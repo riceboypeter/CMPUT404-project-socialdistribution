@@ -613,8 +613,7 @@ class post_detail(APIView, PageNumberPagination):
             else: 
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
         
-        # i don't think it ever reaches here? 
-        # TODO: refactor 
+        # commenting out what seems to be a redundancy
         #serializer = PostSerializer(post, data=request.data, partial=True)
         #if serializer.is_valid():
         #    serializer.save()
