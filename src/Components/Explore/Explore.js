@@ -75,6 +75,10 @@ function EXPLORE() {
 		setOpen(false);
 	};
 
+	const handleInboxClick = () => {
+		navigate("/");
+	};
+
 	return (
 		<div style={{ padding: "10px", width: "60%", margin: "auto" }}>
 			<Navbar>
@@ -83,7 +87,10 @@ function EXPLORE() {
 					<Nav.Item onClick={handleLogoutClick}>Logout</Nav.Item>
 				</Nav>
 				<Nav pullRight>
-					<Nav.Menu title="Inbox"></Nav.Menu>
+					<Nav.Menu
+						onClick={handleInboxClick}
+						title="Inbox"
+					></Nav.Menu>
 				</Nav>
 				<Nav pullRight>
 					<Nav.Item onClick={handleProfileClick}>Profile</Nav.Item>

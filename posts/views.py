@@ -933,7 +933,7 @@ class PublicPostsView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        posts = Post.objects.filter(visbility='PUBLIC')
+        posts = Post.objects.filter(visibility='PUBLIC')
         serializer = PostSerializer(posts, many=True)
         data_list = serializer.data
 
