@@ -462,6 +462,32 @@ PostLikes = {
 
     )}
 
+Publicpostget = {
+    "200": openapi.Response(
+        description="Successfully Retrieved All public posts",
+        examples={
+            "application/json":{
+    "id": "https://social-distro.herokuapp.com/authors/team24/posts/helloworld",
+    "title": "Hello World!",
+    "source": 'null',
+    "origin": 'null',
+    "description": "Our first post",
+    "contentType": "text/plain",
+    "content": "Hello from team 24!",
+    "categories": [],
+    "published": "2023-03-24T17:53:09.628104Z",
+    "visibility": "PUBLIC",
+    "unlisted": 'false',
+    "author_id": "https://social-distro.herokuapp.com/authors/team24"
+  }
+
+        }
+
+    )}
+
+
+ 
+
 
 class post_list(APIView, PageNumberPagination):
     authentication_classes = [BasicAuthentication]
@@ -932,6 +958,7 @@ class PublicPostsView(APIView):
     authentication_classes = [BasicAuthentication]
     permission_classes = [IsAuthenticated]
 
+    @swagger_auto_schema(responses =Publicpostget, operation_summary="List all Public posts on all servers")
     def get(self, request):
         posts = Post.objects.filter(visibility='PUBLIC')
         serializer = PostSerializer(posts, many=True)
