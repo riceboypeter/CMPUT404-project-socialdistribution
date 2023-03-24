@@ -15,8 +15,9 @@ function COMMENTLIKE({ obj }) {
 		const curr_author_id = getAuthorId(null);
 		var FAID = "";
 		const url2 = obj;
+		
 
-		await reqInstance({ method: "get", url: url2 }).then((res) => {
+		await reqInstance({ method: "get", url: url2 + "/" }).then((res) => {
 			console.log(res.data.author);
 			FAID = getAuthorId(res.data.author.id);
 		});
@@ -31,6 +32,7 @@ function COMMENTLIKE({ obj }) {
 		//Confirm what to add into the params and send inbox
 		reqInstance({ method: "post", url: url, data: params })
 			.then((res) => {
+				console.log(res);
 				toaster.push(
 					<Message type="success">Successful Like</Message>,
 					{

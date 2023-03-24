@@ -24,9 +24,10 @@ function CREATEPOST() {
 	const [categories, setCategories] = useState("");
 	const [disabled, setDisabled] = useState(true);
 	const [markdown, setMarkdown] = useState("");
-	const [authors, setAuthors] = useState({ items: [] });
+	const [authors, setAuthors] = useState([]);
 	let navigate = useNavigate();
 	const toaster = useToaster();
+	const [image64, set_image64] = useState("");
 	const [data, setData] = useState([]);
 
 	function handleClick(eventkey) {
@@ -51,7 +52,7 @@ function CREATEPOST() {
 				setData(
 					res.data.items.map((item) => ({
 						label: item["displayName"],
-						value: item["displayName"],
+						value: getAuthorId(item["id"]),
 					}))
 				);
 			});
@@ -149,15 +150,15 @@ function CREATEPOST() {
 	};
 
 	async function readFileAsDataURL(file) {
-		let result_base64 = await new Promise((resolve) => {
+		return new Promise((resolve) => {
 			let fileReader = new FileReader();
-			fileReader.onloadend = (e) => resolve(fileReader.result);
+			fileReader.onloadend = (e) =>
+				resolve(set_image64(fileReader.result));
 			fileReader.readAsDataURL(file);
 		});
-		return result_base64;
 	}
 
-	const handlePostClick = () => {
+	async function handlePostClick() {
 		const author = JSON.parse(localStorage.getItem("user"));
 		const author_id = getAuthorId(null);
 		const url = `posts/authors/${author_id}/posts/`;
@@ -168,20 +169,21 @@ function CREATEPOST() {
 			content: text,
 			contentType: post_type,
 			visibility: post_status,
+			authors: [],
 		};
 
-		if (post_status === 'PRIVATE') {
-			params['authors'] = authors;
-
+		if (post_status === "PRIVATE") {
+			params["authors"] = authors;
 		}
 		var imagefile = "";
 		if (post_type === "image/png" || post_type === "image/jpeg") {
 			imagefile = document.getElementById("file").files[0];
 			if (imagefile) {
-				readFileAsDataURL(imagefile).then((dataURL) => {
-					params["image"] = dataURL;
+				await readFileAsDataURL(imagefile).then(async (dataURL) => {
+					set_image64(dataURL);
 				});
 			}
+			params["image"] = image64;
 		}
 
 		if (categories.length > 0) {
@@ -199,12 +201,13 @@ function CREATEPOST() {
 					set_post_status("PUBLIC");
 					set_post_type("text/plain");
 					setMarkdown("");
+					setAuthors([]);
 				} else {
 					notifyFailedPost(res.data);
 				}
 			})
 			.catch((err) => console.log(err));
-	};
+	}
 
 	return (
 		<div
@@ -227,7 +230,7 @@ function CREATEPOST() {
 				<Dropdown.Item eventKey="PUBLIC">Public</Dropdown.Item>
 				<Dropdown.Item eventKey="FRIENDS">Friends</Dropdown.Item>
 				<Dropdown.Item eventKey="PRIVATE">Private</Dropdown.Item>
-				<Dropdown.Item eventKey="Unlisted">Unlisted</Dropdown.Item>
+				<Dropdown.Item eventKey="UNLISTED">Unlisted</Dropdown.Item>
 			</Dropdown>
 			<Dropdown
 				title={post_type}
@@ -251,7 +254,10 @@ function CREATEPOST() {
 					data={data}
 					disabled={disabled}
 					valeu={authors}
-					onChange={(e) => setAuthors(e)}
+					onChange={(e) => {
+						console.log(e);
+						setAuthors(e);
+					}}
 				/>
 			</>
 

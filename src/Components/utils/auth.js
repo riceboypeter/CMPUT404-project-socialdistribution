@@ -45,7 +45,7 @@ export async function getCurrentUser(author_id) {
 
 export async function getCsrfToken() {
 	let _csrfToken = null;
-	const API_HOST = "http://127.0.0.1:8000";
+	const API_HOST = "https://sociallydistributed.herokuapp.com";
 	if (_csrfToken === null) {
 		const response = await fetch(`${API_HOST}/csrf/`, {
 			credentials: "include",
@@ -71,7 +71,9 @@ export function getAuthorId(a_id) {
 
 export const getProfileImageUrl = () => {
 	const user = JSON.parse(localStorage.getItem("user"));
-	return user.profileImage;
+	if (localStorage.getItem("loggedIn")) {
+		return user.profileImage;
+	}
 };
 
 export const setCreds = (obj) => {
