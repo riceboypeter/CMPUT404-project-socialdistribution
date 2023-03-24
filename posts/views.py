@@ -952,7 +952,7 @@ class PublicPostsView(APIView):
             posts = getNodePost_social_distro(id)
             
             posts = posts['results']
-            print(posts)
+          
             for post in posts:
                 if post["visibility"]=='PUBLIC':
                     data_list.append(post)
