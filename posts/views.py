@@ -974,21 +974,21 @@ class PublicPostsView(APIView):
         serializer = PostSerializer(posts, many=True)
         data_list = serializer.data
 
-        yoshi = getNodeAuthors_Yoshi()
-        for yoshi_author in yoshi:
-            id = yoshi_author["id"].split('/')[-1] or yoshi_author["id"]
-            posts = getNodePost_Yoshi(id)
-            for post in posts:
-                if post["visbility"]=='PUBLIC':
-                    data_list.append(post)
-        social_distro = getNodeAuthors_social_distro()
-        for social_distro_author in social_distro:
-            id = social_distro_author["id"].split('/')[-1] or social_distro_author["id"]
-            posts = getNodeAuthor_social_distro(id)
-            for post in posts:
-                if post["visbility"]=='PUBLIC':
-                    data_list.append(post)
-        return data_list
+        # yoshi = getNodeAuthors_Yoshi()
+        # for yoshi_author in yoshi:
+        #     id = yoshi_author["id"].split('/')[-1] or yoshi_author["id"]
+        #     posts = getNodePost_Yoshi(id)
+        #     for post in posts:
+        #         if post["visbility"]=='PUBLIC':
+        #             data_list.append(post)
+        # social_distro = getNodeAuthors_social_distro()
+        # for social_distro_author in social_distro:
+        #     id = social_distro_author["id"].split('/')[-1] or social_distro_author["id"]
+        #     posts = getNodeAuthor_social_distro(id)
+        #     for post in posts:
+        #         if post["visbility"]=='PUBLIC':
+        #             data_list.append(post)
+        return Response(data_list)
         
 # share a post to an inbox
 def share_object(item, author, shared_user):
