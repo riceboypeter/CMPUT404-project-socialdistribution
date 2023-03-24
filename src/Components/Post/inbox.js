@@ -40,15 +40,22 @@ function INBOX() {
 		if (obj.type === "Follow") {
 			return <FOLLOWREQ key={obj.id} obj={obj} />;
 		}
-		// if (obj.type === "comment") {
-		// 	return <COMMENTINBOX key={obj.id} obj={obj} />;
-		// }
+		if (obj.type === "comment") {
+			return <COMMENTINBOX key={obj.id} obj={obj} />;
+		}
 	};
 
 	const handleProfileClick = () => {
 		if (curPage !== "profile") {
 			setCurPage("profile");
 			navigate("profile");
+		}
+	};
+
+	const handleExploreClick = () => {
+		if (curPage !== "explore") {
+			setCurPage("explore");
+			navigate("explore");
 		}
 	};
 
@@ -100,6 +107,9 @@ function INBOX() {
 					<Nav.Item onClick={handleProfileClick}>Profile</Nav.Item>
 				</Nav>
 				<Nav pullRight>
+					<Nav.Item onClick={handleExploreClick}>Explore</Nav.Item>
+				</Nav>
+				<Nav pullRight>
 					<Nav.Item onClick={handleOpen}>Add Friend</Nav.Item>
 				</Nav>
 			</Navbar>
@@ -107,24 +117,6 @@ function INBOX() {
 				<CREATEPOST></CREATEPOST>
 			</Panel>
 			{inbox.items.map((obj) => item(obj))}
-			{/* <Modal open={open} onClose={handleClose}>
-				<Modal.Header>
-					<div>Add Friend</div>
-				</Modal.Header>
-				<Modal.Body>
-					<InputGroup>
-						<Input placeholder={"JhonDoe"} />
-						<InputGroup.Addon>
-							<SearchIcon />
-						</InputGroup.Addon>
-					</InputGroup>
-				</Modal.Body>
-				<Modal.Footer>
-					<Button onClick={handleAddFriendClick} appearance="primary">
-						Add Friend
-					</Button>
-				</Modal.Footer>
-			</Modal> */}
 			<ADD_FRIEND_MODAL open={open} handleClose={handleModalClose} />
 		</div>
 	);

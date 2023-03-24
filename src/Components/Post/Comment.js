@@ -13,7 +13,6 @@ function COMMENTS({ postobj }) {
 	const getComments = (url) => {
 		reqInstance({ method: "get", url: url + "/" })
 			.then((res) => {
-				console.log(res);
 				setCommentObj(res.data.results);
 			})
 			.catch((err) => console.log(err));
@@ -22,7 +21,7 @@ function COMMENTS({ postobj }) {
 	useLayoutEffect(() => {
 		const author_id = getAuthorId(null);
 		const post_id = getAuthorId(postObj.id);
-		getComments(`posts/authors/${author_id}/posts/${post_id}/comments/`);
+		getComments(`posts/authors/${author_id}/posts/${post_id}/comments`);
 	}, []);
 
 	const handleSubmitClick = () => {
