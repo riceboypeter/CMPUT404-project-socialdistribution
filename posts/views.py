@@ -958,13 +958,8 @@ class ShareView(APIView):
         share_object(new_post,sharing_author,[])
         # serialize post
         serializer = PostSerializer(new_post)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        # serializer has errors
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+        return Response(serializer.data)
+    
 class PublicPostsView(APIView):
     authentication_classes = [BasicAuthentication]
     permission_classes = [IsAuthenticated]
@@ -996,6 +991,7 @@ def share_object(item, author, shared_user):
     inbox_item.save()
     # TODO: refactor once auth is set up
     authenticated_user = "joe"
+    print(item.visibility)
 
     # public post (send to all inboxes)
     if (item.visibility == 'PUBLIC'):
@@ -1017,7 +1013,7 @@ def share_object(item, author, shared_user):
 
     # private post (send to shared users' inbox)
     if (item.visibility == 'PRIVATE'):
-        for username in shared_user:
-            share = Author.objects.get(displayName=username)
+        for id in shared_user:
+            share = Author.objects.get(id=id)
             inbox_item = Inbox(content_object=item, author=share)
             inbox_item.save()

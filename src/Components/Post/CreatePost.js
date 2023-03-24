@@ -24,13 +24,9 @@ function CREATEPOST() {
 	const [categories, setCategories] = useState("");
 	const [disabled, setDisabled] = useState(true);
 	const [markdown, setMarkdown] = useState("");
-	const [authors, setAuthors] = useState({ items: [] });
+	const [authors, setAuthors] = useState([]);
 	let navigate = useNavigate();
 	const toaster = useToaster();
-	const data = friends.items.map((item) => ({
-		label: item["displayName"],
-		value: item["displayName"],
-	}));
 	const [image64, set_image64] = useState("");
 	const [data, setData] = useState([]);
 
@@ -56,7 +52,7 @@ function CREATEPOST() {
 				setData(
 					res.data.items.map((item) => ({
 						label: item["displayName"],
-						value: item["displayName"],
+						value: getAuthorId(item["id"]),
 					}))
 				);
 			});
@@ -156,13 +152,13 @@ function CREATEPOST() {
 	async function readFileAsDataURL(file) {
 		return new Promise((resolve) => {
 			let fileReader = new FileReader();
-			fileReader.onloadend = (e) => resolve(set_image64(fileReader.result));
+			fileReader.onloadend = (e) =>
+				resolve(set_image64(fileReader.result));
 			fileReader.readAsDataURL(file);
 		});
-
 	}
 
-	async function handlePostClick () {
+	async function handlePostClick() {
 		const author = JSON.parse(localStorage.getItem("user"));
 		const author_id = getAuthorId(null);
 		const url = `posts/authors/${author_id}/posts/`;
@@ -173,11 +169,11 @@ function CREATEPOST() {
 			content: text,
 			contentType: post_type,
 			visibility: post_status,
+			authors: [],
 		};
 
-		if (post_status === 'PRIVATE') {
-			params['authors'] = authors;
-
+		if (post_status === "PRIVATE") {
+			params["authors"] = authors;
 		}
 		var imagefile = "";
 		if (post_type === "image/png" || post_type === "image/jpeg") {
@@ -205,12 +201,13 @@ function CREATEPOST() {
 					set_post_status("PUBLIC");
 					set_post_type("text/plain");
 					setMarkdown("");
+					setAuthors([]);
 				} else {
 					notifyFailedPost(res.data);
 				}
 			})
 			.catch((err) => console.log(err));
-	};
+	}
 
 	return (
 		<div
@@ -257,7 +254,10 @@ function CREATEPOST() {
 					data={data}
 					disabled={disabled}
 					valeu={authors}
-					onChange={(e) => setAuthors(e)}
+					onChange={(e) => {
+						console.log(e);
+						setAuthors(e);
+					}}
 				/>
 			</>
 

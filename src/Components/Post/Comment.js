@@ -33,7 +33,6 @@ function COMMENTS({ postobj }) {
 		reqInstance({ method: "post", url: url, data: params })
 			.then((res) => {
 				if (res.status === 200) {
-					getComments(url);
 					set_new_comment("");
 				}
 			})
