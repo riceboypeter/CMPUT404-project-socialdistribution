@@ -55,7 +55,7 @@ function LOGIN() {
 
 		let reqInstance = axios.create({
 			headers: { "X-CSRFToken": token },
-			baseURL: `http://127.0.0.1:8000/`,
+			baseURL: `https://sociallydistributed.herokuapp.com/`,
 		});
 		reqInstance({ method: "post", url: "dlogin", data: params })
 			.then(async (res) => {
