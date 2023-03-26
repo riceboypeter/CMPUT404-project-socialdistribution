@@ -462,6 +462,32 @@ PostLikes = {
 
     )}
 
+Publicpostget = {
+    "200": openapi.Response(
+        description="Successfully Retrieved All public posts",
+        examples={
+            "application/json":{
+    "id": "https://social-distro.herokuapp.com/authors/team24/posts/helloworld",
+    "title": "Hello World!",
+    "source": 'null',
+    "origin": 'null',
+    "description": "Our first post",
+    "contentType": "text/plain",
+    "content": "Hello from team 24!",
+    "categories": [],
+    "published": "2023-03-24T17:53:09.628104Z",
+    "visibility": "PUBLIC",
+    "unlisted": 'false',
+    "author_id": "https://social-distro.herokuapp.com/authors/team24"
+  }
+
+        }
+
+    )}
+
+
+ 
+
 
 class post_list(APIView, PageNumberPagination):
     authentication_classes = [BasicAuthentication]
@@ -775,18 +801,19 @@ class PostLikesView(APIView):
     @swagger_auto_schema(operation_summary="Get the likes on a post")
     @authentication_classes([BasicAuthentication])
     @permission_classes([IsAuthenticated])
-    def get(request, pk_a):
+    def get(self, request, pk_a, pk):
         """
         Get the list of likes on a post
         """
         # safety try-except
         try:
-            post = Post.objects.get(id=request[""])
+            post = Post.objects.get(id=pk)
         except Post.DoesNotExist:
             error_msg = "Post not found"
             return Response(error_msg,status=status.HTTP_404_NOT_FOUND)
         # filter for all the likes on that post
-        likes = Like.objects.filter(object=post.url)
+        url = post.url[:-1] if post.url.endswith('/') else post.url
+        likes = Like.objects.filter(object=url)
         serializer = LikeSerializer(likes, many=True)
         return Response(serializer.data)
 
@@ -964,6 +991,7 @@ class PublicPostsView(APIView):
     authentication_classes = [BasicAuthentication]
     permission_classes = [IsAuthenticated]
 
+    @swagger_auto_schema(responses =Publicpostget, operation_summary="List all Public posts on all servers")
     def get(self, request):
         posts = Post.objects.filter(visibility='PUBLIC')
         serializer = PostSerializer(posts, many=True)
@@ -984,7 +1012,7 @@ class PublicPostsView(APIView):
             posts = getNodePost_social_distro(id)
             
             posts = posts['results']
-            print(posts)
+          
             for post in posts:
                 if post["visibility"]=='PUBLIC':
                     data_list.append(post)
