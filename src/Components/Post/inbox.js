@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useLayoutEffect } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 // Component Imports
 import POST from "./Post";
 import CREATEPOST from "./CreatePost";
@@ -15,6 +15,7 @@ function INBOX() {
 	const [inbox, setInbox] = useState({ items: [] });
 	const [curPage, setCurPage] = useState("inbox");
 	const [open, setOpen] = useState(false);
+	const [state, setState] = useState({ count: 0 });
 	let navigate = useNavigate();
 
 	// Get the inbox
@@ -30,9 +31,13 @@ function INBOX() {
 		}
 	}, []);
 
+	const refreshInbox = useCallback(() => {
+		setState(({ count }) => ({ count: count + 1 }));
+	});
+
 	const item = (obj) => {
 		if (obj.type === "post") {
-			return <POST key={obj.id} postobj={obj} />;
+			return <POST key={obj.id} postobj={obj} explore={true} />;
 		}
 		if (obj.type === "Like") {
 			return <LIKEINBOX key={obj.id} likeobj={obj} />;
@@ -114,7 +119,7 @@ function INBOX() {
 				</Nav>
 			</Navbar>
 			<Panel bordered header="New Post" collapsible>
-				<CREATEPOST></CREATEPOST>
+				<CREATEPOST refresh={refreshInbox}></CREATEPOST>
 			</Panel>
 			{inbox.items.map((obj) => item(obj))}
 			<ADD_FRIEND_MODAL open={open} handleClose={handleModalClose} />

@@ -9,6 +9,7 @@ getCsrfToken();
 var token = localStorage.getItem("token");
 var busername = base64.encode(username);
 var bpassword = base64.encode(password);
+console.log(username, password);
 export let reqInstance = axios.create({
 	headers: {
 		"X-CSRFToken": token,

@@ -31,7 +31,7 @@ function EXPLORE() {
 
 	const item = (obj) => {
 		if (obj.type === "post") {
-			return <POST key={obj.id} postobj={obj} />;
+			return <POST key={obj.id} postobj={obj} explore={false} />;
 		}
 		if (obj.type === "Like") {
 			return <LIKEINBOX key={obj.id} likeobj={obj} />;

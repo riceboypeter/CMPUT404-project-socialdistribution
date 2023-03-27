@@ -49,7 +49,7 @@ function AUTHORPOSTS() {
 				bordered
 				collapsible
 			>
-				<POST postobj={obj} edit={true}></POST>
+				<POST postobj={obj} edit={true} explore={true}></POST>
 			</Panel>
 		);
 	};

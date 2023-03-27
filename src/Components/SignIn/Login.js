@@ -62,6 +62,7 @@ function LOGIN() {
 				getCsrfToken();
 				setLoggedIn(true);
 				setCreds(params);
+				console.log(res);
 				await setCurrentUser(res.data).then(navigate("/"));
 			})
 			.catch((err) => notifyFailedPost(err.response.data));

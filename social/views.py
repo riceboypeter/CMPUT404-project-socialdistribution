@@ -50,7 +50,7 @@ class register(APIView):
             user.is_active = False
             user.save()
             url = "authors/" + id_
-            author = Author(user=user, id = id_, displayName= display_name, url=url)
+            author = Author(user=user, id = id_, displayName= display_name, url=url, host="https://sociallydistributed.herokuapp.com/")
             author.save()
             return(HttpResponse(id_, status=status.HTTP_201_CREATED))
         except IntegrityError as e: 

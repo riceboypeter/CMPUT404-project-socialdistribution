@@ -337,7 +337,7 @@ class FollowersView(APIView):
                     return Response(error_msg, status=status.HTTP_404_NOT_FOUND) 
                 followers_list.append(AuthorSerializer(follower_author).data)
 
-            results = {"type": "followers",
+            items = {"type": "followers",
                     "items": followers_list
             }
 
