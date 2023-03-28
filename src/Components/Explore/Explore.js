@@ -25,7 +25,7 @@ function EXPLORE() {
 			reqInstance({
 				method: "get",
 				url: url,
-				params: { local: false },
+				params: { local: true },
 			}).then((res) => {
 				console.log(res);
 				setInbox(res.data);
@@ -36,15 +36,6 @@ function EXPLORE() {
 	const item = (obj) => {
 		if (obj.type === "post") {
 			return <POST key={obj.id} postobj={obj} explore={false} />;
-		}
-		if (obj.type === "Like") {
-			return <LIKEINBOX key={obj.id} likeobj={obj} />;
-		}
-		if (obj.type === "Follow") {
-			return <FOLLOWREQ key={obj.id} obj={obj} />;
-		}
-		if (obj.type === "comment") {
-			return <COMMENTINBOX key={obj.id} obj={obj} />;
 		}
 	};
 

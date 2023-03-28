@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useLayoutEffect } from "react";
 import { Input, InputGroup } from "rsuite";
 import { reqInstance } from "../utils/axios";
-import { getAuthorId } from "../utils/auth";
+import { getAuthorId, getCsrfToken } from "../utils/auth";
 // Component Imports
 import COMMENTLIKE from "./LikeComment";
 import axios from "axios";
@@ -12,13 +12,23 @@ function COMMENTS({ postobj }) {
 	const [new_comment, set_new_comment] = useState("");
 
 	async function getComments(url) {
-		return axios({
+		var base64 = require("base-64");
+		var username = localStorage.getItem("username");
+		var password = localStorage.getItem("password");
+		var busername = base64.encode(username);
+		var bpassword = base64.encode(password);
+		let reqInstance = axios.create({
+			headers: {
+				Authorization: { username: busername, password: bpassword },
+			},
+			auth: {
+				username: username,
+				password: password,
+			},
+		});
+		return reqInstance({
 			method: "get",
 			url: url,
-			auth: {
-				username: localStorage.getItem("username"),
-				password: localStorage.getItem("password"),
-			},
 		})
 			.then((res) => {
 				setCommentObj(res.data.results);
