@@ -1005,16 +1005,16 @@ class PublicPostsView(APIView):
                 for post in posts:
                     if post["visibility"]=='PUBLIC':
                         data_list.append(post)
-            social_distro = getNodeAuthors_social_distro()
-            for social_distro_author in social_distro:
-                id = social_distro_author["id"].split('/')[-1] or social_distro_author["id"]
-                posts = getNodePost_social_distro(id)
+            # social_distro = getNodeAuthors_social_distro()
+            # for social_distro_author in social_distro:
+            #     id = social_distro_author["id"].split('/')[-1] or social_distro_author["id"]
+            #     posts = getNodePost_social_distro(id)
                 
-                posts = posts['results']
-                print(posts)
-                for post in posts:
-                    if post["visibility"]=='PUBLIC':
-                        data_list.append(post)
+            #     posts = posts['results']
+            #     print(posts)
+            #     for post in posts:
+            #         if post["visibility"]=='PUBLIC':
+            #             data_list.append(post)
         return Response(data_list)  
         
         

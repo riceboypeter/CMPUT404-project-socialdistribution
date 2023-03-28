@@ -58,12 +58,12 @@ function LOGIN() {
 		});
 		reqInstance({
 			method: "post",
-			url: "https://sociallydistributed.herokuapp.com/login",
+			url: "http://127.0.0.1:8000/login",
 			data: params,
 		})
 			.then(async (res) => {
 				console.log(res.data);
-				if (res.status == 202) {
+				if (res.status === 202) {
 					getCsrfToken();
 					setLoggedIn(true);
 					setCreds(params);

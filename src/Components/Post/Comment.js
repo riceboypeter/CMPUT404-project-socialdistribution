@@ -31,14 +31,19 @@ function COMMENTS({ postobj }) {
 			url: url,
 		})
 			.then((res) => {
-				console.log(res.data);
-				setCommentObj(res.data.results);
+				if (res.data.comments) {
+					setCommentObj(res.data.comments);
+				} else if (res.data.results) {
+					setCommentObj(res.data.results);
+				}
 			})
 			.catch((err) => console.log(err));
 	}
 
 	useEffect(() => {
-		getComments(postObj.comments);
+		if (postobj.type === "post") {
+			getComments(postObj.comments);
+		}
 	}, []);
 
 	const handleSubmitClick = () => {
