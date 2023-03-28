@@ -22,12 +22,24 @@ def getNodeAuthors_social_distro():
     return authors
 
 
+def getNodeApp2():
+    url = 'https://killme.herokuapp.com/authors'
+
+    #base64encoded username: minion and password: minion
+    # authorization = 'minion:minion'
+    # encoded_authorization = base64.b64encode(authorization.encode("utf-8"))
+    # authroization_header = 'Basic ' + encoded_authorization
+    # headers = {'Authorization': authroization_header}
+    response = requests.get(url)
+    status_code = response.status_code
+    # response = requests.get(url, headers=headers)
+    json_response = response.json()
+    print(json_response)
+    authors = json_response['items']
+    return authors
 
 def getNodeAuthors_Yoshi():
-
-
     url = 'https://yoshi-connect.herokuapp.com/authors'
-
     #base64encoded username: minion and password: minion
     # authorization = 'minion:minion'
     # encoded_authorization = base64.b64encode(authorization.encode("utf-8"))
@@ -39,12 +51,7 @@ def getNodeAuthors_Yoshi():
     # response = requests.get(url, headers=headers)
     json_response = response.json()
     authors = json_response['items']
-
     return authors
-
-
-
-
 
 
 def getNodeAuthor_Yoshi(author_id):
@@ -60,8 +67,6 @@ def getNodeAuthor_Yoshi(author_id):
        
         return(json_response, status_code)
     else: return (None, status_code)
-
-
 
 #29c546d45f564a27871838825e3dbecb
 # getNodeAuthor_Yoshi('asgasdfgdsfgd')
@@ -96,6 +101,25 @@ def getNodePost_Yoshi(author_id):
         json_response = response.json()
         return(json_response, status_code)
     else: return (None, status_code)
+
+def getNodePost_app2(author_id):
+    url = 'https://killme.herokuapp.com/authors/'
+
+    url = url + author_id + '/posts/'
+    username = 'app2team15'
+    password = 'password'
+    #remote1:r3mot31
+    credentials = f'{username}:{password}'
+    encoded_credentials = base64.b64encode(credentials.encode("utf-8")).decode("utf-8")
+    authorization_header = f'Basic {encoded_credentials}'
+    headers = {'Authorization': authorization_header}
+
+    response = requests.get(url, headers=headers)
+    #response = requests.get(url)
+    status_code = response.status_code
+    if status_code == 200:
+        json_response = response.json()
+        return(json_response)
 
 #29c546d45f564a27871838825e3dbecb
 # getNodeAuthor_Yoshi('asgasdfgdsfgd')
