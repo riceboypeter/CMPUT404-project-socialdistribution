@@ -21,10 +21,10 @@ function INBOX() {
 	// Get the inbox
 	useEffect(() => {
 		if (!localStorage.getItem("loggedIn")) {
-			navigate("/login");
+			navigate("/signin");
 		} else {
 			const author_id = getAuthorId(null);
-			const url = `authors/${author_id}/inbox/`;
+			const url = `authors/${author_id}/inbox`;
 			reqInstance({ method: "get", url: url }).then((res) => {
 				setInbox(res.data.results);
 			});
@@ -68,7 +68,7 @@ function INBOX() {
 		reqInstance.post("dlogout/").then((res) => {
 			if (res.status === 200) {
 				unsetCurrentUser();
-				navigate("/login");
+				navigate("/signin");
 			}
 		});
 	}

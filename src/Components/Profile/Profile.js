@@ -39,7 +39,7 @@ function PROFILE() {
 
 	useEffect(() => {
 		if (!localStorage.getItem("loggedIn")) {
-			navigate("/login");
+			navigate("/signin");
 		} else {
 			setImage(getProfileImageUrl);
 			setAuthor(JSON.parse(localStorage.getItem("user")));
@@ -65,7 +65,7 @@ function PROFILE() {
 	async function handleLogoutClick() {
 		reqInstance.post("accounts/logout/").then((res) => {
 			if (res.status === 200) {
-				navigate("/login");
+				navigate("/signin");
 			}
 		});
 	}
