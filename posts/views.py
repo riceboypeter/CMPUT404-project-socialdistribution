@@ -757,18 +757,19 @@ class PostLikesView(APIView):
     @swagger_auto_schema(operation_summary="Get the likes on a post")
     @authentication_classes([BasicAuthentication])
     @permission_classes([IsAuthenticated])
-    def get(request, pk_a):
+    def get(self, request, pk_a, pk):
         """
         Get the list of likes on a post
         """
         # safety try-except
         try:
-            post = Post.objects.get(id=request[""])
+            post = Post.objects.get(id=pk)
         except Post.DoesNotExist:
             error_msg = "Post not found"
             return Response(error_msg,status=status.HTTP_404_NOT_FOUND)
         # filter for all the likes on that post
-        likes = Like.objects.filter(object=post.url)
+        url = post.url[:-1] if post.url.endswith('/') else post.url
+        likes = Like.objects.filter(object=url)
         serializer = LikeSerializer(likes, many=True)
         return Response(serializer.data)
 
