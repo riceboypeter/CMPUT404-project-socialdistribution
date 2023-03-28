@@ -30,12 +30,19 @@ def getNodeApp2():
     # encoded_authorization = base64.b64encode(authorization.encode("utf-8"))
     # authroization_header = 'Basic ' + encoded_authorization
     # headers = {'Authorization': authroization_header}
-    response = requests.get(url)
+    username = 'app1team15'
+    password = 'password'
+    #remote1:r3mot31
+    credentials = f'{username}:{password}'
+    encoded_credentials = base64.b64encode(credentials.encode("utf-8")).decode("utf-8")
+    authorization_header = f'Basic {encoded_credentials}'
+    headers = {'Authorization': authorization_header}
+
+    response = requests.get(url, headers=headers)
+   
     status_code = response.status_code
-    # response = requests.get(url, headers=headers)
     json_response = response.json()
-    print(json_response)
-    authors = json_response['items']
+    authors = json_response['results']
     return authors
 
 def getNodeAuthors_Yoshi():
@@ -106,7 +113,7 @@ def getNodePost_app2(author_id):
     url = 'https://killme.herokuapp.com/authors/'
 
     url = url + author_id + '/posts/'
-    username = 'app2team15'
+    username = 'app1team15'
     password = 'password'
     #remote1:r3mot31
     credentials = f'{username}:{password}'
