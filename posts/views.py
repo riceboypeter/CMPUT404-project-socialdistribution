@@ -1,32 +1,21 @@
-from django.http import HttpResponseRedirect
 from author.basic_auth import BasicAuthenticator
 from rest_framework.permissions import IsAuthenticated
 from django.conf import settings
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
-from django.shortcuts import get_object_or_404, render
-from django.urls import reverse,reverse_lazy
-from django.views import generic
+from django.shortcuts import get_object_or_404
 from .models import Post
-from django.views.generic import ListView,DetailView,CreateView,UpdateView,DeleteView
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import *
-from django.http import HttpResponse
+from .pagination import CustomCommentPagination
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.response import Response
 from .serializers import *
-from .pagination import PostSetPagination
 from rest_framework.views import APIView
 from rest_framework.pagination import PageNumberPagination
+from social.pagination import CustomPagination
 from rest_framework import status
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework.renderers import (
-                                        HTMLFormRenderer, 
-                                        JSONRenderer, 
-                                        BrowsableAPIRenderer,
-                                    )
 import base64
-import json
 from client import *
 from .image_renderer import JPEGRenderer, PNGRenderer
 
@@ -485,18 +474,12 @@ Publicpostget = {
 
     )}
 
-
- 
-
-
 class post_list(APIView, PageNumberPagination):
     authentication_classes = [BasicAuthentication]
     permission_classes = [IsAuthenticated]
 
     # for pagination
-    serializer_class = PostSerializer
-    pagination_class = PostSetPagination
-    
+    serializer_class = PostSerializer    
 
     # TODO: RESPONSE AND REQUESTS
     
@@ -514,7 +497,7 @@ class post_list(APIView, PageNumberPagination):
         posts = self.paginate_queryset(posts, request)
 
         serializer = PostSerializer(posts, many=True)
-        return self.get_paginated_response(serializer.data)
+        return CustomPagination.get_paginated_response(self, serializer.data, "posts")
 
     @swagger_auto_schema(responses = PostsPOST, operation_summary="Create a new Post for an Author",request_body=openapi.Schema( type=openapi.TYPE_STRING,description='A raw text input for the POST request',example = {
      "type":"post",
@@ -574,8 +557,6 @@ class CommentDetailView(APIView):
             return Response(error_msg, status=status.HTTP_404_NOT_FOUND)
         
 class post_detail(APIView, PageNumberPagination):
-    serializer_class = PostSerializer
-    pagination_class = PostSetPagination
 
     @swagger_auto_schema(responses = IndividualPOSTGet, operation_summary="Get a particular post of an author")
     def get(self, request, pk_a, pk):
@@ -772,31 +753,6 @@ class CommentLikesView(APIView):
         serializer = LikeSerializer(likes, many=True)
         return Response(serializer.data)
 
-@swagger_auto_schema( method='get', operation_summary="Get the comments on a post")
-@api_view(['GET'])
-@authentication_classes([BasicAuthentication])
-@permission_classes([IsAuthenticated])
-def get_comments(request, pk_a, pk):
-    """
-    Get the list of comments on the post
-    """
-    # try-excepts to catch not founds
-    try:
-        author = Author.objects.get(id=pk_a)
-    except Author.DoesNotExist:
-        error_msg = "Author not found"
-        return Response(error_msg,status=status.HTTP_404_NOT_FOUND)
-    try:
-        post = Post.objects.get(author=author, id=pk)
-    except Post.DoesNotExist:
-        error_msg = "Post not found"
-        return Response(error_msg,status=status.HTTP_404_NOT_FOUND)
-    
-    # filter for the comments on that post by that author
-    comments = Comment.objects.filter(author=author,post=post)
-    serializer = CommentSerializer(comments, many=True)
-    return Response(serializer.data)
-
 class PostLikesView(APIView):
     @swagger_auto_schema(operation_summary="Get the likes on a post")
     @authentication_classes([BasicAuthentication])
@@ -868,12 +824,10 @@ class ImageView(APIView):
 class CommentView(APIView, PageNumberPagination):
     authentication_classes = [BasicAuthentication]
     permission_classes = [IsAuthenticated]
-    serializer_class = CommentSerializer
-    pagination_class = PostSetPagination
     page_size_query_param = 'page_size'
 
     
-    @swagger_auto_schema(responses =GetComments, operation_summary="List all Comments on a post")
+    @swagger_auto_schema(responses = GetComments, operation_summary="List all Comments on a post")
     def get(self, request, pk_a, pk):
         try:
             author = Author.objects.get(id=pk_a)
@@ -882,6 +836,7 @@ class CommentView(APIView, PageNumberPagination):
             return Response(error_msg, status=status.HTTP_404_NOT_FOUND)
         
         post = Post.objects.get(id=pk)
+        post_data = PostSerializer(post)
         # changed to filter for all comments on the post, it was filtering
         # the comments by the author of the post on the post otherwise.
         # comments = Comment.objects.filter(author=author,post=post)
@@ -897,12 +852,11 @@ class CommentView(APIView, PageNumberPagination):
             if post.author != authenticated_user:
                 comments = comments.exclude(author=post.author.friends)
         
-        paginator = self.pagination_class()
-        comments_page = paginator.paginate_queryset(comments, request, view=self)
+        comments_page = self.paginate_queryset(comments, request, view=self)
         serializer = CommentSerializer(comments_page, many=True)
         commentsObj = {}
         commentsObj['comments'] = serializer.data
-        response = paginator.get_paginated_response(serializer.data)
+        response = CustomCommentPagination.get_paginated_response(self,serializer.data, post_data.id, post.comments)
         return response
 
 

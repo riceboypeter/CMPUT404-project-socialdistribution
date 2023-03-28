@@ -1,24 +1,13 @@
 import json
 from django.db import IntegrityError
 from django.forms import model_to_dict
-from django.shortcuts import render
-from .basic_auth import BasicAuthenticator
-# Create your views here.
-
-from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render
-from django.urls import reverse,reverse_lazy
-from django.views import generic
-from django.views.generic import ListView,DetailView,CreateView,UpdateView,DeleteView
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.shortcuts import get_object_or_404
 from author.pagination import *
 from posts.serializers import *
 from .models import *
 from .serializers import *
-from django.http import HttpResponse
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.response import Response
-from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.views import APIView
@@ -29,6 +18,7 @@ from rest_framework.permissions import IsAuthenticated
 from django.conf import settings
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from client import *
+from social.pagination import CustomPagination
 
 custom_parameter = openapi.Parameter(
     name='custom_param',
@@ -193,10 +183,6 @@ InboxGet = {
 class AuthorsListView(APIView, PageNumberPagination):
     authentication_classes = [BasicAuthentication]
     permission_classes = [IsAuthenticated]
-    # for pagination
-    page_size = 10
-    page_size_query_param = 'size'
-    max_page_size = 100
     @swagger_auto_schema(responses= GetAuthorsExample,operation_summary="List of Authors registered")
     def get(self, request):
         
@@ -225,7 +211,7 @@ class AuthorsListView(APIView, PageNumberPagination):
             data_list.append(social_distro_author)
         
         # paginate + send
-        return self.get_paginated_response(data_list)
+        return CustomPagination.get_paginated_response(self,data_list,"authors")
 
 class AuthorView(APIView):
     authentication_classes = [BasicAuthentication]
@@ -521,8 +507,6 @@ class Inbox_list(APIView, InboxSerializerObjects, PageNumberPagination):
     """
     authentication_classes = [BasicAuthentication]
     permission_classes = [IsAuthenticated]
-    serializer_class = InboxSerializer
-    pagination_class = InboxSetPagination
 
     @swagger_auto_schema(responses = InboxGet, operation_summary="Get all the objects in the inbox")
     def get(self, request, pk_a):
@@ -530,12 +514,11 @@ class Inbox_list(APIView, InboxSerializerObjects, PageNumberPagination):
 
         author = get_object_or_404(Author,pk=pk_a)
         inbox_data = author.inbox.all()
-        inbox_data = self.paginate_queryset(inbox_data,request)
         serializer = InboxSerializer(data=inbox_data, context = {"serializer":self.serialize_inbox_objects}, many=True)
         serializer.is_valid()
         data = self.get_items(pk_a, serializer.data)
         # TODO: Fix pagination
-        return self.get_paginated_response(data)
+        return data
     
     
     @swagger_auto_schema(responses = InboxPOST, operation_summary="Post a new object to the inbox",request_body=openapi.Schema( type=openapi.TYPE_STRING,description='A raw text input for the POST request', example = {

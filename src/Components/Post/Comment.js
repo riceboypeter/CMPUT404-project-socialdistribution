@@ -13,7 +13,7 @@ function COMMENTS({ postobj }) {
 	const getComments = (url) => {
 		reqInstance({ method: "get", url: url + "/" })
 			.then((res) => {
-				setCommentObj(res.data.results);
+				setCommentObj(res.data.items);
 			})
 			.catch((err) => console.log(err));
 	};
