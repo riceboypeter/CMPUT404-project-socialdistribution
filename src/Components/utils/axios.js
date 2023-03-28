@@ -9,12 +9,11 @@ getCsrfToken();
 var token = localStorage.getItem("token");
 var busername = base64.encode(username);
 var bpassword = base64.encode(password);
-console.log(username, password);
 export let reqInstance = axios.create({
 	headers: {
 		"X-CSRFToken": token,
 	},
-	baseURL: `https://sociallydistributed.herokuapp.com/`,
+	baseURL: `http://127.0.0.1:8000/`,
 	auth: {
 		username: username,
 		password: password,

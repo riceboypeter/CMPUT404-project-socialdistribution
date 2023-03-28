@@ -60,7 +60,7 @@ class register(APIView):
 
 @authentication_classes([])
 @permission_classes([])
-class login(APIView):
+class dlogin(APIView):
     def post(self, request):
         """deals with user auth"""
         username = request.data['username']
@@ -68,15 +68,18 @@ class login(APIView):
         auth = AllowAllUsersModelBackend()
     
         user = auth.authenticate(request=request, username=username, password= password)
+        # if user:
+        #     login(request, user)
         if not user:
             return Response("user not registered", status=status.HTTP_401_UNAUTHORIZED)
 
         if user.is_active == True:
             author= Author.objects.filter(displayName=username)[0]
             params = AuthorSerializer(author)
+            print(author)
             return Response(params.data, status=status.HTTP_202_ACCEPTED)
         else:
-            return Response("user needs to wait for approval from a server admin", status=status.HTTP_402_PAYMENT_REQUIRED)
+            return Response("user needs to wait for approval from a server admin", status=status.HTTP_401_UNAUTHORIZED)
 
 def csrf(request):
     return JsonResponse({'csrfToken': get_token(request)})

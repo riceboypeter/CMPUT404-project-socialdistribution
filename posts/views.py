@@ -1003,6 +1003,7 @@ class PublicPostsView(APIView):
             id = yoshi_author["id"].split('/')[-1] or yoshi_author["id"]
             posts = getNodePost_Yoshi(id)
             posts = posts[0]['items']
+            print("ehlo"+str(posts))
             for post in posts:
                 if post["visibility"]=='Public':
                     data_list.append(post)

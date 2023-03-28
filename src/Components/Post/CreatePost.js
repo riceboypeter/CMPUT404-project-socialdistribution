@@ -256,7 +256,6 @@ function CREATEPOST({ refresh }) {
 					disabled={disabled}
 					valeu={authors}
 					onChange={(e) => {
-						console.log(e);
 						setAuthors(e);
 					}}
 				/>

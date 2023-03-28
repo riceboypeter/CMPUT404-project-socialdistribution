@@ -11,7 +11,7 @@ from django.urls import reverse,reverse_lazy
 from django.views import generic
 from django.views.generic import ListView,DetailView,CreateView,UpdateView,DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from author.pagination import *
+from .pagination import *
 from posts.serializers import *
 from .models import *
 from .serializers import *
@@ -341,7 +341,7 @@ class FollowersView(APIView):
                     "items": followers_list
             }
 
-            return Response(results, status=200)
+            return Response(items, status=200)
         # else If url is /authors/authors/author_id/followers/foreign_author_id    
         # add foreign followers to the list of followers
         else:

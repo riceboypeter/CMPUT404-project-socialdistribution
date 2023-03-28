@@ -43,7 +43,7 @@ function LOGIN() {
 		return new Promise((resolve) => setTimeout(resolve, time));
 	}
 
-	delay(1000).then(() => console.log("ran after 1 second1 passed"));
+	delay(1000).then(() => {});
 
 	async function handleLoginClick() {
 		var params = {
@@ -55,14 +55,13 @@ function LOGIN() {
 
 		let reqInstance = axios.create({
 			headers: { "X-CSRFToken": token },
-			baseURL: `https://sociallydistributed.herokuapp.com/`,
+			baseURL: `http://127.0.0.1:8000/`,
 		});
 		reqInstance({ method: "post", url: "dlogin", data: params })
 			.then(async (res) => {
 				getCsrfToken();
 				setLoggedIn(true);
 				setCreds(params);
-				console.log(res);
 				await setCurrentUser(res.data).then(navigate("/"));
 			})
 			.catch((err) => notifyFailedPost(err.response.data));

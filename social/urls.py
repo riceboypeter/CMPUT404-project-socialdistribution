@@ -54,7 +54,7 @@ urlpatterns = [
     path('redoc/', schema_view.with_ui('redoc',cache_timeout=0),name = 'schema-redoc'),
 
     path("dregister", views.register.as_view(), name="register"),
-    path("dlogin", views.login.as_view(), name="login"),
+    path("dlogin", views.dlogin.as_view(), name="login"),
     path("dlogout", views.logout_view, name="logout"),
     path('csrf/', views.csrf),
     re_path(r"^$", render_react),
