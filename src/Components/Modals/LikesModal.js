@@ -13,14 +13,14 @@ function LIKESMODAL({ postobj }) {
 
 	useLayoutEffect(() => {
 		if (!localStorage.getItem("loggedIn")) {
-			navigate("/login");
+			navigate("/signin");
 		} else {
-			// const author_id = getAuthorId(postobj.author.id);
-			// const post_id = getAuthorId(postobj.id);
-			// const url = `posts/authors/${author_id}/posts/${post_id}/likes/`
-			// reqInstance({ method: "get", url: url }).then((res) => {
-			//   setLikes(res.data);
-			// });
+			const author_id = getAuthorId(postobj.author.id);
+			const post_id = getAuthorId(postobj.id);
+			const url = `posts/authors/${author_id}/posts/${post_id}/likes/`;
+			reqInstance({ method: "get", url: url }).then((res) => {
+				setLikes(res.data);
+			});
 		}
 	}, []);
 

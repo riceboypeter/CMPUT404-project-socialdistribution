@@ -323,11 +323,11 @@ class FollowersView(APIView):
                     return Response(error_msg, status=status.HTTP_404_NOT_FOUND) 
                 followers_list.append(AuthorSerializer(follower_author).data)
 
-            results = {"type": "followers",
+            items = {"type": "followers",
                     "items": followers_list
             }
 
-            return Response(results, status=200)
+            return Response(items, status=200)
         # else If url is /authors/authors/author_id/followers/foreign_author_id    
         # add foreign followers to the list of followers
         else:
@@ -518,7 +518,7 @@ class Inbox_list(APIView, InboxSerializerObjects, PageNumberPagination):
         serializer.is_valid()
         data = self.get_items(pk_a, serializer.data)
         # TODO: Fix pagination
-        return data
+        return Response(data, status=status.HTTP_200_OK)
     
     
     @swagger_auto_schema(responses = InboxPOST, operation_summary="Post a new object to the inbox",request_body=openapi.Schema( type=openapi.TYPE_STRING,description='A raw text input for the POST request', example = {
