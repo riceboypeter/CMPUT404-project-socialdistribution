@@ -13,7 +13,7 @@ function LIKESMODAL({ postobj }) {
 
 	useLayoutEffect(() => {
 		if (!localStorage.getItem("loggedIn")) {
-			navigate("/login");
+			navigate("/signin");
 		} else {
 			const author_id = getAuthorId(postobj.author.id);
 			const post_id = getAuthorId(postobj.id);

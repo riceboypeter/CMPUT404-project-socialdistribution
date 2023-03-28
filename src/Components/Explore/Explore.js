@@ -19,10 +19,14 @@ function EXPLORE() {
 	// Get the inbox
 	useEffect(() => {
 		if (!localStorage.getItem("loggedIn")) {
-			navigate("/login");
+			navigate("/signin");
 		} else {
-			const url = `posts/public/`;
-			reqInstance({ method: "get", url: url }).then((res) => {
+			const url = `posts/public`;
+			reqInstance({
+				method: "get",
+				url: url,
+				params: { local: false },
+			}).then((res) => {
 				console.log(res);
 				setInbox(res.data);
 			});
@@ -62,7 +66,7 @@ function EXPLORE() {
 		reqInstance.post("logout/").then((res) => {
 			if (res.status === 200) {
 				unsetCurrentUser();
-				navigate("/login");
+				navigate("/signinn");
 			}
 		});
 	}
