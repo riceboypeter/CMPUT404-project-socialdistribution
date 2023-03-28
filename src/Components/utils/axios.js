@@ -12,9 +12,8 @@ var bpassword = base64.encode(password);
 export let reqInstance = axios.create({
 	headers: {
 		"X-CSRFToken": token,
-		csrftoken: token,
 	},
-	baseURL: `https://sociallydistributed.herokuapp.com//`,
+	baseURL: `https://sociallydistributed.herokuapp.com/`,
 	auth: {
 		username: username,
 		password: password,
