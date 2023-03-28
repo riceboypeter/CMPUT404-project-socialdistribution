@@ -54,15 +54,21 @@ function LOGIN() {
 		const token = localStorage.getItem("token");
 
 		let reqInstance = axios.create({
-			headers: { "X-CSRFToken": token },
-			baseURL: `http://127.0.0.1:8000/`,
+			headers: { "X-CSRFToken": token, csrftoken: token },
 		});
-		reqInstance({ method: "post", url: "dlogin", data: params })
+		reqInstance({
+			method: "post",
+			url: "http://127.0.0.1:8000/login",
+			data: params,
+		})
 			.then(async (res) => {
-				getCsrfToken();
-				setLoggedIn(true);
-				setCreds(params);
-				await setCurrentUser(res.data).then(navigate("/"));
+				console.log(res.data);
+				if (res.status == 202) {
+					getCsrfToken();
+					setLoggedIn(true);
+					setCreds(params);
+					await setCurrentUser(res.data).then(navigate("/"));
+				}
 			})
 			.catch((err) => notifyFailedPost(err.response.data));
 	}

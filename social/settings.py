@@ -58,9 +58,10 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
-    "whitenoise.middleware.WhiteNoiseMiddleware",
-    # 'social.middleware.AppendOrRemoveSlashMiddleware',
     'social.middleware.CommonMiddlewareAppendSlashWithoutRedirect',
+    'author.middleware.CommonMiddlewareAppendSlashWithoutRedirect',
+    'posts.middleware.CommonMiddlewareAppendSlashWithoutRedirect',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
 ]
  
 STATIC_URL = 'static/'
@@ -93,9 +94,21 @@ TEMPLATES = [
 ]
 ALLOWED_HOSTS = ['*']
 WSGI_APPLICATION = 'social.wsgi.application'
-CSRF_TRUSTED_ORIGINS = ['http://localhost:3000/', "http://127.0.0.1:8000/", "http://localhost:8000"]
+CSRF_TRUSTED_ORIGINS = ['http://localhost:3000', "http://127.0.0.1:8000/", "http://localhost:8000"]
 CORS_ORIGIN_WHITELIST = ['http://localhost:3000', 'http://localhost:8000', "http://127.0.0.1:8000"]
 CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_HEADERS = (
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+    'csrftoken'
+)
 
 
 # Database

@@ -41,7 +41,7 @@ function CREATEPOST({ refresh }) {
 
 	useLayoutEffect(() => {
 		if (!localStorage.getItem("loggedIn")) {
-			navigate("/login");
+			navigate("/signin");
 		} else {
 			const AUTHOR_ID = getAuthorId(null);
 			const url = `authors/${AUTHOR_ID}/followers/`;

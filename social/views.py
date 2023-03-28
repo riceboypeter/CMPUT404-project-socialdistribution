@@ -21,6 +21,7 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
+from django.views.decorators.csrf import csrf_exempt
 
 custom_parameter = openapi.Parameter(
     name='custom_param',
@@ -66,17 +67,18 @@ class dlogin(APIView):
         username = request.data['username']
         password = request.data['password']
         auth = AllowAllUsersModelBackend()
+        print("1")
     
         user = auth.authenticate(request=request, username=username, password= password)
-        # if user:
-        #     login(request, user)
+        if user:
+            login(request, user)
         if not user:
             return Response("user not registered", status=status.HTTP_401_UNAUTHORIZED)
 
         if user.is_active == True:
             author= Author.objects.filter(displayName=username)[0]
             params = AuthorSerializer(author)
-            print(author)
+            print(params.data)
             return Response(params.data, status=status.HTTP_202_ACCEPTED)
         else:
             return Response("user needs to wait for approval from a server admin", status=status.HTTP_401_UNAUTHORIZED)

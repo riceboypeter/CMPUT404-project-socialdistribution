@@ -12,6 +12,7 @@ var bpassword = base64.encode(password);
 export let reqInstance = axios.create({
 	headers: {
 		"X-CSRFToken": token,
+		csrftoken: token,
 	},
 	baseURL: `http://127.0.0.1:8000/`,
 	auth: {

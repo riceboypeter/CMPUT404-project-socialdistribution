@@ -997,27 +997,28 @@ class PublicPostsView(APIView):
         serializer = PostSerializer(posts, many=True)
         data_list = serializer.data
 
-        yoshi = getNodeAuthors_Yoshi()
+        if (request.data == "false") :
+            yoshi = getNodeAuthors_Yoshi()
         
-        for yoshi_author in yoshi:
-            id = yoshi_author["id"].split('/')[-1] or yoshi_author["id"]
-            posts = getNodePost_Yoshi(id)
-            posts = posts[0]['items']
-            print("ehlo"+str(posts))
-            for post in posts:
-                if post["visibility"]=='Public':
-                    data_list.append(post)
-        social_distro = getNodeAuthors_social_distro()
-        for social_distro_author in social_distro:
-            id = social_distro_author["id"].split('/')[-1] or social_distro_author["id"]
-            posts = getNodePost_social_distro(id)
-            
-            posts = posts['results']
-          
-            for post in posts:
-                if post["visibility"]=='PUBLIC':
-                    data_list.append(post)
-        return Response(data_list)
+            for yoshi_author in yoshi:
+                id = yoshi_author["id"].split('/')[-1] or yoshi_author["id"]
+                posts = getNodePost_Yoshi(id)
+                posts = posts[0]['items']
+                for post in posts:
+                    if post["visibility"]=='PUBLIC':
+                        data_list.append(post)
+            social_distro = getNodeAuthors_social_distro()
+            for social_distro_author in social_distro:
+                id = social_distro_author["id"].split('/')[-1] or social_distro_author["id"]
+                posts = getNodePost_social_distro(id)
+                
+                posts = posts['results']
+                
+                for post in posts:
+                    if post["visibility"]=='PUBLIC':
+                        data_list.append(post)
+        return Response(data_list)  
+        
         
 # share a post to an inbox
 def share_object(item, author, shared_user):

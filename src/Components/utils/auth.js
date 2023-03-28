@@ -19,6 +19,7 @@ export const setToken = (token) => {
 };
 
 export async function setCurrentUser(user) {
+	console.log(user);
 	return localStorage.setItem("user", JSON.stringify(user));
 }
 
