@@ -13,8 +13,8 @@ class CustomCommentPagination(PageNumberPagination):
     def get_paginated_response(self, data, post, id):
         return Response({
             'type': 'comments',
-            'page': int(self.request.GET.get('page', DEFAULT_PAGE)), # can not set default = self.page
-            'size': int(self.request.GET.get('page_size', self.page_size)),
+            'page': int(self.request.GET.get('page', DEFAULT_PAGE)),
+            'size': int(self.request.GET.get('size', 5)),
             'post': post,
             'id': id,
             'comments': data
