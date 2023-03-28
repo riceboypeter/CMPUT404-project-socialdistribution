@@ -262,7 +262,7 @@ class AuthorView(APIView):
                     return Response(author_json)
                 # get social distro's authors and format their data to our style
                 else:
-                    author_json, status_code = getNodeAuthor_social_distro(pk_a)
+                    author_json, status_code = getNodeAuthor_app2(pk_a)
                     if status_code == 200:
                         # formatting (theirs is nonetype while ours is empty string)
                         if author_json['profileImage'] == None:

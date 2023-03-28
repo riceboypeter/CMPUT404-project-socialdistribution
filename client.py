@@ -1,5 +1,6 @@
 import requests
 import base64
+from requests.auth import HTTPBasicAuth
 
 def getNodeAuthors_social_distro():
 
@@ -23,27 +24,37 @@ def getNodeAuthors_social_distro():
 
 
 def getNodeApp2():
-    url = 'https://killme.herokuapp.com/authors'
-
+    url = 'http://killme.herokuapp.com/authors/'
+    hosturl = "http://killme.herokuapp.com/"
     #base64encoded username: minion and password: minion
     # authorization = 'minion:minion'
     # encoded_authorization = base64.b64encode(authorization.encode("utf-8"))
     # authroization_header = 'Basic ' + encoded_authorization
     # headers = {'Authorization': authroization_header}
+    # #remote1:r3mot31
+    # credentials = f'{username}:{password}'
+    # encoded_credentials = base64.b64encode(credentials.encode("utf-8")).decode("utf-8")
+    # authorization_header = f'Basic {encoded_credentials}'
+    # headers = {'Authorization': authorization_header}
     username = 'app1team15'
-    password = 'password'
-    #remote1:r3mot31
-    credentials = f'{username}:{password}'
-    encoded_credentials = base64.b64encode(credentials.encode("utf-8")).decode("utf-8")
-    authorization_header = f'Basic {encoded_credentials}'
-    headers = {'Authorization': authorization_header}
+    password = 'hari1234'
+    session = requests.Session()
+    session.auth = (username, password)
 
-    response = requests.get(url, headers=headers)
-   
+    auth = session.post(hosturl)
+    response = session.get(url)
+
+    # basic = HTTPBasicAuth(username, password)
+
+    # response = requests.get(url, basic)
     status_code = response.status_code
+    print(response)
     json_response = response.json()
     authors = json_response['results']
-    return authors
+    print(authors)
+    return 
+
+getNodeApp2()
 
 def getNodeAuthors_Yoshi():
     url = 'https://yoshi-connect.herokuapp.com/authors'
@@ -79,8 +90,22 @@ def getNodeAuthor_Yoshi(author_id):
 # getNodeAuthor_Yoshi('asgasdfgdsfgd')
 # getNodeAuthor_Yoshi('29c546d45f564a27871838825e3dbecb')
 
-def getNodeAuthor_social_distro(author_id):
-    url = 'https://social-distro.herokuapp.com/api/authors/https://social-distro.herokuapp.com/authors/'
+# def getNodeAuthor_social_distro(author_id):
+#     url = 'https://social-distro.herokuapp.com/api/authors/https://social-distro.herokuapp.com/authors/'
+
+#     url = url + author_id
+
+#     response = requests.get(url)
+#     status_code = response.status_code
+   
+#     if status_code == 200:
+#         json_response = response.json()
+
+#         return(json_response, status_code)
+#     else: return (None, status_code)
+
+def getNodeAuthor_app2(author_id):
+    url = 'http://killme.herokuapp.com/authors/'
 
     url = url + author_id
 
@@ -132,24 +157,24 @@ def getNodePost_app2(author_id):
 # getNodeAuthor_Yoshi('asgasdfgdsfgd')
 # getNodeAuthor_Yoshi('29c546d45f564a27871838825e3dbecb')
 
-def getNodePost_social_distro(author_id):
-    url = 'https://social-distro.herokuapp.com/api/authors/'
+# def getNodePost_social_distro(author_id):
+#     url = 'https://social-distro.herokuapp.com/api/authors/'
 
-    url = url + author_id + '/posts/'
-    username = 'remote1'
-    password = 'r3mot31'
-    #remote1:r3mot31
-    credentials = f'{username}:{password}'
-    encoded_credentials = base64.b64encode(credentials.encode("utf-8")).decode("utf-8")
-    authorization_header = f'Basic {encoded_credentials}'
-    headers = {'Authorization': authorization_header}
+#     url = url + author_id + '/posts/'
+#     username = 'remote1'
+#     password = 'r3mot31'
+#     #remote1:r3mot31
+#     credentials = f'{username}:{password}'
+#     encoded_credentials = base64.b64encode(credentials.encode("utf-8")).decode("utf-8")
+#     authorization_header = f'Basic {encoded_credentials}'
+#     headers = {'Authorization': authorization_header}
 
-    response = requests.get(url, headers=headers)
-    #response = requests.get(url)
-    status_code = response.status_code
-    if status_code == 200:
-        json_response = response.json()
-        return(json_response)
+#     response = requests.get(url, headers=headers)
+#     #response = requests.get(url)
+#     status_code = response.status_code
+#     if status_code == 200:
+#         json_response = response.json()
+#         return(json_response)
 
 # import socket
 
