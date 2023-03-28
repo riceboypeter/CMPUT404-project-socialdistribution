@@ -58,7 +58,7 @@ function LOGIN() {
 		});
 		reqInstance({
 			method: "post",
-			url: "https://sociallydistributed.herokuapp.com//login",
+			url: "https://sociallydistributed.herokuapp.com/login",
 			data: params,
 		})
 			.then(async (res) => {
