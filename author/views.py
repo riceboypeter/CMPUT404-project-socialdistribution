@@ -242,8 +242,8 @@ class AuthorView(APIView):
                 # get yoshi's author at node
                 author_json, status_code = getNodeAuthor_Yoshi(pk_a)
                 if status_code == 200:
-                    # author_dict = json.loads(author_json)
-                    # author = Author(id = author_json['authorId'], displayName= author_json['displayname'], url=author_json['url'], profileImage=author_json['profileImage'], github=author_json['github'], host=author_json['host'])
+                    author_dict = json.loads(author_json)
+                    author = Author(id = author_json['authorId'], displayName= author_json['displayname'], url=author_json['url'], profileImage=author_json['profileImage'], github=author_json['github'], host=author_json['host'])
                     return Response(author_json)
                 # get social distro's authors and format their data to our style
                 else:
