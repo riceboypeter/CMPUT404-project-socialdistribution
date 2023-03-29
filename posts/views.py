@@ -477,11 +477,19 @@ Publicpostget = {
 class post_list(APIView, PageNumberPagination):
     authentication_classes = [BasicAuthentication]
     permission_classes = [IsAuthenticated]
+    serializer_class = PostSerializer
+    pagination_class = CustomPagination
 
-    # for pagination
-    serializer_class = PostSerializer    
-
-    # TODO: RESPONSE AND REQUESTS
+    # ref: https://auganrymkhan.com/tutorial/implementing-a-custom-configured-pagination-in-django-rest-framework-using-listapiview-and-apiview
+    @property
+    def paginator(self):
+        """The paginator instance associated with the view, or `None`."""
+        if not hasattr(self, '_paginator'):
+            if self.pagination_class is None:
+                self._paginator = None
+            else:
+                self._paginator = self.pagination_class()
+        return self._paginator
     
     @swagger_auto_schema(responses =PostsGet, operation_summary="List all Posts for an Author")
     def get(self, request, pk_a):
@@ -494,10 +502,10 @@ class post_list(APIView, PageNumberPagination):
         # privacy is all handled when post is created, except for image posts
 
         posts = Post.objects.filter(author=author)
-        posts = self.paginate_queryset(posts, request)
+        posts = self.paginator.paginate_queryset(posts, self.request, view=self)
 
         serializer = PostSerializer(posts, many=True)
-        return CustomPagination.get_paginated_response(self, serializer.data, "posts")
+        return self.paginator.get_paginated_response(serializer.data, "posts")
 
     @swagger_auto_schema(responses = PostsPOST, operation_summary="Create a new Post for an Author",request_body=openapi.Schema( type=openapi.TYPE_STRING,description='A raw text input for the POST request',example = {
      "type":"post",
@@ -825,8 +833,19 @@ class ImageView(APIView):
 class CommentView(APIView, PageNumberPagination):
     authentication_classes = [BasicAuthentication]
     permission_classes = [IsAuthenticated]
-    page_size_query_param = 'page_size'
+    serializer_class = CommentSerializer
+    pagination_class = CustomCommentPagination
 
+    # ref: https://auganrymkhan.com/tutorial/implementing-a-custom-configured-pagination-in-django-rest-framework-using-listapiview-and-apiview
+    @property
+    def paginator(self):
+        """The paginator instance associated with the view, or `None`."""
+        if not hasattr(self, '_paginator'):
+            if self.pagination_class is None:
+                self._paginator = None
+            else:
+                self._paginator = self.pagination_class()
+        return self._paginator
     
     @swagger_auto_schema(responses = GetComments, operation_summary="List all Comments on a post")
     def get(self, request, pk_a, pk):
@@ -853,15 +872,13 @@ class CommentView(APIView, PageNumberPagination):
             if post.author != authenticated_user:
                 comments = comments.exclude(author=post.author.friends)
         
-        comments_page = self.paginate_queryset(comments, request, view=self)
+        comments_page = self.paginator.paginate_queryset(comments, self.request, view=self)
         serializer = CommentSerializer(comments_page, many=True)
-        commentsObj = {}
-        commentsObj['comments'] = serializer.data
-        response = CustomCommentPagination.get_paginated_response(self,serializer.data, post_data['id'], post_data['comments'])
+        response = self.paginator.get_paginated_response(serializer.data, post_data['id'], post_data['comments'])
         return response
 
 
-    @swagger_auto_schema(responses =CreateComment, operation_summary="Create a comment on the post", request_body=openapi.Schema( type=openapi.TYPE_STRING,description='A raw text input for the PUT request', example = {"author_id" : "cfd9d228-44df-4a95-836f-c0cb050c7ad6", "comment": "hi"}))
+    @swagger_auto_schema(responses = CreateComment, operation_summary="Create a comment on the post", request_body=openapi.Schema( type=openapi.TYPE_STRING,description='A raw text input for the PUT request', example = {"author_id" : "cfd9d228-44df-4a95-836f-c0cb050c7ad6", "comment": "hi"}))
     def post(self, request,pk_a, pk):
         comment_id = uuid.uuid4()
         # try to get the author, return 404 if ID doesn't exist

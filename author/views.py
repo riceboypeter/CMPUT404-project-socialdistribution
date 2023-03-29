@@ -18,6 +18,7 @@ from rest_framework.permissions import IsAuthenticated
 from django.conf import settings
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from client import *
+from django.core.paginator import Paginator
 from social.pagination import CustomPagination
 
 custom_parameter = openapi.Parameter(
@@ -198,20 +199,18 @@ class AuthorsListView(APIView, PageNumberPagination):
         
         # create a list of our own authors
         authors = Author.objects.all()
-        authors=self.paginate_queryset(authors, request)
         serializer = AuthorSerializer(authors, many=True)
         data_list = serializer.data
-        
         # get remote authors and add to list
-        yoshi = getNodeAuthors_Yoshi()
-        for yoshi_author in yoshi:
-            data_list.append(yoshi_author)
+        # yoshi = getNodeAuthors_Yoshi()
+        # for yoshi_author in yoshi:
+        #     data_list.append(yoshi_author)
         social_distro = getNodeAuthors_social_distro()
         for social_distro_author in social_distro:
             data_list.append(social_distro_author)
-        
+
         # paginate + send
-        return CustomPagination.get_paginated_response(self,data_list,"authors")
+        return Response(ViewPaginatorMixin.paginate(self,object_list=data_list, page=int(self.request.GET.get('page', 1)), size=int(self.request.GET.get('size', 50))))
 
 class AuthorView(APIView):
     authentication_classes = [BasicAuthentication]

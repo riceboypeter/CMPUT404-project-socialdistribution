@@ -26,9 +26,7 @@ function INBOX() {
 			const author_id = getAuthorId(null);
 			const url = `authors/${author_id}/inbox`;
 			reqInstance({ method: "get", url: url }).then((res) => {
-				console.log(res.data)
-				setInbox(res.data.items);
-				console.log(inbox)
+				setInbox(res.data);
 			});
 		}
 	}, []);
