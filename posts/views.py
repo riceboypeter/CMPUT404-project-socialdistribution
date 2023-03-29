@@ -972,20 +972,28 @@ class PublicPostsView(APIView):
             for yoshi_author in yoshi:
                 id = yoshi_author["id"].split('/')[-1] or yoshi_author["id"]
                 posts = getNodePost_Yoshi(id)
+                posts = posts['items']
+                for post in posts:
+                    if post["visibility"]=='PUBLIC':
+                        data_list.append(post)
+            app2 = getNodeAuthors_App2()
+            for app2_author in app2:
+                id = app2_author["id"].split('/')[-1] or app2_author["id"]
+                posts = getNodePost_Yoshi(id)
                 posts = posts[0]['items']
                 for post in posts:
                     if post["visibility"]=='PUBLIC':
                         data_list.append(post)
-            social_distro = getNodeAuthors_social_distro()
-            for social_distro_author in social_distro:
-                id = social_distro_author["id"].split('/')[-1] or social_distro_author["id"]
-                posts = getNodePost_social_distro(id)
+            # social_distro = getNodeAuthors_social_distro()
+            # for social_distro_author in social_distro:
+            #     id = social_distro_author["id"].split('/')[-1] or social_distro_author["id"]
+            #     posts = getNodePost_social_distro(id)
                 
-                posts = posts['results']
-                print(posts)
-                for post in posts:
-                    if post["visibility"]=='PUBLIC':
-                        data_list.append(post)
+            #     posts = posts['results']
+            #     print(posts)
+            #     for post in posts:
+            #         if post["visibility"]=='PUBLIC':
+            #             data_list.append(post)
         return Response(data_list)  
         
         

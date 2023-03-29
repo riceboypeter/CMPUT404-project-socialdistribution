@@ -63,7 +63,7 @@ function LOGIN() {
 		})
 			.then(async (res) => {
 				console.log(res.data);
-				if (res.status == 202) {
+				if (res.status === 202) {
 					getCsrfToken();
 					setLoggedIn(true);
 					setCreds(params);

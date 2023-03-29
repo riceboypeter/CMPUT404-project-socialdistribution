@@ -19,7 +19,6 @@ export const setToken = (token) => {
 };
 
 export async function setCurrentUser(user) {
-	console.log(user);
 	return localStorage.setItem("user", JSON.stringify(user));
 }
 
@@ -68,6 +67,7 @@ export function getAuthorId(a_id) {
 		const author = JSON.parse(localStorage.getItem("user"));
 		author_id = author.id.slice(author.id.length - len, author.id.length);
 	} else {
+		console.log(author_id);
 		author_id = a_id.slice(a_id.length - len, a_id.length);
 	}
 	return author_id;
