@@ -21,12 +21,18 @@ class AuthorSerializer(serializers.ModelSerializer):
         try:
             updated_author = Author.objects.get(id=author_id)
         except Author.DoesNotExist:
-            #try other servers
-            updated_author, status = client.getNodeAuthor_Yoshi(author_id)
-            if status != 200:
-                updated_author, status = client.getNodeAuthor_social_distro
-                # if status!= 200:
-                #     updated_author, status = client.getNodeAuthor_app2
+            updated_author = AuthorSerializer._upcreate(validated_data)
+        #     #try other servers
+        #     author, status = client.getNodeAuthor_Yoshi(author_id)
+        #     if status != 200:
+        #         print('nope')
+        #     #     author, status = client.getNodeAuthor_social_distro(author_id)
+        #     #     if status == 200:
+        #     #         author = Author.objects.create(author)
+        #     else: 
+        #         updated_author = AuthorSerializer._upcreate()
+        #         # if status!= 200:
+        #         #     updated_author, status = client.getNodeAuthor_app2
 
 
         #try to get authors from other servers
