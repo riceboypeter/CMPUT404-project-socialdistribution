@@ -312,6 +312,7 @@ class FollowersView(APIView):
         # If url is /authors/authors/author_id/followers/
         # add local followers to the list of followers
         if pk ==None:
+            print(author.friends)
             followers = author.friends.all()
             followers_list = []
             for follower in followers:
@@ -537,9 +538,19 @@ class Inbox_list(APIView, InboxSerializerObjects, PageNumberPagination):
                 
         except Author.DoesNotExist:
             # post to other apps
-            response = client.postFollow(request.data, pk_a)
-            return response
-        
+            # response = client.postFollow(request.data, pk_a)
+            # return response
+            if request.data['type'] == "Follow":
+                response = client.postFollow(request.data, pk_a)
+                return response
+            author, status_code = client.getNodeAuthor(pk_a)
+            if status_code != 200:
+                error_msg = "Author id not found"
+                return Response(error_msg, status=status.HTTP_404_NOT_FOUND)
+
+        # if self
+
+
         serializer = self.deserialize_objects(
             self.request.data, pk_a)
         

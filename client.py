@@ -281,3 +281,13 @@ def postFollow(data, author_id):
         "object": {
             "id": "b7cbbd87-3da4-48a2-ab97-ee0331276412"
                 }'''
+
+def getNodeAuthor(author_id):
+    author, status_code = getNodeAuthor_social_distro(author_id)
+    if status_code != 200:
+        author, status_code = getNodeAuthor_Yoshi(author_id)
+        if status_code != 200:
+            author, status_code = getNodeAuthor_App2(author_id)
+            if status_code != 200:
+                return None, status_code
+    return author
