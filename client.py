@@ -237,11 +237,13 @@ def postFollow(data, author_id):
                 url =  'https://killme.herokuapp.com/authors/{author_id}/inbox'
                 username = 'app1team15'
                 password = 'hari1234'
+                request_data = data
 
         else:
             url =  'https://yoshi-connect.herokuapp.com/authors/{author_id}/inbox'
-            username = "Yoshi_Connects"
-            password = "MinionConnector1"
+            username = "minion"
+            password = "minion"
+            request_data = {"actor":author}
     else:
         url =  'https://social-distro.herokuapp.com/api/authors{author_id}/inbox'
         username = 'remote1'
@@ -252,8 +254,7 @@ def postFollow(data, author_id):
     authorization_header = f'Basic {encoded_credentials}'
     headers = {'Authorization': authorization_header}
     
-    # This should in theory work for the Yoshi APP, Not ready yet so testing when they get it done
-    request_data = {"actor":author} 
+    # This should in theory work for the Yoshi APP, Not ready yet so testing when they get it done 
     response = requests.post(url, headers=headers, data=request_data)
 
     #Check if they return an HTTP response, IF not do HTTP response 200 OK 
