@@ -246,14 +246,14 @@ def postFollow(data, author_id):
             url =  'https://yoshi-connect.herokuapp.com/authors/{author_id}/inbox'
             username = "minion"
             password = "minion"
-            request_data = {"actor":author}
+            request_data = {"actor":data.actor}
     else:
         url =  'https://social-distro.herokuapp.com/api/authors{author_id}/inbox'
         username = 'team24'
         password = 'team24'
         '''"author:"urltoauthor", "object":"urltoobject", "type":"Follow", "Summary":"username liked your post"'''
         request_data = {"author":data.actor, "object":data.object, "type":"Follow", "Summary":"A Follow Request"}
-
+    #Make summary manually 
     credentials = f'{username}:{password}'
     encoded_credentials = base64.b64encode(credentials.encode("utf-8")).decode("utf-8")
     authorization_header = f'Basic {encoded_credentials}'
