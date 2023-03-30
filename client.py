@@ -231,13 +231,15 @@ def postFollow(data, author_id):
         if status_code != 200:
             author, status_code = getNodeAuthor_App2(author_id)
             if status_code != 200:
-                error_msg = "Author id not found"
                 return Response(error_msg, status=status.HTTP_404_NOT_FOUND)
-            else:
-                url =  'https://killme.herokuapp.com/authors/{author_id}/inbox'
-                username = 'app1team15'
-                password = 'hari1234'
-                request_data = data
+            # if status_code != 200:
+            #     error_msg = "Author id not found"
+            #     return Response(error_msg, status=status.HTTP_404_NOT_FOUND)
+            # else:
+            #     url =  'https://killme.herokuapp.com/authors/{author_id}/inbox'
+            #     username = 'app1team15'
+            #     password = 'hari1234'
+            #     request_data = data
 
         else:
             url =  'https://yoshi-connect.herokuapp.com/authors/{author_id}/inbox'
@@ -246,8 +248,10 @@ def postFollow(data, author_id):
             request_data = {"actor":author}
     else:
         url =  'https://social-distro.herokuapp.com/api/authors{author_id}/inbox'
-        username = 'remote1'
-        password = 'r3mot31'
+        username = 'team24'
+        password = 'team24'
+        '''"author:"urltoauthor", "object":"urltoobject", "type":"Follow", "Summary":"username liked your post"'''
+        request_data = {"author":data.actor, "object":data.object, "type":"Follow", "Summary":"A Follow Request"}
 
     credentials = f'{username}:{password}'
     encoded_credentials = base64.b64encode(credentials.encode("utf-8")).decode("utf-8")
