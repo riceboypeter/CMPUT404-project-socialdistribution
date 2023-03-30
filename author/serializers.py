@@ -73,8 +73,8 @@ class FollowRequestSerializer(serializers.ModelSerializer):
     #actor = serializers.PrimaryKeyRelatedField(queryset=Author.objects.all())
    # object = serializers.PrimaryKeyRelatedField(queryset=Author.objects.all())
     def create(self,validated_data):
-        actor = AuthorSerializer.extract_and_upcreate_author(validated_data, author_id=self.context["actorr"])
-        object = AuthorSerializer.extract_and_upcreate_author(validated_data, author_id=self.context["objectt"])
+        actor = AuthorSerializer.extract_and_upcreate_author(validated_data, author_id=self.context["actor"])
+        object = AuthorSerializer.extract_and_upcreate_author(validated_data, author_id=self.context["object"])
 
         if FollowRequest.objects.filter(actor=actor, object=object).exists():
             return "already sent"
