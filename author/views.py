@@ -497,6 +497,7 @@ class InboxSerializerObjects:
             context={'author_id': pk_a,'id':data["id"].split("/")[-1]}
         elif type == FollowRequest.get_api_type():
             serializer = FollowRequestSerializer
+            data = json.loads(data)
             context={'actorr': data["actor"]["id"],'objectt':data["object"]["id"]}
             
         return obj or serializer(data=data, context=context, partial=True)
