@@ -533,12 +533,12 @@ class Inbox_list(APIView, InboxSerializerObjects, PageNumberPagination):
             2. If object in database: TYPE, id.
         """
         try:
-            author = get_object_or_404(Author,pk=pk_a)
-            
-            
+            author = get_object_or_404(Author,pk=pk_a, host="https://sociallydistributed.herokuapp.com/")
+                
         except Author.DoesNotExist:
-            error_msg = "Author id not found"
-            return Response(error_msg, status=status.HTTP_404_NOT_FOUND)
+            # post to other apps
+            response = client.postFollow(request.data, pk_a)
+            return response
         
         serializer = self.deserialize_objects(
             self.request.data, pk_a)
