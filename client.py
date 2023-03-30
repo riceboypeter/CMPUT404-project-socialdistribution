@@ -231,6 +231,7 @@ def postFollow(data, author_id):
         if status_code != 200:
             author, status_code = getNodeAuthor_App2(author_id)
             if status_code != 200:
+                error_msg = "Author id not found"
                 return Response(error_msg, status=status.HTTP_404_NOT_FOUND)
             # if status_code != 200:
             #     error_msg = "Author id not found"
