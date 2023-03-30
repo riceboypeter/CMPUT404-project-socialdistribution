@@ -3,6 +3,7 @@ from django.urls import reverse
 from rest_framework import serializers, exceptions
 from .models import *
 from django.http import HttpResponse
+import client
 
 class AuthorSerializer(serializers.ModelSerializer):
     type = serializers.CharField(default="author",source="get_api_type",read_only=True)
@@ -17,7 +18,18 @@ class AuthorSerializer(serializers.ModelSerializer):
     @staticmethod
     def extract_and_upcreate_author(validated_data, author_id=None):
         #validated_author_data = validated_data.pop('author') if validated_data.get('author') else None
-        updated_author = Author.objects.get(id=author_id)
+        try:
+            updated_author = Author.objects.get(id=author_id)
+        except Author.DoesNotExist:
+            #try other servers
+            updated_author, status = client.getNodeAuthor_Yoshi(author_id)
+            if status != 200:
+                updated_author, status = client.getNodeAuthor_social_distro
+                # if status!= 200:
+                #     updated_author, status = client.getNodeAuthor_app2
+
+
+        #try to get authors from other servers
         if not updated_author:
             raise exceptions.ValidationError("Author does not exist")
         else:
