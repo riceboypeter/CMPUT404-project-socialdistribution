@@ -78,9 +78,9 @@ def getNodeAuthor_Yoshi(author_id):
     
     if status_code == 200:
         json_response = response.json()
-       
         return(json_response, status_code)
     else: return (None, status_code)
+
 
 def getNodeAuthor_App2(author_id):
     url = 'https://killme.herokuapp.com/authors/'
@@ -102,19 +102,26 @@ def getNodeAuthor_App2(author_id):
 # getNodeAuthor_Yoshi('29c546d45f564a27871838825e3dbecb')
 
 def getNodeAuthor_social_distro(author_id):
-    url = 'https://social-distro.herokuapp.com/api/authors/https://social-distro.herokuapp.com/authors/'
+    url = 'https://social-distro.herokuapp.com/api/authors/'
+    username = 'team24'
+    password = 'team24'
+    url = url + author_id + '/'
 
-    url = url + author_id
+    credentials = f'{username}:{password}'
+    encoded_credentials = base64.b64encode(credentials.encode("utf-8")).decode("utf-8")
+    authorization_header = f'Basic {encoded_credentials}'
+    headers = {'Authorization': authorization_header}
 
-    response = requests.get(url)
+    response = requests.get(url, headers=headers)
+
     status_code = response.status_code
    
+
     if status_code == 200:
         json_response = response.json()
 
         return(json_response, status_code)
     else: return (None, status_code)
-
 
 ####### GET POSTS
 
