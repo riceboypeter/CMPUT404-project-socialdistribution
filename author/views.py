@@ -496,10 +496,8 @@ class InboxSerializerObjects:
             serializer = CommentSerializer
             context={'author_id': pk_a,'id':data["id"].split("/")[-1]}
         elif type == FollowRequest.get_api_type():
-            print(data)
-            print(data["actor"], data['actor'])
             serializer = FollowRequestSerializer
-            context={'actor': data["actor"],'object':data["object"]}
+            context={'actor_id': data["actor"]["id"],'object_id':data["object"]["id"]}
             
         return obj or serializer(data=data, context=context, partial=True)
 
