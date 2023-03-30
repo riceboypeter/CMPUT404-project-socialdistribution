@@ -221,33 +221,22 @@ def postFollow(data, author_id):
     #"type": "Follow",
     #"actor":{"id":"cfd9d228-44df-4a95-836f-c0cb050c7ad6"},
     #"object":{"id":"971fa387-b101-4276-891f-d970f2cf0cad"}
-
-    #     username = 'remote1'
-    #     password = 'r3mot31'
-    #     #remote1:r3mot31
-    #     credentials = f'{username}:{password}'
-    #     encoded_credentials = base64.b64encode(credentials.encode("utf-8")).decode("utf-8")
-    #     authorization_header = f'Basic {encoded_credentials}'
-    #     headers = {'Authorization': authorization_header}
-
-    #     response = requests.get(url, headers=headers)
-
     author, status_code = getNodeAuthor_social_distro(author_id)
     if status_code != 200:
         author, status_code = getNodeAuthor_Yoshi(author_id)
         if status_code != 200:
             author, status_code = getNodeAuthor_App2(author_id)
-            if status_code != 200:
-                error_msg = "Author id not found"
-                return Response(error_msg, status=status.HTTP_404_NOT_FOUND)
             # if status_code != 200:
             #     error_msg = "Author id not found"
             #     return Response(error_msg, status=status.HTTP_404_NOT_FOUND)
-            # else:
-            #     url =  'https://killme.herokuapp.com/authors/{author_id}/inbox'
-            #     username = 'app1team15'
-            #     password = 'hari1234'
-            #     request_data = data
+            if status_code != 200:
+                error_msg = "Author id not found"
+                return Response(error_msg, status=status.HTTP_404_NOT_FOUND)
+            else:
+                url =  'https://killme.herokuapp.com/authors/{author_id}/inbox'
+                username = 'app1team15'
+                password = 'hari1234'
+                request_data = data
 
         else:
             url =  'https://yoshi-connect.herokuapp.com/authors/{author_id}/inbox'
