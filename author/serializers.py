@@ -20,22 +20,21 @@ class AuthorSerializer(serializers.ModelSerializer):
     def extract_and_upcreate_author(author_id=None):
         print("Author id is" + " " + author_id)
         #validated_author_data = validated_data.pop('author') if validated_data.get('author') else None
-        updated_author= None
+        updated_author= {}
         try:
             updated_author = Author.objects.get(id=author_id)
         except Author.DoesNotExist:
-           # updated_author = AuthorSerializer._upcreate(validated_data)
-             #try other servers
-             author, status = client.getNodeAuthor_Yoshi(author_id)
-             if status != 200:
+            author, status = client.getNodeAuthor_Yoshi(author_id)
+            if status == 200:
+                updated_author = Author.objects.create(author)
+            elif status != 200:
                 author, status = client.getNodeAuthor_social_distro(author_id)
                 if status == 200:
-                    author = Author.objects.create(author)
-             else: 
-                updated_author = AuthorSerializer._upcreate()
-                if status!= 200:
-                    updated_author, status = getNodeAuthor_App2(author_id)
-        #try to get authors from other servers
+                    updated_author = Author.objects.create(author)
+                else: 
+                    author, status = getNodeAuthor_App2(author_id)
+                    if status == 200:
+                        updated_author = Author.objects.create(author)
         if not updated_author:
             print("hello")
             raise exceptions.ValidationError("Author does not exist")
