@@ -34,7 +34,7 @@ export async function getCurrentUser(author_id) {
 		return await axios({
 			method: "get",
 			url: `authors/${author_id}`,
-			baseURL: `https://sociallydistributed.herokuapp.com/`,
+			baseURL: `http://127.0.0.1:8000/`,
 		})
 			.then((response) => {
 				const user = response.data;
@@ -48,7 +48,7 @@ export async function getCurrentUser(author_id) {
 
 export async function getCsrfToken() {
 	let _csrfToken = null;
-	const API_HOST = "https://sociallydistributed.herokuapp.com";
+	const API_HOST = "http://127.0.0.1:8000";
 	if (_csrfToken === null) {
 		const response = await fetch(`${API_HOST}/csrf/`, {
 			credentials: "include",
