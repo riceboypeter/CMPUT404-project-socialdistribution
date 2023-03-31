@@ -20,6 +20,7 @@ from rest_framework.authentication import SessionAuthentication, BasicAuthentica
 from client import *
 from django.core.paginator import Paginator
 from social.pagination import CustomPagination
+from posts.github.utils import get_github_activities
 
 custom_parameter = openapi.Parameter(
     name='custom_param',
@@ -205,9 +206,9 @@ class AuthorsListView(APIView, PageNumberPagination):
         # yoshi = getNodeAuthors_Yoshi()
         # for yoshi_author in yoshi:
         #     data_list.append(yoshi_author)
-        social_distro = getNodeAuthors_social_distro()
-        for social_distro_author in social_distro:
-            data_list.append(social_distro_author)
+        #social_distro = getNodeAuthors_social_distro()
+        #for social_distro_author in social_distro:
+        #    data_list.append(social_distro_author)
 
         # paginate + send
         return Response(ViewPaginatorMixin.paginate(self,object_list=data_list, page=int(self.request.GET.get('page', 1)), size=int(self.request.GET.get('size', 50))))
@@ -515,7 +516,11 @@ class Inbox_list(APIView, InboxSerializerObjects, PageNumberPagination):
         inbox_data = author.inbox.all()
         serializer = InboxSerializer(data=inbox_data, context = {"serializer":self.serialize_inbox_objects}, many=True)
         serializer.is_valid()
-        data = self.get_items(pk_a, serializer.data)
+        data = serializer.data
+        github_posts = get_github_activities(author.github, author)
+        for post in github_posts:
+            data.append(PostSerializer(post).data)
+        data = self.get_items(pk_a, data)
         # TODO: Fix pagination
         return Response(data, status=status.HTTP_200_OK)
     
@@ -585,7 +590,10 @@ class Inbox_list(APIView, InboxSerializerObjects, PageNumberPagination):
         dict = {"type":"inbox", "author": settings.APP_NAME + '/authors/' + pk_a }
         items = []
         for item in data:
-            items.append(item["content_object"])
+            try: 
+                items.append(item["content_object"]) 
+            except:
+                items.append(item)
 
         dict["items"] = items
         return(dict) 
