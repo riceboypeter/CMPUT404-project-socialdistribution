@@ -205,9 +205,9 @@ class AuthorsListView(APIView, PageNumberPagination):
         # yoshi = getNodeAuthors_Yoshi()
         # for yoshi_author in yoshi:
         #     data_list.append(yoshi_author)
-        social_distro = getNodeAuthors_social_distro()
+        '''social_distro = getNodeAuthors_social_distro()
         for social_distro_author in social_distro:
-            data_list.append(social_distro_author)
+            data_list.append(social_distro_author)'''
 
         # paginate + send
         return Response(ViewPaginatorMixin.paginate(self,object_list=data_list, page=int(self.request.GET.get('page', 1)), size=int(self.request.GET.get('size', 50))))
@@ -535,6 +535,7 @@ class Inbox_list(APIView, InboxSerializerObjects, PageNumberPagination):
         try:
             author = get_object_or_404(Author,pk=pk_a)
             
+            
         except Author.DoesNotExist:
             error_msg = "Author id not found"
             return Response(error_msg, status=status.HTTP_404_NOT_FOUND)
@@ -545,8 +546,10 @@ class Inbox_list(APIView, InboxSerializerObjects, PageNumberPagination):
         # Case 1: friend author is outside the server, we create all these objects in our database (not sure)
         try:
             if serializer.is_valid():
+
                 item = serializer.save()
                 if self.request.data['type'] == "Follow":
+
                     objectid = self.request.data['object']['id']
                     author = get_object_or_404(Author,pk=objectid)
                 if item=="already liked":
