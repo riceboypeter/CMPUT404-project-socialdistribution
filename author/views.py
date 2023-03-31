@@ -607,7 +607,7 @@ def getAuthor(request, displayName):
     """
     authorList = getRemoteAuthorsDisplayName(displayName)
     try:
-        author = Author.objects.get(displayName=displayName)
+        author = Author.objects.get(displayName=displayName, host="https://killme.herokuapp.com/")
         serializer = AuthorSerializer(author,partial=True)
         authorList.append(serializer.data)
     except Author.DoesNotExist:
