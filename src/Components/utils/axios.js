@@ -23,9 +23,9 @@ export let reqInstance = axios.create({
 export let axiosInstance = axios.create({
 	headers: {
 		"X-CSRFToken": token,
-		auth: {
-			username: username,
-			password: password,
-		},
+	},
+	auth: {
+		username: username,
+		password: password,
 	},
 });
