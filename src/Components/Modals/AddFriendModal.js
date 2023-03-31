@@ -25,7 +25,7 @@ function ADD_FRIEND_MODAL({ open, handleClose }) {
 		const url2 = `authors/${faid}/inbox/`;
 		const params = {
 			type: "Follow",
-			actor_id: getCurrentUser(),
+			actor: getCurrentUser(),
 		};
 		return reqInstance({ method: "post", url: url2, data: params })
 			.then((res) => {
