@@ -23,17 +23,18 @@ class AuthorSerializer(serializers.ModelSerializer):
         try:
             updated_author = Author.objects.get(id=author_id)
         except Author.DoesNotExist:
-            author, status = client.getNodeAuthor_Yoshi(author_id)
+            author, status = getNodeAuthor_App2(author_id)
             if status == 200:
+                print("found author in app2")
                 updated_author = Author.objects.create(author)
-            elif status != 200:
-                author, status = client.getNodeAuthor_social_distro(author_id)
-                if status == 200:
-                    updated_author = Author.objects.create(author)
-                else:
-                    author, status = getNodeAuthor_App2(author_id)
-                    if status == 200:
-                        updated_author = Author.objects.create(author)
+            # elif status != 200:
+            #     author, status = client.getNodeAuthor_social_distro(author_id)
+            #     if status == 200:
+            #         updated_author = Author.objects.create(author)
+            #     else:
+            #         author, status = client.getNodeAuthor_Yoshi(author_id)
+            #         if status == 200:
+            #             updated_author = Author.objects.create(author)
         if not updated_author:
             print("hello")
             raise exceptions.ValidationError("Author does not exist")
@@ -68,11 +69,14 @@ class FollowRequestSerializer(serializers.ModelSerializer):
     object = AuthorSerializer(required=False)
 
     def create(self,validated_data):
+        print("in follow req create")
         actor = validated_data["actor"]
         object = validated_data["object"]
         if actor in object.friends.all():
+            print("already friends")
             return "already friends"
         if FollowRequest.objects.filter(actor=actor,object=object).exists():
+            print("already sent")
             return "already sent"
         actor = validated_data["actor"]
         object = validated_data["object"]
@@ -83,20 +87,20 @@ class FollowRequestSerializer(serializers.ModelSerializer):
     
     # https://www.django-rest-framework.org/api-guide/serializers/
     def to_internal_value(self, data):
+        print("to_internal_value")
         actor = AuthorSerializer.extract_and_upcreate_author(author_id=self.context["actor_id"])
-        object = AuthorSerializer.extract_and_upcreate_author(author_id=self.context["object_id"])
+        object = Author.objects.get(id=self.context["object_id"])
 
         # Perform the data validation.
         if not actor:
             raise serializers.ValidationError({
-                'score': 'This field is required.'
+                'actor': 'This field is required.'
             })
         if not object:
             raise serializers.ValidationError({
-                'player_name': 'This field is required.'
+                'object': 'This field is required.'
             })
-        # Return the validated values. This will be available as
-        # the `.validated_data` property.
+        
         return {
             'object': object,
             'actor': actor

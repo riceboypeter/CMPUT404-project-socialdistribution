@@ -497,9 +497,11 @@ class InboxSerializerObjects:
             serializer = CommentSerializer
             context={'author_id': pk_a,'id':data["id"].split("/")[-1]}
         elif type1 == FollowRequest.get_api_type():
+            print("deser follow")
             serializer = FollowRequestSerializer
             actor_id = data.get("actor_id")
             context={'object_id': pk_a, 'actor_id':actor_id}
+            print(context)
             return serializer(data={}, context=context, partial=True)
         return obj or serializer(data=data, context=context, partial=True)
     
@@ -550,12 +552,7 @@ class Inbox_list(APIView, InboxSerializerObjects, PageNumberPagination):
                 error_msg = "Author id not found"
                 return Response(error_msg, status=status.HTTP_404_NOT_FOUND)
 
-        # if self
-
-
-        serializer = self.deserialize_objects(
-            self.request.data, pk_a)
-        
+        serializer = self.deserialize_objects(self.request.data, pk_a)
         # Case 1: friend author is outside the server, we create all these objects in our database (not sure)
         try:
             if serializer.is_valid():
@@ -575,7 +572,6 @@ class Inbox_list(APIView, InboxSerializerObjects, PageNumberPagination):
                     item.update_fields_with_request(request)
             else: 
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        # Case 2: author is within the server
         except AttributeError as e:
             item = serializer   
         inbox_item = Inbox(content_object=item, author=author)
