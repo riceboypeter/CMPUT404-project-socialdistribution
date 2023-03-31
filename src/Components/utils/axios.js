@@ -13,7 +13,7 @@ export let reqInstance = axios.create({
 	headers: {
 		"X-CSRFToken": token,
 	},
-	baseURL: `http://127.0.0.1:8000/`,
+	baseURL: `https://sociallydistributed.herokuapp.com/`,
 	auth: {
 		username: username,
 		password: password,
