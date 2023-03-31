@@ -20,6 +20,7 @@ from rest_framework.authentication import SessionAuthentication, BasicAuthentica
 from client import *
 from django.core.paginator import Paginator
 from social.pagination import CustomPagination
+from Remote.Authors import getRemoteAuthorsDisplayName
 
 custom_parameter = openapi.Parameter(
     name='custom_param',
@@ -496,10 +497,9 @@ class InboxSerializerObjects:
             serializer = CommentSerializer
             context={'author_id': pk_a,'id':data["id"].split("/")[-1]}
         elif type == FollowRequest.get_api_type():
-            actor = Author.objects.get(pk=data["actor_id"])
-            object = Author.objects.get(pk=data["object_id"])
-            obj = FollowRequest(actor=actor, object=object)
-            obj.save()
+            serializer = FollowRequestSerializer
+            actor_id = data.pop("actor_id")
+            context={'object_id': pk_a, 'actor_id':actor_id}
             
         return obj or serializer(data=data, context=context, partial=True)
 
@@ -559,18 +559,18 @@ class Inbox_list(APIView, InboxSerializerObjects, PageNumberPagination):
         # Case 1: friend author is outside the server, we create all these objects in our database (not sure)
         try:
             if serializer.is_valid():
-
                 item = serializer.save()
-                if self.request.data['type'] == "Follow":
-
-                    objectid = self.request.data['object']['id']
-                    author = get_object_or_404(Author,pk=objectid)
+                # if self.request.data['type'] == "Follow":
+                #     objectid = self.request.data['object']['id']
+                #     author = get_object_or_404(Author,pk=objectid)
                 if item=="already liked":
-                    return Response("Post Already Liked!")
+                    return Response("Post Already Liked!", status=status.HTTP_400_BAD_REQUEST)
                 if item == "already sent":
-                    return Response("You've already sent a request to this user!")
+                    return Response("You've already sent a request to this user!", status=status.HTTP_400_BAD_REQUEST)
                 if item == "same":
-                    return Response("You cannot send a follow request to yourself!")
+                    return Response("You cannot send a follow request to yourself!", status=status.HTTP_400_BAD_REQUEST)
+                if item == "already friends":
+                    return Response("You already follow them!", status=status.HTTP_400_BAD_REQUEST)
                 if hasattr(item, 'update_fields_with_request'):
                     item.update_fields_with_request(request)
             else: 
@@ -613,9 +613,14 @@ def getAuthor(request, displayName):
     """
     Details of particular author
     """
-    author = Author.objects.get(displayName=displayName)
-    serializer = AuthorSerializer(author,partial=True)
-    return Response(serializer.data)
+    authorList = getRemoteAuthorsDisplayName(displayName)
+    try:
+        author = Author.objects.get(displayName=displayName)
+        serializer = AuthorSerializer(author,partial=True)
+        authorList.append(serializer.data)
+    except Author.DoesNotExist:
+        return Response(authorList)
+    return Response(authorList)
 
 class registerNode(APIView):
     def post(self, request):
