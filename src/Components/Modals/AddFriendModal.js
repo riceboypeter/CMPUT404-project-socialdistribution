@@ -23,10 +23,14 @@ function ADD_FRIEND_MODAL({ open, handleClose }) {
 		const AUTHOR_ID = getAuthorId(null);
 		const faid = getAuthorId(id);
 		const url2 = `authors/${faid}/inbox/`;
+		const user = JSON.parse(localStorage.getItem("user"));
+		user["id"] = AUTHOR_ID;
+		delete user["type"];
 		const params = {
 			type: "Follow",
-			actor: getCurrentUser(),
+			actor: user,
 		};
+		console.log(params);
 		return reqInstance({ method: "post", url: url2, data: params })
 			.then((res) => {
 				toaster.push(
