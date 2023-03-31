@@ -16,8 +16,7 @@ class AuthorSerializer(serializers.ModelSerializer):
         author = Author.objects.create(**validated_data)   
         return author
     @staticmethod
-    def extract_and_upcreate_author(validated_data, author_id=None):
-        print(validated_data)
+    def extract_and_upcreate_author(author_id=None):
         print("Author id is" + " " + author_id)
         #validated_author_data = validated_data.pop('author') if validated_data.get('author') else None
         try:
