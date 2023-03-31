@@ -19,3 +19,16 @@ export let reqInstance = axios.create({
 		password: password,
 	},
 });
+
+export const createReqInstance = (baseUrl) => {
+	return axios.create({
+	  headers: {
+		"X-CSRFToken": token,
+	  },
+	  baseURL: baseUrl, // Set the baseURL using the passed in URL
+	  auth: {
+		username: username,
+		password: password,
+	  },
+	});
+  };
