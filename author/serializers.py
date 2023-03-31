@@ -20,7 +20,7 @@ class AuthorSerializer(serializers.ModelSerializer):
     def extract_and_upcreate_author(author_id=None):
         print("Author id is" + " " + author_id)
         #validated_author_data = validated_data.pop('author') if validated_data.get('author') else None
-        updated_author= {}
+        updated_author= None
         try:
             updated_author = Author.objects.get(id=author_id)
         except Author.DoesNotExist:
