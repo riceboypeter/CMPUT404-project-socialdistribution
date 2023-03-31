@@ -529,9 +529,7 @@ class Inbox_list(APIView, InboxSerializerObjects, PageNumberPagination):
         inbox_data = author.inbox.all()
         serializer = InboxSerializer(data=inbox_data, context = {"serializer":self.serialize_inbox_objects}, many=True)
         serializer.is_valid()
-        data = serializer.data
-        data = self.get_items(pk_a, data)
-        # TODO: Fix pagination
+        data = self.get_items(pk_a, serializer.data)
         return Response(data, status=status.HTTP_200_OK)
     
     
@@ -600,11 +598,7 @@ class Inbox_list(APIView, InboxSerializerObjects, PageNumberPagination):
         dict = {"type":"inbox", "author": settings.APP_NAME + '/authors/' + pk_a }
         items = []
         for item in data:
-            try: 
-                items.append(item["content_object"]) 
-            except:
-                items.append(item)
-
+            items.append(item["content_object"]) 
         dict["items"] = items
         return(dict) 
 
