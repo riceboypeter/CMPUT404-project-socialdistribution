@@ -43,12 +43,13 @@ def getNodeAuthor_App2(author_id):
 
     url = url + author_id
 
+    print("in node 2 authors")
+
     response = requests.get(url)
     status_code = response.status_code
     
     if status_code == 200:
         json_response = response.json()
-       
         return(json_response, status_code)
     else: return (None, status_code)
 

@@ -27,16 +27,19 @@ class AuthorSerializer(serializers.ModelSerializer):
             if status == 200:
                 print("found author in app2")
                 updated_author = Author.objects.create(author)
+                updated_author.save()
             # elif status != 200:
             #     author, status = client.getNodeAuthor_social_distro(author_id)
             #     if status == 200:
             #         updated_author = Author.objects.create(author)
+            #         updated_author.save()
             #     else:
             #         author, status = client.getNodeAuthor_Yoshi(author_id)
             #         if status == 200:
             #             updated_author = Author.objects.create(author)
+            #             updated_author.save()
         if not updated_author:
-            print("hello")
+            print("no author", updated_author)
             raise exceptions.ValidationError("Author does not exist")
         else:
             return updated_author
