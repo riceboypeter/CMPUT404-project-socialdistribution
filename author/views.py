@@ -404,6 +404,19 @@ class FollowersView(APIView):
         
         # return the new list of followers
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+class GitHubView(APIView):
+    authentication_classes = [BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, pk_a):
+        author = get_object_or_404(Author,pk=pk_a)
+
+        github_posts = get_github_activities(author.github, author)
+
+        serializer = PostSerializer(github_posts,many=True)
+        
+        return Response(serializer.data)        
 
 #request_body=openapi.Schema( type=openapi.TYPE_STRING,description='A raw text input for the POST request'))
 class FriendRequestView(APIView):
@@ -517,9 +530,6 @@ class Inbox_list(APIView, InboxSerializerObjects, PageNumberPagination):
         serializer = InboxSerializer(data=inbox_data, context = {"serializer":self.serialize_inbox_objects}, many=True)
         serializer.is_valid()
         data = serializer.data
-        github_posts = get_github_activities(author.github, author)
-        for post in github_posts:
-            data.append(PostSerializer(post).data)
         data = self.get_items(pk_a, data)
         # TODO: Fix pagination
         return Response(data, status=status.HTTP_200_OK)
