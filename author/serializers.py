@@ -19,7 +19,6 @@ class AuthorSerializer(serializers.ModelSerializer):
     @staticmethod
     def extract_and_upcreate_author(author_id=None):
         print("Author id is" + " " + author_id)
-        #validated_author_data = validated_data.pop('author') if validated_data.get('author') else None
         updated_author= None
         try:
             updated_author = Author.objects.get(id=author_id)
@@ -31,7 +30,7 @@ class AuthorSerializer(serializers.ModelSerializer):
                 author, status = client.getNodeAuthor_social_distro(author_id)
                 if status == 200:
                     updated_author = Author.objects.create(author)
-                else: 
+                else:
                     author, status = getNodeAuthor_App2(author_id)
                     if status == 200:
                         updated_author = Author.objects.create(author)
@@ -69,9 +68,11 @@ class FollowRequestSerializer(serializers.ModelSerializer):
     object = AuthorSerializer(required=False)
 
     def create(self,validated_data):
+        actor = validated_data["actor"]
+        object = validated_data["object"]
         if actor in object.friends.all():
             return "already friends"
-        if FollowRequest.objects.get(actor=actor,object=object).exists():
+        if FollowRequest.objects.filter(actor=actor,object=object).exists():
             return "already sent"
         actor = validated_data["actor"]
         object = validated_data["object"]
@@ -79,7 +80,7 @@ class FollowRequestSerializer(serializers.ModelSerializer):
             return "same"
         else:
             return FollowRequest.objects.create(actor=actor,object=object)
-
+    
     # https://www.django-rest-framework.org/api-guide/serializers/
     def to_internal_value(self, data):
         actor = AuthorSerializer.extract_and_upcreate_author(author_id=self.context["actor_id"])
@@ -94,14 +95,13 @@ class FollowRequestSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({
                 'player_name': 'This field is required.'
             })
-
         # Return the validated values. This will be available as
-        # the .validated_data property.
+        # the `.validated_data` property.
         return {
             'object': object,
             'actor': actor
         }
-
+        
     class Meta:
         model = FollowRequest
         fields = ['type','summary','actor', 'object']

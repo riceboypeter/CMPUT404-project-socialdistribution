@@ -474,14 +474,14 @@ class InboxSerializerObjects:
             serializer = FollowRequestSerializer
         return serializer(item.content_object, context=context).data
     
-    def deserialize_objects(self, data, pk_a):
+       def deserialize_objects(self, data, pk_a):
         # return serializer of objects to be added to inbox (so we get the object)
-        type = data.get('type')
+        type1 = data.get('type')
         obj = None
-        if type is None:
+        if type1 is None:
             raise exceptions
         
-        if type == Post.get_api_type():
+        if type1 == Post.get_api_type():
             try:
                 obj = Post.objects.get(id=(data["id"].split("/")[-1]))
             except Post.DoesNotExist:
@@ -489,21 +489,20 @@ class InboxSerializerObjects:
                 return Response(error_msg, status=status.HTTP_404_NOT_FOUND)
             serializer = PostSerializer
             context={'author_id': pk_a,'id':data["id"].split("/")[-1]}
-        elif type == Like.get_api_type():
+        elif type1 == Like.get_api_type():
             # TODO: Add a check to see if the author liked that object before, then just return obj
             serializer = LikeSerializer
             context={'author_id': data["author_id"]}
-        elif type == Comment.get_api_type():
+        elif type1 == Comment.get_api_type():
             serializer = CommentSerializer
             context={'author_id': pk_a,'id':data["id"].split("/")[-1]}
-        elif type == FollowRequest.get_api_type():
+        elif type1 == FollowRequest.get_api_type():
             serializer = FollowRequestSerializer
             actor_id = data.get("actor_id")
             context={'object_id': pk_a, 'actor_id':actor_id}
-            return obj or serializer(data={"type": "Follow"}, context=context, partial=True)
-            
+            return serializer(data={}, context=context, partial=True)
         return obj or serializer(data=data, context=context, partial=True)
-
+    
 class Inbox_list(APIView, InboxSerializerObjects, PageNumberPagination):
     """
         URL: author/auhor_id/inbox
