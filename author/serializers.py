@@ -17,27 +17,15 @@ class AuthorSerializer(serializers.ModelSerializer):
         author = Author.objects.create(**validated_data)   
         return author
     @staticmethod
-    def extract_and_upcreate_author(author_id=None):
-        print("Author id is" + " " + author_id)
+    def extract_and_upcreate_author(author):
+        print("in upcreate")
         updated_author= None
         try:
-            updated_author = Author.objects.get(id=author_id)
+            updated_author = Author.objects.get(id=author["id"])
         except Author.DoesNotExist:
-            author, status = getNodeAuthor_App2(author_id)
-            if status == 200:
-                print("found author in app2")
-                updated_author = Author.objects.create(author)
-                updated_author.save()
-            # elif status != 200:
-            #     author, status = client.getNodeAuthor_social_distro(author_id)
-            #     if status == 200:
-            #         updated_author = Author.objects.create(author)
-            #         updated_author.save()
-            #     else:
-            #         author, status = client.getNodeAuthor_Yoshi(author_id)
-            #         if status == 200:
-            #             updated_author = Author.objects.create(author)
-            #             updated_author.save()
+            updated_author = Author(**author)
+            updated_author.save()
+            print("updated author saved")
         if not updated_author:
             print("no author", updated_author)
             raise exceptions.ValidationError("Author does not exist")
@@ -91,7 +79,7 @@ class FollowRequestSerializer(serializers.ModelSerializer):
     # https://www.django-rest-framework.org/api-guide/serializers/
     def to_internal_value(self, data):
         print("to_internal_value")
-        actor = AuthorSerializer.extract_and_upcreate_author(author_id=self.context["actor_id"])
+        actor = AuthorSerializer.extract_and_upcreate_author(author=self.context["actor_"])
         object = Author.objects.get(id=self.context["object_id"])
 
         # Perform the data validation.

@@ -499,9 +499,8 @@ class InboxSerializerObjects:
         elif type1 == FollowRequest.get_api_type():
             print("deser follow")
             serializer = FollowRequestSerializer
-            actor_id = data.get("actor_id")
-            context={'object_id': pk_a, 'actor_id':actor_id}
-            print(context)
+            actor = data.get("actor")
+            context={'object_id': pk_a, 'actor_':actor}
             return serializer(data={}, context=context, partial=True)
         return obj or serializer(data=data, context=context, partial=True)
     
@@ -541,16 +540,13 @@ class Inbox_list(APIView, InboxSerializerObjects, PageNumberPagination):
             author = get_object_or_404(Author,pk=pk_a, host="https://sociallydistributed.herokuapp.com/")
                 
         except Author.DoesNotExist:
-            # post to other apps
-            # response = client.postFollow(request.data, pk_a)
-            # return response
             if request.data['type'] == "Follow":
                 response = client.postFollow(request.data, pk_a)
                 return response
-            author, status_code = client.getNodeAuthor(pk_a)
-            if status_code != 200:
-                error_msg = "Author id not found"
-                return Response(error_msg, status=status.HTTP_404_NOT_FOUND)
+            # author, status_code = client.getNodeAuthor(pk_a)
+            # if status_code != 200:
+            #     error_msg = "Author id not found"
+            #     return Response(error_msg, status=status.HTTP_404_NOT_FOUND)
 
         serializer = self.deserialize_objects(self.request.data, pk_a)
         # Case 1: friend author is outside the server, we create all these objects in our database (not sure)
