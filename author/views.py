@@ -500,7 +500,7 @@ class InboxSerializerObjects:
             serializer = FollowRequestSerializer
             actor_id = data.get("actor_id")
             context={'object_id': pk_a, 'actor_id':actor_id}
-            return obj or serializer(data={}, context=context, partial=True)
+            return obj or serializer(data={"type": "Follow"}, context=context, partial=True)
             
         return obj or serializer(data=data, context=context, partial=True)
 

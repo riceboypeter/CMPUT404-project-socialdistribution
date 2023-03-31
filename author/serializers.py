@@ -37,6 +37,7 @@ class AuthorSerializer(serializers.ModelSerializer):
                      updated_author, status = client.getNodeAuthor_app2
         #try to get authors from other servers
         if not updated_author:
+            print("hello")
             raise exceptions.ValidationError("Author does not exist")
         else:
             return updated_author
