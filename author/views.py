@@ -474,7 +474,7 @@ class InboxSerializerObjects:
             serializer = FollowRequestSerializer
         return serializer(item.content_object, context=context).data
     
-       def deserialize_objects(self, data, pk_a):
+    def deserialize_objects(self, data, pk_a):
         # return serializer of objects to be added to inbox (so we get the object)
         type1 = data.get('type')
         obj = None
