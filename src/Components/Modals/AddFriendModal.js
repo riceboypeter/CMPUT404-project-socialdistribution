@@ -10,7 +10,7 @@ import {
 } from "rsuite";
 import { ToastContainer, toast } from "react-toastify";
 import SearchIcon from "@rsuite/icons/Search";
-import { reqInstance } from "../utils/axios";
+import { reqInstance, instance } from "../utils/axios";
 import { getAuthorId, getCurrentUser } from "../utils/auth";
 
 function ADD_FRIEND_MODAL({ open, handleClose }) {
@@ -19,11 +19,13 @@ function ADD_FRIEND_MODAL({ open, handleClose }) {
 	const [users, setusers] = useState([]);
 	const toaster = useToaster();
 
-	async function sendreq(id) {
+	async function sendreq(obj) {
 		const AUTHOR_ID = getAuthorId(null);
-		const faid = getAuthorId(id);
-		const url2 = `authors/${faid}/inbox/`;
+		// const faid = getAuthorId(obj.id);
+		// const url2 = `authors/${faid}/inbox/`;
+		const url2 = obj.id + "/inbox";
 		const user = JSON.parse(localStorage.getItem("user"));
+		console.log(obj, url2);
 		user["id"] = AUTHOR_ID;
 		delete user["type"];
 		const params = {
@@ -97,7 +99,7 @@ function ADD_FRIEND_MODAL({ open, handleClose }) {
 					<Button
 						style={{ float: "right", marginRight: "10px" }}
 						appearance="primary"
-						onClick={() => sendreq(obj.id)}
+						onClick={() => sendreq(obj)}
 					>
 						Follow
 					</Button>

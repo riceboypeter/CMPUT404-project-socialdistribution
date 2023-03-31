@@ -539,12 +539,14 @@ class Inbox_list(APIView, InboxSerializerObjects, PageNumberPagination):
         try:
             print("in Post")
             author = get_object_or_404(Author,pk=pk_a, host="https://sociallydistributed.herokuapp.com/")
+            print("author")
             print("found author locally")
         except Author.DoesNotExist:
             print("couldnt find author locally")
-            if request.data['type'] == "Follow":
-                response = client.postFollow(request.data, pk_a)
-                return response
+            return Response("Author not Found", status=status.HTTP_404_NOT_FOUND)
+            # if request.data['type'] == "Follow":
+            #     response = client.postFollow(request.data, pk_a)
+            #     return response
 
         serializer = self.deserialize_objects(self.request.data, pk_a)
         # Case 1: friend author is outside the server, we create all these objects in our database (not sure)
