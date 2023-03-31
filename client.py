@@ -252,7 +252,6 @@ def postFollow(data, author_id):
     authorization_header = f'Basic {encoded_credentials}'
     headers = {'Authorization': authorization_header}
     # This should in theory work for the Yoshi APP, Not ready yet so testing when they get it done 
-    print("sending req")
     response = requests.post(url, headers=headers, data=request_data)
 
     #Check if they return an HTTP response, IF not do HTTP response 200 OK 

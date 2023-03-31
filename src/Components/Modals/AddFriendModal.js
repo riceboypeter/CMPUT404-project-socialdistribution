@@ -11,7 +11,7 @@ import {
 import { ToastContainer, toast } from "react-toastify";
 import SearchIcon from "@rsuite/icons/Search";
 import { reqInstance } from "../utils/axios";
-import { getAuthorId } from "../utils/auth";
+import { getAuthorId, getCurrentUser } from "../utils/auth";
 
 function ADD_FRIEND_MODAL({ open, handleClose }) {
 	const [displayName, setName] = useState("");
@@ -25,7 +25,7 @@ function ADD_FRIEND_MODAL({ open, handleClose }) {
 		const url2 = `authors/${faid}/inbox/`;
 		const params = {
 			type: "Follow",
-			actor_id: AUTHOR_ID,
+			actor_id: getCurrentUser(),
 		};
 		return reqInstance({ method: "post", url: url2, data: params })
 			.then((res) => {
