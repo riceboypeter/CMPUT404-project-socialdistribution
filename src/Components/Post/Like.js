@@ -16,10 +16,11 @@ function LIKE({ postObj }) {
 		const FAID = getAuthorId(postObj.author["id"]);
 		const author_id = getAuthorId(null);
 		const host = postObj.author["host"]
+		const user = JSON.parse(localStorage.getItem("user"));
 		// const user = JSON.parse(localStorage.getItem("user"));
 		const params = {
 			type: "Like",
-			author_id: author_id,
+			author_id: user,
 			object: postObjUrl,
 		};
 		const url = `authors/${FAID}/inbox/`;
