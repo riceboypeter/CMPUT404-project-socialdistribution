@@ -41,7 +41,7 @@ function PROFILE() {
 		if (!localStorage.getItem("loggedIn")) {
 			navigate("/signin");
 		} else {
-			setImage(getProfileImageUrl);
+			setImage(getProfileImageUrl());
 			setAuthor(JSON.parse(localStorage.getItem("user")));
 		}
 	}, []);

@@ -36,7 +36,8 @@ function POST({ postobj, edit, explore }) {
 			);
 		}
 		
-		// Peter you just need to return the image here
+		// handle images
+		console.log(post);
 		if (post["contentType"] === "image/jpeg" || post["contentType"] === "image/png") {
 			let tempAuthorId = (postobj.author.id + "").split("/").slice(-1);
 			let tempPostId = (postobj.id + "").split("/").slice(-1);
