@@ -110,7 +110,7 @@ class Node(models.Model):
     username = models.CharField(max_length=30)
     name = models.CharField(max_length=255, default='Node')
     is_active = models.BooleanField(default=False)
-    url = models.URLField(editable=False, default='https://sociallydistributed.herokuapp.com/', max_length=500)
+    url = models.URLField(editable=False, default=settings.HOST_NAME, max_length=500)
     # objects = MyNodeManager()
 
     USERNAME_FIELD = 'username'
