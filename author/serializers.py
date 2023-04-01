@@ -17,9 +17,14 @@ class AuthorSerializer(serializers.ModelSerializer):
         author = Author.objects.create(**validated_data)   
         return author
     @staticmethod
-    def extract_and_upcreate_author(author):
+    def extract_and_upcreate_author(author, author_id = None):
         print("in upcreate")
         updated_author= None
+        if author_id:
+            try:
+                return Author.objects.get(id=author_id)
+            except Author.DoesNotExist:
+                raise exceptions.ValidationError("Author does not exist")
         try:
             updated_author = Author.objects.get(id=author["id"])
         except Author.DoesNotExist:

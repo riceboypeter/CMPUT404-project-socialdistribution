@@ -18,7 +18,7 @@ class PostSerializer(WritableNestedModelSerializer):
     categories = serializers.CharField(max_length=300, default="")
     
     def create(self, validated_data):
-        author = AuthorSerializer.extract_and_upcreate_author(validated_data, author_id=self.context["author_id"])
+        author = AuthorSerializer.extract_and_upcreate_author(None, author_id=self.context["author_id"])
         id = validated_data.pop('id') if validated_data.get('id') else None
         if not id:
             id = self.context["id"]
@@ -57,7 +57,7 @@ class PostSerializer(WritableNestedModelSerializer):
             'published',
             'visibility',
             #'unlisted',
-            'is_github',
+            #'is_github'
         ]
 
 class CommentSerializer(serializers.ModelSerializer):
@@ -66,7 +66,7 @@ class CommentSerializer(serializers.ModelSerializer):
     author = AuthorSerializer()
 
     def create(self, validated_data):
-        author = AuthorSerializer.extract_and_upcreate_author(validated_data,author_id=self.context["author_id"])
+        author = AuthorSerializer.extract_and_upcreate_author(None,author_id=self.context["author_id"])
         id = validated_data.pop('id') if validated_data.get('id') else None
         
         if not id:
@@ -122,7 +122,7 @@ class LikeSerializer(serializers.ModelSerializer):
             'object': object,
             'author': author
         }
-
+    
     class Meta:
         model = Like
         fields = [
@@ -131,7 +131,6 @@ class LikeSerializer(serializers.ModelSerializer):
             "author",
             "object",
         ]
-    
 
 class ImageSerializer(serializers.ModelSerializer):
     type = serializers.CharField(default="post",source="get_api_type",read_only=True)
@@ -140,7 +139,7 @@ class ImageSerializer(serializers.ModelSerializer):
     image = Base64ImageField()
     
     def create(self, validated_data):
-        author = AuthorSerializer.extract_and_upcreate_author(validated_data, author_id=self.context["author_id"])
+        author = AuthorSerializer.extract_and_upcreate_author(None, author_id=self.context["author_id"])
         id = validated_data.pop('id') if validated_data.get('id') else None
         if not id:
             id = self.context["id"]
