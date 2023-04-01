@@ -494,7 +494,7 @@ class InboxSerializerObjects:
             serializer = LikeSerializer
             author = data.get("author")
             obj = data.get("object")
-            context={'object': pk_a, 'author':author}
+            context={'object': obj, 'author':author}
             return serializer(data={}, context=context, partial=True)
             # context={'author_id': data["author_id"]}
         elif type1 == Comment.get_api_type():
