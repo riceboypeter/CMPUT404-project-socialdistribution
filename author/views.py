@@ -21,6 +21,7 @@ from client import *
 from django.core.paginator import Paginator
 from social.pagination import CustomPagination
 from posts.github.utils import get_github_activities
+from Remote.Authors import getRemoteAuthorsDisplayName
 
 custom_parameter = openapi.Parameter(
     name='custom_param',
@@ -621,9 +622,14 @@ def getAuthor(request, displayName):
     """
     Details of particular author
     """
-    author = Author.objects.get(displayName=displayName)
-    serializer = AuthorSerializer(author,partial=True)
-    return Response(serializer.data)
+    authorList = getRemoteAuthorsDisplayName(displayName)
+    try:
+        author = Author.objects.get(displayName=displayName, host="https://killme.herokuapp.com/")
+        serializer = AuthorSerializer(author,partial=True)
+        authorList.append(serializer.data)
+    except Author.DoesNotExist:
+        return Response(authorList)
+    return Response(authorList)
 
 class registerNode(APIView):
     def post(self, request):

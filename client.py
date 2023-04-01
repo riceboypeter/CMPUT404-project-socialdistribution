@@ -135,12 +135,6 @@ def getNodeAuthor_App2(author_id):
 
 def getNodeAuthor_social_distro(author_id):
     url = 'https://social-distro.herokuapp.com/api/authors/'
-<<<<<<< HEAD
-
-    url = url + author_id + '/'
-
-    response = requests.get(url,auth=("team15","team15"))
-=======
     username = 'team24'
     password = 'team24'
     url = url + author_id + '/'
@@ -152,7 +146,6 @@ def getNodeAuthor_social_distro(author_id):
 
     response = requests.get(url, headers=headers)
 
->>>>>>> origin/jacob-work
     status_code = response.status_code
    
 
@@ -163,22 +156,6 @@ def getNodeAuthor_social_distro(author_id):
         return(json_response, status_code)
     else: return (None, status_code)
 
-<<<<<<< HEAD
-def getNodeAuthors_social_distro():
-    url = 'https://social-distro.herokuapp.com/api/authors/'
-
-    response = requests.get(url,auth=("team15","team15"))
-    status_code = response.status_code
-    # response = requests.get(url, headers=headers)
-    json_response = response.json()
-
-    # clean the response
-    authors = json.dumps(clean_list(json_response['results']))
-
-    return authors
-
-=======
->>>>>>> origin/jacob-work
 ####### GET POSTS
 
 def getNodePost_Yoshi(author_id):
