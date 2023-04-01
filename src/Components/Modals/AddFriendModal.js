@@ -10,7 +10,7 @@ import {
 } from "rsuite";
 import { ToastContainer, toast } from "react-toastify";
 import SearchIcon from "@rsuite/icons/Search";
-import { reqInstance, instance } from "../utils/axios";
+import { reqInstance, createReqInstance } from "../utils/axios";
 import { getAuthorId, getCurrentUser } from "../utils/auth";
 
 function ADD_FRIEND_MODAL({ open, handleClose }) {
@@ -21,19 +21,17 @@ function ADD_FRIEND_MODAL({ open, handleClose }) {
 
 	async function sendreq(obj) {
 		const AUTHOR_ID = getAuthorId(null);
-		// const faid = getAuthorId(obj.id);
-		// const url2 = `authors/${faid}/inbox/`;
 		const url2 = obj.id + "/inbox";
 		const user = JSON.parse(localStorage.getItem("user"));
-		console.log(obj, url2);
+		const instance = createReqInstance(obj.host);
 		user["id"] = AUTHOR_ID;
 		delete user["type"];
 		const params = {
 			type: "Follow",
 			actor: user,
 		};
-		console.log(params);
-		return reqInstance({ method: "post", url: url2, data: params })
+
+		return instance({ method: "post", url: url2, data: params })
 			.then((res) => {
 				toaster.push(
 					<Message type="success">Friend Request Sent</Message>,
