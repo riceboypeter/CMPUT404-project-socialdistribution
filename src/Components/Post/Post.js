@@ -37,11 +37,11 @@ function POST({ postobj, edit, explore }) {
 		}
 		
 		// Peter you just need to return the image here
-		let tempAuthorId = (postobj.author.id + "").split("/").slice(-1);
-		let tempPostId = (postobj.id + "").split("/").slice(-1);
-		let HOST = "https://sociallydistributed.herokuapp.com/";
-		let posturl = HOST + "posts/authors/" + tempAuthorId + "/posts/" + tempPostId + "/image";
 		if (post["contentType"] === "image/jpeg" || post["contentType"] === "image/png") {
+			let tempAuthorId = (postobj.author.id + "").split("/").slice(-1);
+			let tempPostId = (postobj.id + "").split("/").slice(-1);
+			let HOST = "https://sociallydistributed.herokuapp.com/";
+			let posturl = HOST + "posts/authors/" + tempAuthorId + "/posts/" + tempPostId + "/image";
 			return <p style={{ padding: '5px' }}>
 				<img src={posturl} alt="image" />
 			</p>;
