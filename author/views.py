@@ -1,24 +1,13 @@
 import json
 from django.db import IntegrityError
 from django.forms import model_to_dict
-from django.shortcuts import render
-from .basic_auth import BasicAuthenticator
-# Create your views here.
-
-from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render
-from django.urls import reverse,reverse_lazy
-from django.views import generic
-from django.views.generic import ListView,DetailView,CreateView,UpdateView,DeleteView
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from .pagination import *
+from django.shortcuts import get_object_or_404
+from author.pagination import *
 from posts.serializers import *
 from .models import *
 from .serializers import *
-from django.http import HttpResponse
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.response import Response
-from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.views import APIView
@@ -31,7 +20,7 @@ from rest_framework.authentication import SessionAuthentication, BasicAuthentica
 from client import *
 from django.core.paginator import Paginator
 from social.pagination import CustomPagination
-from Remote.Authors import getRemoteAuthorsDisplayName
+from posts.github.utils import get_github_activities
 
 custom_parameter = openapi.Parameter(
     name='custom_param',
@@ -196,10 +185,6 @@ InboxGet = {
 class AuthorsListView(APIView, PageNumberPagination):
     authentication_classes = [BasicAuthentication]
     permission_classes = [IsAuthenticated]
-    # for pagination
-    page_size = 10
-    page_size_query_param = 'size'
-    max_page_size = 100
     @swagger_auto_schema(responses= GetAuthorsExample,operation_summary="List of Authors registered")
     def get(self, request):
         
@@ -215,20 +200,18 @@ class AuthorsListView(APIView, PageNumberPagination):
         
         # create a list of our own authors
         authors = Author.objects.all()
-        authors=self.paginate_queryset(authors, request)
         serializer = AuthorSerializer(authors, many=True)
         data_list = serializer.data
-        
         # get remote authors and add to list
         # yoshi = getNodeAuthors_Yoshi()
         # for yoshi_author in yoshi:
         #     data_list.append(yoshi_author)
-        '''social_distro = getNodeAuthors_social_distro()
-        for social_distro_author in social_distro:
-            data_list.append(social_distro_author)'''
+        #social_distro = getNodeAuthors_social_distro()
+        #for social_distro_author in social_distro:
+        #    data_list.append(social_distro_author)
 
         # paginate + send
-        return self.get_paginated_response(data_list)
+        return Response(ViewPaginatorMixin.paginate(self,object_list=data_list, page=int(self.request.GET.get('page', 1)), size=int(self.request.GET.get('size', 50))))
 
 class AuthorView(APIView):
     authentication_classes = [BasicAuthentication]
@@ -260,8 +243,8 @@ class AuthorView(APIView):
                 # get yoshi's author at node
                 author_json, status_code = getNodeAuthor_Yoshi(pk_a)
                 if status_code == 200:
-                    # author_dict = json.loads(author_json)
-                    # author = Author(id = author_json['authorId'], displayName= author_json['displayname'], url=author_json['url'], profileImage=author_json['profileImage'], github=author_json['github'], host=author_json['host'])
+                    author_dict = json.loads(author_json)
+                    author = Author(id = author_json['authorId'], displayName= author_json['displayname'], url=author_json['url'], profileImage=author_json['profileImage'], github=author_json['github'], host=author_json['host'])
                     return Response(author_json)
                 # get social distro's authors and format their data to our style
                 else:
@@ -330,7 +313,6 @@ class FollowersView(APIView):
         # If url is /authors/authors/author_id/followers/
         # add local followers to the list of followers
         if pk ==None:
-            print(author.friends)
             followers = author.friends.all()
             followers_list = []
             for follower in followers:
@@ -422,6 +404,19 @@ class FollowersView(APIView):
         
         # return the new list of followers
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+class GitHubView(APIView):
+    authentication_classes = [BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, pk_a):
+        author = get_object_or_404(Author,pk=pk_a)
+
+        github_posts = get_github_activities(author.github, author)
+
+        serializer = PostSerializer(github_posts,many=True)
+        
+        return Response(serializer.data)        
 
 #request_body=openapi.Schema( type=openapi.TYPE_STRING,description='A raw text input for the POST request'))
 class FriendRequestView(APIView):
@@ -493,12 +488,12 @@ class InboxSerializerObjects:
     
     def deserialize_objects(self, data, pk_a):
         # return serializer of objects to be added to inbox (so we get the object)
-        type1 = data.get('type')
+        type = data.get('type')
         obj = None
-        if type1 is None:
+        if type is None:
             raise exceptions
         
-        if type1 == Post.get_api_type():
+        if type == Post.get_api_type():
             try:
                 obj = Post.objects.get(id=(data["id"].split("/")[-1]))
             except Post.DoesNotExist:
@@ -506,33 +501,25 @@ class InboxSerializerObjects:
                 return Response(error_msg, status=status.HTTP_404_NOT_FOUND)
             serializer = PostSerializer
             context={'author_id': pk_a,'id':data["id"].split("/")[-1]}
-        elif type1 == Like.get_api_type():
+        elif type == Like.get_api_type():
             # TODO: Add a check to see if the author liked that object before, then just return obj
             serializer = LikeSerializer
-            author = data.get("author")
-            obj = data.get("object")
-            context={'object': obj, 'author':author}
-            return serializer(data={}, context=context, partial=True)
-            # context={'author_id': data["author_id"]}
-        elif type1 == Comment.get_api_type():
+            context={'author_id': data["author_id"]}
+        elif type == Comment.get_api_type():
             serializer = CommentSerializer
             context={'author_id': pk_a,'id':data["id"].split("/")[-1]}
-        elif type1 == FollowRequest.get_api_type():
-            print("deser follow")
+        elif type == FollowRequest.get_api_type():
             serializer = FollowRequestSerializer
-            actor = data.get("actor")
-            context={'object_id': pk_a, 'actor_':actor}
-            return serializer(data={}, context=context, partial=True)
+            context={'actorr': data["actor"]["id"],'objectt':data["object"]["id"]}
+            
         return obj or serializer(data=data, context=context, partial=True)
-    
+
 class Inbox_list(APIView, InboxSerializerObjects, PageNumberPagination):
     """
         URL: author/auhor_id/inbox
     """
     authentication_classes = [BasicAuthentication]
     permission_classes = [IsAuthenticated]
-    serializer_class = InboxSerializer
-    pagination_class = InboxSetPagination
 
     @swagger_auto_schema(responses = InboxGet, operation_summary="Get all the objects in the inbox")
     def get(self, request, pk_a):
@@ -540,12 +527,10 @@ class Inbox_list(APIView, InboxSerializerObjects, PageNumberPagination):
 
         author = get_object_or_404(Author,pk=pk_a)
         inbox_data = author.inbox.all()
-        inbox_data = self.paginate_queryset(inbox_data,request)
         serializer = InboxSerializer(data=inbox_data, context = {"serializer":self.serialize_inbox_objects}, many=True)
         serializer.is_valid()
         data = self.get_items(pk_a, serializer.data)
-        # TODO: Fix pagination
-        return self.get_paginated_response(data)
+        return Response(data, status=status.HTTP_200_OK)
     
     
     @swagger_auto_schema(responses = InboxPOST, operation_summary="Post a new object to the inbox",request_body=openapi.Schema( type=openapi.TYPE_STRING,description='A raw text input for the POST request', example = {
@@ -561,37 +546,33 @@ class Inbox_list(APIView, InboxSerializerObjects, PageNumberPagination):
             2. If object in database: TYPE, id.
         """
         try:
-            print("in Post")
-            author = get_object_or_404(Author,pk=pk_a, host="https://sociallydistributed.herokuapp.com/")
-            print("author")
-            print("found author locally")
+            author = get_object_or_404(Author,pk=pk_a)
+            
         except Author.DoesNotExist:
-            print("couldnt find author locally")
-            return Response("Author not Found", status=status.HTTP_404_NOT_FOUND)
-            # if request.data['type'] == "Follow":
-            #     response = client.postFollow(request.data, pk_a)
-            #     return response
-
-        serializer = self.deserialize_objects(self.request.data, pk_a)
+            error_msg = "Author id not found"
+            return Response(error_msg, status=status.HTTP_404_NOT_FOUND)
+        
+        serializer = self.deserialize_objects(
+            self.request.data, pk_a)
+        
         # Case 1: friend author is outside the server, we create all these objects in our database (not sure)
         try:
             if serializer.is_valid():
                 item = serializer.save()
-                # if self.request.data['type'] == "Follow":
-                #     objectid = self.request.data['object']['id']
-                #     author = get_object_or_404(Author,pk=objectid)
+                if self.request.data['type'] == "Follow":
+                    objectid = self.request.data['object']['id']
+                    author = get_object_or_404(Author,pk=objectid)
                 if item=="already liked":
-                    return Response("Post Already Liked!", status=status.HTTP_400_BAD_REQUEST)
+                    return Response("Post Already Liked!")
                 if item == "already sent":
-                    return Response("You've already sent a request to this user!", status=status.HTTP_400_BAD_REQUEST)
+                    return Response("You've already sent a request to this user!")
                 if item == "same":
-                    return Response("You cannot send a follow request to yourself!", status=status.HTTP_400_BAD_REQUEST)
-                if item == "already friends":
-                    return Response("You already follow them!", status=status.HTTP_400_BAD_REQUEST)
+                    return Response("You cannot send a follow request to yourself!")
                 if hasattr(item, 'update_fields_with_request'):
                     item.update_fields_with_request(request)
             else: 
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        # Case 2: author is within the server
         except AttributeError as e:
             item = serializer   
         inbox_item = Inbox(content_object=item, author=author)
@@ -617,8 +598,7 @@ class Inbox_list(APIView, InboxSerializerObjects, PageNumberPagination):
         dict = {"type":"inbox", "author": settings.APP_NAME + '/authors/' + pk_a }
         items = []
         for item in data:
-            items.append(item["content_object"])
-
+            items.append(item["content_object"]) 
         dict["items"] = items
         return(dict) 
 
@@ -629,14 +609,9 @@ def getAuthor(request, displayName):
     """
     Details of particular author
     """
-    authorList = getRemoteAuthorsDisplayName(displayName)
-    try:
-        author = Author.objects.get(displayName=displayName, host="https://killme.herokuapp.com/")
-        serializer = AuthorSerializer(author,partial=True)
-        authorList.append(serializer.data)
-    except Author.DoesNotExist:
-        return Response(authorList)
-    return Response(authorList)
+    author = Author.objects.get(displayName=displayName)
+    serializer = AuthorSerializer(author,partial=True)
+    return Response(serializer.data)
 
 class registerNode(APIView):
     def post(self, request):
