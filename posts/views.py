@@ -505,6 +505,7 @@ class post_list(APIView, PageNumberPagination):
         posts = self.paginator.paginate_queryset(posts, self.request, view=self)
 
         serializer = PostSerializer(posts, many=True)
+        
         return self.paginator.get_paginated_response(serializer.data, "posts")
 
     @swagger_auto_schema(responses = PostsPOST, operation_summary="Create a new Post for an Author",request_body=openapi.Schema( type=openapi.TYPE_STRING,description='A raw text input for the POST request',example = {
@@ -580,8 +581,12 @@ class post_detail(APIView, PageNumberPagination):
             # post is not found, so 404
             error_msg = "Post not found"
             return Response(error_msg, status=status.HTTP_404_NOT_FOUND)
-        
-        serializer = PostSerializer(post)
+
+        if "image/" in post.contentType:
+            serializer = ImageSerializer(post)
+        else:
+            serializer = PostSerializer(post)
+
         return Response(serializer.data)
     
     #content for creating a new post object
@@ -857,12 +862,9 @@ class CommentView(APIView, PageNumberPagination):
         
         post = Post.objects.get(id=pk)
         post_data = PostSerializer(post).data
-        # changed to filter for all comments on the post, it was filtering
-        # the comments by the author of the post on the post otherwise.
-        # comments = Comment.objects.filter(author=author,post=post)
+        # filter for all comments on specific post
         comments = Comment.objects.filter(post=post)
 
-        # TODO: refactor with auth (part3)
         authenticated_user = Author.objects.get(id=pk_a)
         
         # on private posts, friends' comments will only be available to me.
@@ -955,7 +957,10 @@ class ShareView(APIView):
         # this shared_user here is blank
         share_object(new_post,sharing_author,[])
         # serialize post
-        serializer = PostSerializer(new_post)
+        if "image/" in new_post.contentType:
+            serializer = ImageSerializer(new_post)
+        else:
+            serializer = PostSerializer(new_post)
         return Response(serializer.data)
     
 class PublicPostsView(APIView):
@@ -978,9 +983,6 @@ class PublicPostsView(APIView):
 def share_object(item, author, shared_user):
     inbox_item = Inbox(content_object=item, author=author)
     inbox_item.save()
-    # TODO: refactor once auth is set up
-    authenticated_user = "joe"
-    print(item.visibility)
 
     # friend post (send to friend inbox)
     if (item.visibility == 'FRIENDS'):
@@ -989,13 +991,13 @@ def share_object(item, author, shared_user):
             inbox_item.save()
 
     # unlisted post (send only to own inbox)
-    if (item.visibility == 'UNLISTED'):
-        if author == authenticated_user:
+    elif (item.visibility == 'UNLISTED'):
+        if author:
             inbox_item = Inbox(content_object=item, author=author)
             inbox_item.save()
 
     # private post (send to shared users' inbox)
-    if (item.visibility == 'PRIVATE'):
+    elif (item.visibility == 'PRIVATE'):
         for id in shared_user:
             share = Author.objects.get(id=id)
             inbox_item = Inbox(content_object=item, author=share)

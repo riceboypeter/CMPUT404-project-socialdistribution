@@ -8,14 +8,8 @@ from rest_framework import status
 def clean_dict(dirty):
     result = {}
     for key,value in dirty.items():
-        # categories is a single str in our format
-        if key == "categories":
-            category = ''
-            for item in value:
-                category += item + ","
-            value = category
         # unlisted field is in our visibility field
-        elif key == "unlisted":
+        if key == "unlisted":
             if value == True:
                 result["visibility"] = "UNLISTED"
         # if the type for some key is not str, make it an empty

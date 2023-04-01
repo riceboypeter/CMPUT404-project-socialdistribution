@@ -155,6 +155,7 @@ class ImageSerializer(serializers.ModelSerializer):
             "type",
             "id",
             "author",
+            "title",
             "image",
             "visibility",
         ]
