@@ -57,6 +57,7 @@ export let createReqInstance = (baseUrl) => {
 		headers: {
 			"X-CSRFToken": token,
 		},
+		baseURL: baseUrl,
 		auth: {
 			username: username,
 			password: password,
