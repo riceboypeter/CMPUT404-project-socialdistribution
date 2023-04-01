@@ -57,10 +57,36 @@ class PostSerializer(WritableNestedModelSerializer):
             'published',
             'visibility',
             #'unlisted',
-            'is_github'
+            #'is_github'
         ]
 
 class CommentSerializer(serializers.ModelSerializer):
+    type = serializers.CharField(default="comment",source="get_api_type",read_only=True)
+    id = serializers.URLField(source="get_public_id",read_only=True)
+    author = AuthorSerializer()
+
+    def create(self, validated_data):
+        author = AuthorSerializer.extract_and_upcreate_author(None,author_id=self.context["author_id"])
+        id = validated_data.pop('id') if validated_data.get('id') else None
+        
+        if not id:
+            id = self.context["id"]
+        comment = Comment.objects.create(**validated_data, author = author, id = id, post=self.context["post"])
+        comment.save()
+        return comment
+
+    class Meta:
+        model = Comment
+        fields = [
+            'type', 
+            'author',
+            'comment',
+            'contentType',
+            'published',
+            'id',       
+        ]
+
+class LikeSerializer(serializers.ModelSerializer):
     type = serializers.CharField(default="like",source="get_api_type",read_only=True)
     author = AuthorSerializer(required=True)
     summary = serializers.CharField(source="get_summary", read_only=True)
