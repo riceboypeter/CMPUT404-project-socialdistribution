@@ -488,12 +488,12 @@ class InboxSerializerObjects:
     
     def deserialize_objects(self, data, pk_a):
         # return serializer of objects to be added to inbox (so we get the object)
-        type = data.get('type')
+        type1 = data.get('type')
         obj = None
-        if type is None:
+        if type1 is None:
             raise exceptions
         
-        if type == Post.get_api_type():
+        if type1 == Post.get_api_type():
             try:
                 obj = Post.objects.get(id=(data["id"].split("/")[-1]))
             except Post.DoesNotExist:
@@ -501,19 +501,25 @@ class InboxSerializerObjects:
                 return Response(error_msg, status=status.HTTP_404_NOT_FOUND)
             serializer = PostSerializer
             context={'author_id': pk_a,'id':data["id"].split("/")[-1]}
-        elif type == Like.get_api_type():
+        elif type1 == Like.get_api_type():
             # TODO: Add a check to see if the author liked that object before, then just return obj
             serializer = LikeSerializer
-            context={'author_id': data["author_id"]}
-        elif type == Comment.get_api_type():
+            author = data.get("author")
+            obj = data.get("object")
+            context={'object': obj, 'author':author}
+            return serializer(data={}, context=context, partial=True)
+            # context={'author_id': data["author_id"]}
+        elif type1 == Comment.get_api_type():
             serializer = CommentSerializer
             context={'author_id': pk_a,'id':data["id"].split("/")[-1]}
-        elif type == FollowRequest.get_api_type():
+        elif type1 == FollowRequest.get_api_type():
+            print("deser follow")
             serializer = FollowRequestSerializer
-            context={'actorr': data["actor"]["id"],'objectt':data["object"]["id"]}
-            
+            actor = data.get("actor")
+            context={'object_id': pk_a, 'actor_':actor}
+            return serializer(data={}, context=context, partial=True)
         return obj or serializer(data=data, context=context, partial=True)
-
+    
 class Inbox_list(APIView, InboxSerializerObjects, PageNumberPagination):
     """
         URL: author/auhor_id/inbox
@@ -530,6 +536,7 @@ class Inbox_list(APIView, InboxSerializerObjects, PageNumberPagination):
         serializer = InboxSerializer(data=inbox_data, context = {"serializer":self.serialize_inbox_objects}, many=True)
         serializer.is_valid()
         data = self.get_items(pk_a, serializer.data)
+        # TODO: Fix pagination
         return Response(data, status=status.HTTP_200_OK)
     
     
@@ -546,33 +553,37 @@ class Inbox_list(APIView, InboxSerializerObjects, PageNumberPagination):
             2. If object in database: TYPE, id.
         """
         try:
-            author = get_object_or_404(Author,pk=pk_a)
-            
+            print("in Post")
+            author = get_object_or_404(Author,pk=pk_a, host="https://sociallydistributed.herokuapp.com/")
+            print("author")
+            print("found author locally")
         except Author.DoesNotExist:
-            error_msg = "Author id not found"
-            return Response(error_msg, status=status.HTTP_404_NOT_FOUND)
-        
-        serializer = self.deserialize_objects(
-            self.request.data, pk_a)
-        
+            print("couldnt find author locally")
+            return Response("Author not Found", status=status.HTTP_404_NOT_FOUND)
+            # if request.data['type'] == "Follow":
+            #     response = client.postFollow(request.data, pk_a)
+            #     return response
+
+        serializer = self.deserialize_objects(self.request.data, pk_a)
         # Case 1: friend author is outside the server, we create all these objects in our database (not sure)
         try:
             if serializer.is_valid():
                 item = serializer.save()
-                if self.request.data['type'] == "Follow":
-                    objectid = self.request.data['object']['id']
-                    author = get_object_or_404(Author,pk=objectid)
+                # if self.request.data['type'] == "Follow":
+                #     objectid = self.request.data['object']['id']
+                #     author = get_object_or_404(Author,pk=objectid)
                 if item=="already liked":
-                    return Response("Post Already Liked!")
+                    return Response("Post Already Liked!", status=status.HTTP_400_BAD_REQUEST)
                 if item == "already sent":
-                    return Response("You've already sent a request to this user!")
+                    return Response("You've already sent a request to this user!", status=status.HTTP_400_BAD_REQUEST)
                 if item == "same":
-                    return Response("You cannot send a follow request to yourself!")
+                    return Response("You cannot send a follow request to yourself!", status=status.HTTP_400_BAD_REQUEST)
+                if item == "already friends":
+                    return Response("You already follow them!", status=status.HTTP_400_BAD_REQUEST)
                 if hasattr(item, 'update_fields_with_request'):
                     item.update_fields_with_request(request)
             else: 
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        # Case 2: author is within the server
         except AttributeError as e:
             item = serializer   
         inbox_item = Inbox(content_object=item, author=author)
@@ -598,10 +609,11 @@ class Inbox_list(APIView, InboxSerializerObjects, PageNumberPagination):
         dict = {"type":"inbox", "author": settings.APP_NAME + '/authors/' + pk_a }
         items = []
         for item in data:
-            items.append(item["content_object"]) 
+            items.append(item["content_object"])
+
         dict["items"] = items
         return(dict) 
-
+    
 @api_view(['GET'])
 @authentication_classes([BasicAuthentication])
 @permission_classes([IsAuthenticated])
