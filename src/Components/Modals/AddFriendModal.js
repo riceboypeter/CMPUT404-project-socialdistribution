@@ -23,15 +23,16 @@ function ADD_FRIEND_MODAL({ open, handleClose }) {
 		const AUTHOR_ID = getAuthorId(null);
 		const url2 = obj.id + "/inbox";
 		const user = JSON.parse(localStorage.getItem("user"));
-		const instance = createReqInstance(obj.host);
+		const axiosInstance = createReqInstance(obj.host);
 		user["id"] = AUTHOR_ID;
 		delete user["type"];
 		const params = {
 			type: "Follow",
 			actor: user,
+			object: obj,
+			summary: "A Follow Request",
 		};
-
-		return instance({ method: "post", url: url2, data: params })
+		return axiosInstance({ method: "post", url: url2, data: params })
 			.then((res) => {
 				toaster.push(
 					<Message type="success">Friend Request Sent</Message>,
