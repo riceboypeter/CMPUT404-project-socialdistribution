@@ -20,6 +20,8 @@ mimetypes.add_type("application/javascript", ".js", True)
 
 APP_NAME = 'https://sociallydistributed.herokuapp.com'
 
+HOST_NAME = 'https://sociallydistributed.herokuapp.com/'
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
