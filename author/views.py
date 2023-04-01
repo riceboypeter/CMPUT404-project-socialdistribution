@@ -555,7 +555,7 @@ class Inbox_list(APIView, InboxSerializerObjects, PageNumberPagination):
         """
         try:
             print("in Post")
-            author = get_object_or_404(Author,pk=pk_a, host="https://sociallydistributed.herokuapp.com/")
+            author = Author.objects.get(pk=pk_a, host=settings.HOST_NAME)
             print("author")
             print("found author locally")
         except Author.DoesNotExist:
