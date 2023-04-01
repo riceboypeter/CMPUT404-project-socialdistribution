@@ -35,11 +35,18 @@ function POST({ postobj, edit, explore }) {
 				</ReactMarkdown>
 			);
 		}
-
+		
 		// Peter you just need to return the image here
-		if (post["contentType"] === "image/jpeg") {
-			return <p>{ }</p>;
+		let tempAuthorId = (postobj.author.id + "").split("/").slice(-1);
+		let tempPostId = (postobj.id + "").split("/").slice(-1);
+		let HOST = "https://sociallydistributed.herokuapp.com/";
+		let posturl = HOST + "posts/authors/" + tempAuthorId + "/posts/" + tempPostId + "/image";
+		if (post["contentType"] === "image/jpeg" || post["contentType"] === "image/png") {
+			return <p style={{ padding: '5px' }}>
+				<img src={posturl} alt="image" />
+			</p>;
 		}
+
 	};
 
 	const handleOpen = () => {
