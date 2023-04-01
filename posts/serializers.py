@@ -122,6 +122,15 @@ class LikeSerializer(serializers.ModelSerializer):
             'object': object,
             'author': author
         }
+    
+    class Meta:
+        model = Like
+        fields = [
+            "summary",
+            "type",
+            "author",
+            "object",
+        ]
 
 class ImageSerializer(serializers.ModelSerializer):
     type = serializers.CharField(default="post",source="get_api_type",read_only=True)
