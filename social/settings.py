@@ -18,9 +18,9 @@ import mimetypes
 
 mimetypes.add_type("application/javascript", ".js", True)
 
-APP_NAME = 'https://sociallydistributed.herokuapp.com'
+APP_NAME = 'http://127.0.0.1:8000'
 
-HOST_NAME = 'https://sociallydistributed.herokuapp.com/'
+HOST_NAME = 'http://127.0.0.1:8000/'
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -97,7 +97,7 @@ TEMPLATES = [
 ALLOWED_HOSTS = ['*']
 WSGI_APPLICATION = 'social.wsgi.application'
 CSRF_TRUSTED_ORIGINS = ['http://localhost:3000', "http://127.0.0.1:8000/", "http://localhost:8000"]
-CORS_ORIGIN_WHITELIST = ['http://localhost:3000', 'http://localhost:8000', "http://127.0.0.1:8000", "https://sociallydistributed.herokuapp.com", "https://killme.herokuapp.com"]
+CORS_ORIGIN_WHITELIST = ['http://localhost:3000', 'http://localhost:8000', "http://127.0.0.1:8000", "http://127.0.0.1:8000", "https://killme.herokuapp.com"]
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_HEADERS = (
     'accept',

@@ -13,7 +13,7 @@ export let reqInstance = axios.create({
 	headers: {
 		"X-CSRFToken": token,
 	},
-	baseURL: "https://sociallydistributed.herokuapp.com/",
+	baseURL: "http://127.0.0.1:8000/",
 	auth: {
 		username: username,
 		password: password,
@@ -33,7 +33,7 @@ export let axiosInstance = axios.create({
 export let createReqInstance = (baseUrl) => {
 	let username, password;
 	switch (baseUrl) {
-		case "https://sociallydistributed.herokuapp.com/":
+		case "http://127.0.0.1:8000/":
 			username = localStorage.getItem("username");
 			password = localStorage.getItem("password");
 			break;

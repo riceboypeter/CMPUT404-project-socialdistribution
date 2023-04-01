@@ -9,7 +9,7 @@ from rest_framework.response import Response
 from author.models import Author
 from author.serializers import AuthorSerializer
 from rest_framework import status
-
+from django.conf import settings
 from django.db import transaction, IntegrityError
 from django.contrib.auth.backends import AllowAllUsersModelBackend
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -51,7 +51,7 @@ class register(APIView):
             user.is_active = False
             user.save()
             url = "authors/" + id_
-            author = Author(user=user, id = id_, displayName= display_name, url=url, host="https://sociallydistributed.herokuapp.com/")
+            author = Author(user=user, id = id_, displayName= display_name, host=settings.HOST_NAME)
             author.save()
             return(HttpResponse(id_, status=status.HTTP_201_CREATED))
         except IntegrityError as e: 

@@ -74,8 +74,6 @@ class FollowRequestSerializer(serializers.ModelSerializer):
         if FollowRequest.objects.filter(actor=actor,object=object).exists():
             print("already sent")
             return "already sent"
-        actor = validated_data["actor"]
-        object = validated_data["object"]
         if actor==object:
             return "same"
         else:
