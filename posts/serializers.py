@@ -18,7 +18,7 @@ class PostSerializer(WritableNestedModelSerializer):
     categories = serializers.CharField(max_length=300, default="")
     
     def create(self, validated_data):
-        author = AuthorSerializer.extract_and_upcreate_author(validated_data, author_id=self.context["author_id"])
+        author = AuthorSerializer.extract_and_upcreate_author(None, author_id=self.context["author_id"])
         id = validated_data.pop('id') if validated_data.get('id') else None
         if not id:
             id = self.context["id"]
@@ -57,7 +57,7 @@ class PostSerializer(WritableNestedModelSerializer):
             'published',
             'visibility',
             #'unlisted',
-            'is_github',
+            'is_github'
         ]
 
 class CommentSerializer(serializers.ModelSerializer):
@@ -66,12 +66,12 @@ class CommentSerializer(serializers.ModelSerializer):
     author = AuthorSerializer()
 
     def create(self, validated_data):
-        author = AuthorSerializer.extract_and_upcreate_author(validated_data,author_id=self.context["author_id"])
+        author = AuthorSerializer.extract_and_upcreate_author(None,author_id=self.context["author_id"])
         id = validated_data.pop('id') if validated_data.get('id') else None
         
         if not id:
             id = self.context["id"]
-        comment = Comment.objects.create(**validated_data, author = author, id = id, post=self.context["post"])
+        comment = Comment.objects.create(**validated_data, author = author,  id =id, post=self.context["post"])
         comment.save()
         return comment
 
@@ -92,36 +92,15 @@ class LikeSerializer(serializers.ModelSerializer):
     summary = serializers.CharField(source="get_summary", read_only=True)
 
     def create(self, validated_data):
-        # author = AuthorSerializer.extract_and_upcreate_author(validated_data, author_id=self.context["author_id"])
-        author = validated_data["author"]
+        author = AuthorSerializer.extract_and_upcreate_author(None, author_id=self.context["author_id"])
+       
         if Like.objects.filter(author=author, object=validated_data.get("object")).exists():
             return "already liked"
         else:
             id = str(uuid.uuid4())
-            like = Like.objects.create(**validated_data, id = id)
+            like = Like.objects.create(**validated_data, author=author, id = id)
             like.save()
             return like
-    
-    def to_internal_value(self, data):
-        print("to_internal_value")
-        author = AuthorSerializer.extract_and_upcreate_author(author=self.context["author"])
-        # object = Author.objects.get(id=self.context["object"])
-        object = self.context["object"]
-
-        # Perform the data validation.
-        if not author:
-            raise serializers.ValidationError({
-                'author': 'This field is required.'
-            })
-        if not object:
-            raise serializers.ValidationError({
-                'object': 'This field is required.'
-            })
-        
-        return {
-            'object': object,
-            'author': author
-        }
 
     class Meta:
         model = Like
@@ -131,7 +110,6 @@ class LikeSerializer(serializers.ModelSerializer):
             "author",
             "object",
         ]
-    
 
 class ImageSerializer(serializers.ModelSerializer):
     type = serializers.CharField(default="post",source="get_api_type",read_only=True)
@@ -140,7 +118,7 @@ class ImageSerializer(serializers.ModelSerializer):
     image = Base64ImageField()
     
     def create(self, validated_data):
-        author = AuthorSerializer.extract_and_upcreate_author(validated_data, author_id=self.context["author_id"])
+        author = AuthorSerializer.extract_and_upcreate_author(None, author_id=self.context["author_id"])
         id = validated_data.pop('id') if validated_data.get('id') else None
         if not id:
             id = self.context["id"]
