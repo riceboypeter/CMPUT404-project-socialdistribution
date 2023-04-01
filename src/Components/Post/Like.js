@@ -25,7 +25,7 @@ function LIKE({ postObj }) {
 		const url = `authors/${FAID}/inbox/`;
 		
 		const reqInstance = createReqInstance(host); // Create axios instance with default base URL
-  		reqInstance.post(url, params)
+  		reqInstance.post({url:url, baseurl:host, data:params})
     		.then((res) => {
       		toaster.push(
         		<Message type="success">Successful Like</Message>,
