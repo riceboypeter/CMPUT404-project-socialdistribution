@@ -10,7 +10,7 @@ import {
 } from "rsuite";
 import { ToastContainer, toast } from "react-toastify";
 import SearchIcon from "@rsuite/icons/Search";
-import { reqInstance } from "../utils/axios";
+import { reqInstance, createReqInstance } from "../utils/axios";
 import { getAuthorId, getCurrentUser } from "../utils/auth";
 
 function ADD_FRIEND_MODAL({ open, handleClose }) {
@@ -19,19 +19,20 @@ function ADD_FRIEND_MODAL({ open, handleClose }) {
 	const [users, setusers] = useState([]);
 	const toaster = useToaster();
 
-	async function sendreq(id) {
+	async function sendreq(obj) {
 		const AUTHOR_ID = getAuthorId(null);
-		const faid = getAuthorId(id);
-		const url2 = `authors/${faid}/inbox/`;
+		const url2 = obj.id + "/inbox";
 		const user = JSON.parse(localStorage.getItem("user"));
+		const axiosInstance = createReqInstance(obj.host);
 		user["id"] = AUTHOR_ID;
 		delete user["type"];
 		const params = {
 			type: "Follow",
 			actor: user,
+			object: obj,
+			summary: "A Follow Request",
 		};
-		console.log(params);
-		return reqInstance({ method: "post", url: url2, data: params })
+		return axiosInstance({ method: "post", url: url2, data: params })
 			.then((res) => {
 				toaster.push(
 					<Message type="success">Friend Request Sent</Message>,
@@ -97,7 +98,7 @@ function ADD_FRIEND_MODAL({ open, handleClose }) {
 					<Button
 						style={{ float: "right", marginRight: "10px" }}
 						appearance="primary"
-						onClick={() => sendreq(obj.id)}
+						onClick={() => sendreq(obj)}
 					>
 						Follow
 					</Button>

@@ -95,7 +95,7 @@ TEMPLATES = [
 ALLOWED_HOSTS = ['*']
 WSGI_APPLICATION = 'social.wsgi.application'
 CSRF_TRUSTED_ORIGINS = ['http://localhost:3000', "http://127.0.0.1:8000/", "http://localhost:8000"]
-CORS_ORIGIN_WHITELIST = ['http://localhost:3000', 'http://localhost:8000', "http://127.0.0.1:8000"]
+CORS_ORIGIN_WHITELIST = ['http://localhost:3000', 'http://localhost:8000', "http://127.0.0.1:8000", "https://sociallydistributed.herokuapp.com", "https://killme.herokuapp.com"]
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_HEADERS = (
     'accept',
@@ -107,7 +107,8 @@ CORS_ALLOW_HEADERS = (
     'user-agent',
     'x-csrftoken',
     'x-requested-with',
-    'csrftoken'
+    'csrftoken',
+    'auth'
 )
 
 

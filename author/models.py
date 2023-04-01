@@ -33,23 +33,23 @@ class Author(models.Model):
         return 'author'
     
     def get_absolute_url(self):
-        url = reverse('authors:detail', args=[str(self.id)])
-        url = settings.APP_NAME + url
-        self.url = url if url.endswith('/') else url + '/'
-        self.save()
+        if self.host == 'https://sociallydistributed.herokuapp.com/':
+            url = reverse('authors:detail', args=[str(self.id)])
+            url = settings.APP_NAME + url
+            self.url = url[-1] if url.endswith('/') else url 
+            self.save()
+            return self.url
         return self.url
     
     def update_fields_with_request(self, request):
-        if not self.url and not self.host:
-            self.url = request.build_absolute_uri(self.get_absolute_url())
-            self.host = request.build_absolute_uri('/') 
-            self.save()
+        self.url = request.build_absolute_uri(self.get_absolute_url())
+        self.host = request.build_absolute_uri('/') 
+        self.save()
     
     # return the author public ID
     def get_public_id(self):
-        if not self.url:
-            self.get_absolute_url()
-        return (self.url)[:-1] or str(self.id)   
+        self.get_absolute_url()
+        return self.url or str(self.id)   
     
     def follower_to_object(self):
         return {"type":"author",
