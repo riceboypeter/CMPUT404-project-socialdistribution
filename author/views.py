@@ -489,7 +489,8 @@ class InboxSerializerObjects:
     
     def deserialize_objects(self, data, pk_a):
         # return serializer of objects to be added to inbox (so we get the object)
-        type1 = data.get('type')
+        type1 = data["type"]
+        print(type1)
         obj = None
         if type1 is None:
             raise exceptions
@@ -504,6 +505,7 @@ class InboxSerializerObjects:
             context={'author_id': pk_a,'id':data["id"].split("/")[-1]}
         elif type1 == Like.get_api_type():
             # TODO: Add a check to see if the author liked that object before, then just return obj
+            print("its a like")
             serializer = LikeSerializer
             author = data.get("author")
             obj = data.get("object")
@@ -564,7 +566,7 @@ class Inbox_list(APIView, InboxSerializerObjects, PageNumberPagination):
             # if request.data['type'] == "Follow":
             #     response = client.postFollow(request.data, pk_a)
             #     return response
-
+        #issue here
         serializer = self.deserialize_objects(self.request.data, pk_a)
         # Case 1: friend author is outside the server, we create all these objects in our database (not sure)
         try:
