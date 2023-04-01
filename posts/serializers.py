@@ -61,55 +61,41 @@ class PostSerializer(WritableNestedModelSerializer):
         ]
 
 class CommentSerializer(serializers.ModelSerializer):
-    type = serializers.CharField(default="comment",source="get_api_type",read_only=True)
-    id = serializers.URLField(source="get_public_id",read_only=True)
-    author = AuthorSerializer()
-
-    def create(self, validated_data):
-        author = AuthorSerializer.extract_and_upcreate_author(None,author_id=self.context["author_id"])
-        id = validated_data.pop('id') if validated_data.get('id') else None
-        
-        if not id:
-            id = self.context["id"]
-        comment = Comment.objects.create(**validated_data, author = author,  id =id, post=self.context["post"])
-        comment.save()
-        return comment
-
-    class Meta:
-        model = Comment
-        fields = [
-            'type', 
-            'author',
-            'comment',
-            'contentType',
-            'published',
-            'id',       
-        ]
-
-class LikeSerializer(serializers.ModelSerializer):
     type = serializers.CharField(default="like",source="get_api_type",read_only=True)
     author = AuthorSerializer(required=True)
     summary = serializers.CharField(source="get_summary", read_only=True)
 
     def create(self, validated_data):
-        author = AuthorSerializer.extract_and_upcreate_author(None, author_id=self.context["author_id"])
-       
+        # author = AuthorSerializer.extract_and_upcreate_author(validated_data, author_id=self.context["author_id"])
+        author = validated_data["author"]
         if Like.objects.filter(author=author, object=validated_data.get("object")).exists():
             return "already liked"
         else:
             id = str(uuid.uuid4())
-            like = Like.objects.create(**validated_data, author=author, id = id)
+            like = Like.objects.create(**validated_data, id = id)
             like.save()
             return like
+    
+    def to_internal_value(self, data):
+        print("to_internal_value")
+        author = AuthorSerializer.extract_and_upcreate_author(author=self.context["author"])
+        # object = Author.objects.get(id=self.context["object"])
+        object = self.context["object"]
 
-    class Meta:
-        model = Like
-        fields = [
-            "summary",
-            "type",
-            "author",
-            "object",
-        ]
+        # Perform the data validation.
+        if not author:
+            raise serializers.ValidationError({
+                'author': 'This field is required.'
+            })
+        if not object:
+            raise serializers.ValidationError({
+                'object': 'This field is required.'
+            })
+        
+        return {
+            'object': object,
+            'author': author
+        }
 
 class ImageSerializer(serializers.ModelSerializer):
     type = serializers.CharField(default="post",source="get_api_type",read_only=True)
