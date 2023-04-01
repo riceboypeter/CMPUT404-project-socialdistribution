@@ -35,7 +35,7 @@ function LIKE({ postObj }) {
 		console.log(postObjUrl)
 		console.log(host)
 		// reqInstance.post({ url: url, baseurl: host, data: params })
-		reqInstance.post( url, {baseurl: host, data: params  })
+		reqInstance.post( url, { data: params  })
 			.then((res) => {
 				toaster.push(
 					<Message type="success">Successful Like</Message>,
