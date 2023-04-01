@@ -489,6 +489,7 @@ class InboxSerializerObjects:
     
     def deserialize_objects(self, data, pk_a):
         # return serializer of objects to be added to inbox (so we get the object)
+        print(data)
         type1 = data["type"]
         print(type1)
         obj = None
@@ -567,6 +568,8 @@ class Inbox_list(APIView, InboxSerializerObjects, PageNumberPagination):
             #     response = client.postFollow(request.data, pk_a)
             #     return response
         #issue here
+        print("deserialize")
+        print(self.request.data)
         serializer = self.deserialize_objects(self.request.data, pk_a)
         # Case 1: friend author is outside the server, we create all these objects in our database (not sure)
         try:
