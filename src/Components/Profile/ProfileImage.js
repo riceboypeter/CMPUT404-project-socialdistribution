@@ -9,7 +9,10 @@ function PROFILEIMAGE({ size }) {
 		if (getProfileImageUrl() === "") {
 			setUrl("https://i.imgur.com/J95WCOD.jpg");
 		}
-	}, []);
+		else {
+			setUrl(getProfileImageUrl());
+		}
+	});
 
 	return (
 		<Avatar style={{ float: "left" }} circle src={url} size={size}></Avatar>
