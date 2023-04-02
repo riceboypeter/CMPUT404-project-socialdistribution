@@ -2,7 +2,8 @@ import uuid
 from django.urls import reverse
 from rest_framework import serializers, exceptions
 from .models import *
-from django.http import HttpResponse
+from rest_framework import status
+from rest_framework.response import Response
 import client
 from Remote.Authors import getNodeAuthor_App2
 
@@ -13,33 +14,36 @@ class AuthorSerializer(serializers.ModelSerializer):
     displayName = serializers.CharField(default = 'x')
     
     @staticmethod
-    def _upcreate(validated_data):
-        print("in the other upcreate function")
-        author = Author.objects.create(**validated_data)   
-        return author
+    def _update(validated_data):
+        print("AUTHOR ID", validated_data["id"])
+        id = validated_data["id"].split("/")[-1]
+        author = Author.objects.get(id=id)
+        return super().update(author,validated_data)
     
     @staticmethod
-    def extract_and_upcreate_author(author, author_id = None):
+    def _upcreate(validated_data):
+        print("in the other upcreate function")
+        return Author(**validated_data)
+    
+    @staticmethod
+    def extract_and_upcreate_author(validated_data, author_id = None):
         print("in extract and upcreate")
-        updated_author= None
         if author_id is not None:
             try:
                 return Author.objects.get(id=author_id)
             except Author.DoesNotExist:
-                raise exceptions.ValidationError("Author does not exist")
+                return Response("Author does not exist here!", status=status.HTTP_404_NOT_FOUND)
+        updated_author = None
         try:
-            print("AUTHOR ID", author["id"])
-            id = author["id"].split("/")[-1]
-            updated_author = Author.objects.get(id=id)
+            updated_author = AuthorSerializer._update(validated_data)
         except Author.DoesNotExist:
-            updated_author = Author(**author)
-            updated_author.save()
+            updated_author = AuthorSerializer._upcreate(validated_data)
             print("updated author saved")
         if not updated_author:
             print("no author", updated_author)
-            raise exceptions.ValidationError("Author does not exist")
+            return Response("Author does not exist here!", status=status.HTTP_404_NOT_FOUND)
         else:
-            return updated_author
+            return updated_author.save()            
     
     def to_representation(self, instance):
         id = instance.get_public_id()
