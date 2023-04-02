@@ -14,13 +14,15 @@ class AuthorSerializer(serializers.ModelSerializer):
     
     @staticmethod
     def _upcreate(validated_data):
+        print("in the other upcreate function")
         author = Author.objects.create(**validated_data)   
         return author
+    
     @staticmethod
     def extract_and_upcreate_author(author, author_id = None):
-        print("in upcreate")
+        print("in extract and upcreate")
         updated_author= None
-        if author_id:
+        if author_id is not None:
             try:
                 return Author.objects.get(id=author_id)
             except Author.DoesNotExist:

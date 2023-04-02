@@ -5,20 +5,33 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.conf import settings
 
-# helper function that makes foreign formats similar to ours
+# helper functions that make foreign formats similar to ours
 def clean_dict(dirty):
     result = {}
     for key,value in dirty.items():
-        # unlisted field is in our visibility field
-        if key == "unlisted":
-            if value == True:
-                result["visibility"] = "UNLISTED"
         # if the type for some key is not str, make it an empty
         # str so that the format matches ours
-        elif type(value) != str:
+        if type(value) != str:
             value = ''
         result[key] = value
+
     return result
+
+def handle_image(dirty):
+    # our image posts use the image field to store images
+    # foreign formats use "content" to store them
+    if dirty.get('image') is None:
+        dirty['image'] = dirty['content']
+        # base64imagefield HATES base64 images that don't have
+        # proper padding, so this is to make sure that it works
+        if dirty['image'][-1] != '=':
+            dirty['image'] += '='
+    return dirty
+
+# get the authorID for a foreign author
+def handle_author(dirty):
+    a = dirty.get("author").split('/')[-1]
+    return a
 
 # helper function that works on lists of foreign formats
 def clean_list(dirty):
@@ -28,7 +41,7 @@ def clean_list(dirty):
         result.append(clean_dict(i))
     # JSON-ifying the result for now will just be handled outside the function
     return result
-        
+
 # def getNodeAuthors_social_distro():
 
 #     #https://social-distro.herokuapp.com/api/authors/15/
@@ -91,7 +104,6 @@ def getNodeAuthors_Yoshi():
     # response = requests.get(url, headers=headers)
     json_response = response.json()
     authors = json_response['items']
-
     return authors
 
 
@@ -222,7 +234,7 @@ def getNodePost_social_distro(author_id):
     if status_code == 200:
         json_response = response.json()
         
-        json_response = json.dumps(clean_list(json_response['results']))
+        json_response = json_response['results']
 
         return(json_response)
 

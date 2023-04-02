@@ -18,13 +18,17 @@ class PostSerializer(WritableNestedModelSerializer):
     categories = serializers.CharField(max_length=300, default="")
     
     def create(self, validated_data):
-        
-        author = AuthorSerializer.extract_and_upcreate_author(None, author_id=self.context["author_id"])
-        
-        id = validated_data.pop('id') if validated_data.get('id') else None
-        if not id:
-            id = self.context["id"]
-        post = Post.objects.create(**validated_data, author = author, id = id)
+        print(validated_data)
+        try:
+            author = AuthorSerializer.extract_and_upcreate_author(validated_data['author'], None)
+            post = Post.objects.create(**validated_data)
+        except:
+            author = AuthorSerializer.extract_and_upcreate_author(None, author_id=self.context["author_id"])
+            id = validated_data.pop('id') if validated_data.get('id') else None
+            if not id:
+                id = self.context["id"]
+            post = Post.objects.create(**validated_data, author = author, id = id)
+
         return post
 
     def to_representation(self, instance):
@@ -58,7 +62,7 @@ class PostSerializer(WritableNestedModelSerializer):
             'commentsSrc',
             'published',
             'visibility',
-            #'unlisted',
+            'unlisted',
             #'is_github'
         ]
 
@@ -143,11 +147,16 @@ class ImageSerializer(serializers.ModelSerializer):
     image = Base64ImageField()
     
     def create(self, validated_data):
-        author = AuthorSerializer.extract_and_upcreate_author(None, author_id=self.context["author_id"])
-        id = validated_data.pop('id') if validated_data.get('id') else None
-        if not id:
-            id = self.context["id"]
-        post = Post.objects.create(**validated_data, author = author, id = id)
+        try:
+            author = AuthorSerializer.extract_and_upcreate_author(validated_data['author'], None)
+            post = Post.objects.create(**validated_data)
+        except:
+            author = AuthorSerializer.extract_and_upcreate_author(None, author_id=self.context["author_id"])
+            id = validated_data.pop('id') if validated_data.get('id') else None
+            if not id:
+                id = self.context["id"]
+            post = Post.objects.create(**validated_data, author = author, id = id)
+
         return post
 
     class Meta:
@@ -160,4 +169,5 @@ class ImageSerializer(serializers.ModelSerializer):
             "title",
             "image",
             "visibility",
+            "unlisted",
         ]

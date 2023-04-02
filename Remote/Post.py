@@ -95,12 +95,15 @@ def getAllPublicPosts():
 
 
 def sendPost(host, data, auth_id):
+    print(data)
     if 'yoshi' in host:
         response, status_code = sendPostYoshi(data, auth_id)
     elif 'social-distro' in host:
         response, status_code = sendPostDistro(data, auth_id)
     elif 'killme' in host:
         response, status_code = sendPostApp2(data, auth_id)
+    elif 'p2psd' in host:
+        response, status_code = sendPostP2(data, auth_id)
     return response
 
 def sendPostYoshi(data, auth_id):
@@ -131,18 +134,36 @@ def sendPostApp2(data, auth_id):
     json_response = response.json()
     return json_response, status_code
 
-# url = 'https://killme.herokuapp.com/authors/'
-#     hosturl = "https://killme.herokuapp.com/"
+def sendPostP2(data, auth_id):
+    url = 'http://p2psd.herokuapp.com/authors/' + auth_id + '/inbox'
+    response = requests.post(url=url, headers=p2_headers(), data=data)
+    status_code = response.status_code
+    json_response = response.json()
+    return json_response, status_code
 
-#     username = 'app1team15'
-#     password = 'hari1234'
-
-#     session = requests.Session()
-#     session.auth = (username, password)
-
-#     auth = session.post(hosturl)
-#     response = session.get(url)
-
-#     json_response = response.json()
-#     authors = json_response['data']
-#     return authors
+# post for yoshi connect:
+# 
+#
+# {"type":"post",
+# "title":"Fake post",
+# "id":"http://localhost:3000/authors/08a779b240624ff899823d1024ff3aa1/posts/2da30761567a4f708a77bd5f337126d3",
+# source":"http://localhost:3000/authors/08a779b240624ff899823d1024ff3aa1/posts/2da30761567a4f708a77bd5f337126d3",
+# origin":"http://localhost:3000/authors/08a779b240624ff899823d1024ff3aa1/posts/2da30761567a4f708a77bd5f337126d3",
+# description":"Fake description",
+# contentType":"text/plain",
+# content":"Fake Content",
+# "author": {  
+#       "type":"author",
+#       "id":"http://localhost:3000/authors/08a779b240624ff899823d1024ff3aa1",
+#       "host":"http://localhost:3000/",
+#       "displayName":"Tommy",
+#       "url":"http://localhost:3000/authors/08a779b240624ff899823d1024ff3aa1",
+#       "github":"Fake url",
+#       "profileImage":"Fake image",
+#       },
+# categories[0]:"Empty",
+# comments:"http://localhost:3000/authors/08a779b240624ff899823d1024ff3aa1/posts/2da30761567a4f708a77bd5f337126d3",
+# published:"2015-03-09T13:07:04+00:00",
+# visibility:"PUBLIC",
+# unlisted:"false" 
+# }
