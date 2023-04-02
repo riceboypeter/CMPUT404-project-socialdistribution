@@ -15,11 +15,13 @@ import os
 import dj_database_url
 
 import mimetypes
+from dotenv import load_dotenv
+
+load_dotenv()
 
 mimetypes.add_type("application/javascript", ".js", True)
 
-#APP_NAME = 'https://sociallydistributed.herokuapp.com'
-APP_NAME = 'http://127.0.0.1:8000'
+APP_NAME = os.getenv('REACT_APP_HOST_NAME')
 HOST_NAME = APP_NAME + '/'
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
