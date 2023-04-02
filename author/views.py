@@ -216,6 +216,7 @@ class AuthorsListView(APIView, PageNumberPagination):
 
 # made the foreign author getter a helper function instead to work with inbox
 def get_foreign_authors(pk_a):
+    print("getting foreign")
     try:
         # get yoshi's author at node
         author_json, status_code = getNodeAuthor_Yoshi(pk_a)
@@ -227,13 +228,13 @@ def get_foreign_authors(pk_a):
         else:
             author_json, status_code = getNodeAuthor_social_distro(pk_a)
             if status_code == 200:
-                # formatting (theirs is nonetype while ours is empty string)
+                """# formatting (theirs is nonetype while ours is empty string)
                 if author_json['profileImage'] == None:
                     profileImage = ''
                 if author_json['github'] == None:
                     github = ''
-                author = Author(id = pk_a, displayName= author_json['displayName'], url=author_json['url'], profileImage=profileImage, github=github, host=author_json['host'])
-                print(author)
+                author = Author(id = pk_a, displayName= author_json['displayName'], url=author_json['url'], profileImage=profileImage, github=github, host=author_json['host'])"""
+                return Response(author_json)
                 
     except:
         error_msg = "Author id not found"
@@ -497,7 +498,7 @@ class InboxSerializerObjects:
     
     def deserialize_objects(self, data, pk_a):
         # return serializer of objects to be added to inbox (so we get the object)
-        print(data)
+        # print(data)
         type1 = data["type"]
         print(type1)
         obj = None
@@ -542,7 +543,10 @@ class InboxSerializerObjects:
             context={'object_id': pk_a, 'actor_':actor}
             return serializer(data={}, context=context, partial=True)
         print("finish")
-        return obj or serializer(data=data, context=context, partial=True)
+        if obj is not None:
+            return obj
+        else:
+            return serializer(data=data, context=context, partial=True)
     
 class Inbox_list(APIView, InboxSerializerObjects, PageNumberPagination):
     """
@@ -582,9 +586,11 @@ class Inbox_list(APIView, InboxSerializerObjects, PageNumberPagination):
             print("found author locally")
         except Author.DoesNotExist:
             try:
+                print("looking through foreign authors")
                 author = get_foreign_authors(pk_a)
+                author = author.data
             except Author.DoesNotExist:
-                print("couldnt find author locally")
+                print("couldnt find author in foreign or local")
                 return Response("Author not Found", status=status.HTTP_404_NOT_FOUND)
             # if request.data['type'] == "Follow":
             #     response = client.postFollow(request.data, pk_a)
@@ -613,6 +619,7 @@ class Inbox_list(APIView, InboxSerializerObjects, PageNumberPagination):
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except AttributeError as e:
             item = serializer   
+
         inbox_item = Inbox(content_object=item, author=author)
         inbox_item.save()
         return Response({'request': self.request.data, 'saved': model_to_dict(inbox_item)})
