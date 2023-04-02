@@ -373,7 +373,7 @@ class FollowersView(APIView):
         author.save()
         try: 
             follow = FollowRequest.objects.get(actor=new_follower,object=author)
-            Inbox.objects.get(object_id=follow.id).delete()
+            Inbox.objects.get(object=follow).delete()
         except:
             pass
 
