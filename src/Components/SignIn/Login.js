@@ -58,7 +58,7 @@ function LOGIN() {
 		});
 		reqInstance({
 			method: "post",
-			url: "https://sociallydistributed.herokuapp.com/login",
+			url: process.env.REACT_APP_HOST_NAME + "/login",
 			data: params,
 		})
 			.then(async (res) => {

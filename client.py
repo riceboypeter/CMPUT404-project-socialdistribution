@@ -3,6 +3,7 @@ import base64
 import json
 from rest_framework.response import Response
 from rest_framework import status
+from django.conf import settings
 
 # helper function that makes foreign formats similar to ours
 def clean_dict(dirty):
@@ -267,7 +268,7 @@ def postFollow(data, author_id):
                 error_msg = "Author id not found"
                 return Response(error_msg, status=status.HTTP_404_NOT_FOUND)
             else:
-                url =  'https://sociallydistributed.herokuapp.com/authors/'+ author_id +'/inbox'
+                url =  settings.HOST_NAME + 'authors/'+ author_id +'/inbox'
                 username = 'superuser'
                 password = 'password'
                 data['actor'] = author

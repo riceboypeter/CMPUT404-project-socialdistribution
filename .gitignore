@@ -40,3 +40,7 @@ author/__pycache__/
 backend/social/media/
 media/
 .vscode/
+
+# dotenv environment variables file
+.env
+.env.test
