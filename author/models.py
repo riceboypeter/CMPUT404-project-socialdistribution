@@ -33,13 +33,14 @@ class Author(models.Model):
         return 'author'
     
     def get_absolute_url(self):
-        if settings.APP_NAME in self.host:
+        if settings.HOST_NAME == self.host:
             url = reverse('authors:detail', args=[str(self.id)])
             url = settings.APP_NAME + url
             self.url = url[:-1] if url.endswith('/') else url 
             self.save()
             return self.url
         self.url = self.url[:-1] if self.url.endswith('/') else self.url 
+        self.save()
         return self.url
     
     def update_fields_with_request(self, request):
