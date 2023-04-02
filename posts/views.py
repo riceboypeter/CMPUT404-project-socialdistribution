@@ -526,7 +526,6 @@ class post_list(APIView, PageNumberPagination):
         except Author.DoesNotExist:
             error_msg = "Author id not found"
             return Response(error_msg, status=status.HTTP_404_NOT_FOUND)
-
         # handle an image post
         if 'image' in request.data['contentType']:
             # format is similar to post: a JSON object with: { title, contentType, content, image }
