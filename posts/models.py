@@ -11,14 +11,12 @@ from django.conf import settings
 PUBLIC = 'PUBLIC'
 PRIVATE = 'PRIVATE'
 FRIENDS = 'FRIENDS'
-UNLISTED = 'UNLISTED'
 
 # 
 visbility_choices = [
     (PUBLIC, 'Public'),
     (PRIVATE, 'Private'),
-    (FRIENDS, 'Friends'),
-    (UNLISTED, 'Unlisted')
+    (FRIENDS, 'Friends')
 ]
 
 MARKDOWN = 'text/markdown'
@@ -50,6 +48,7 @@ class Post(models.Model):
     count = models.PositiveIntegerField(default=0, blank=True)
     commentsSrc = models.CharField(max_length=255, default="", blank=True)
     is_github = models.BooleanField(default=False)
+    unlisted = models.BooleanField(default=False)
     
     image = models.ImageField(null=True,blank=True, default="")  # reference to an image in the DB
 

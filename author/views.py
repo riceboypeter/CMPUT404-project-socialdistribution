@@ -519,10 +519,10 @@ class InboxSerializerObjects:
                     # normal post
                     else:
                         serializer = PostSerializer
-                    context={'author_id': pk_a,'id':data["id"].split("/")[-1]}
                 except:
                     error_msg = "Post not found"
                     return Response(error_msg, status=status.HTTP_404_NOT_FOUND)
+            context={}
 
         elif type1 == Like.get_api_type():
             # TODO: Add a check to see if the author liked that object before, then just return obj
@@ -585,13 +585,8 @@ class Inbox_list(APIView, InboxSerializerObjects, PageNumberPagination):
             author = Author.objects.get(pk=pk_a, host=settings.HOST_NAME)
             print("found author locally")
         except Author.DoesNotExist:
-            try:
-                print("looking through foreign authors")
-                author = get_foreign_authors(pk_a)
-                author = author.data
-            except Author.DoesNotExist:
-                print("couldnt find author in foreign or local")
-                return Response("Author not Found", status=status.HTTP_404_NOT_FOUND)
+            print("couldnt find author in foreign or local")
+            return Response("Author not Found", status=status.HTTP_404_NOT_FOUND)
             # if request.data['type'] == "Follow":
             #     response = client.postFollow(request.data, pk_a)
             #     return response
@@ -619,7 +614,6 @@ class Inbox_list(APIView, InboxSerializerObjects, PageNumberPagination):
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except AttributeError as e:
             item = serializer   
-
         inbox_item = Inbox(content_object=item, author=author)
         inbox_item.save()
         return Response({'request': self.request.data, 'saved': model_to_dict(inbox_item)})

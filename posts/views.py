@@ -812,22 +812,6 @@ class ImageView(APIView):
         if not post.image:
             error_msg = {"message":"Post does not contain an image!"}
             return Response(error_msg,status=status.HTTP_404_NOT_FOUND)
-        
-        # image privacy protection settings
-        # unlisted does not need to be addressed here
-        # if it is private or friends, only continue if author is trying to access it:
-        if "PRIVATE" in post.visibility:
-            # check if the author is not the one accessing it, return a 403 if not:
-            if post.author != authenticated_user:
-                error_msg = {"message":"You do not have access to this image!"}
-                return Response(error_msg,status=status.HTTP_403_FORBIDDEN)
-
-        # otherwise, handle it for friends:
-        elif "FRIENDS" in post.visibility:
-            # if the author or friends are trying to access it, return a 403 if not:
-            if post.author not in authenticated_user.friends and post.author != authenticated_user:
-                error_msg = {"message":"You do not have access to this image!"}
-                return Response(error_msg,status=status.HTTP_403_FORBIDDEN)
 
         # return the image!
         # post.image refers to an image in the database 
@@ -945,6 +929,7 @@ class ShareView(APIView):
         categories=post.categories,
         published=post.published,
         visibility=post.visibility,
+        unlisted=post.unlisted,
         )
 
         # update the source and origin fields
@@ -983,16 +968,16 @@ def share_object(item, author, shared_user):
     inbox_item = Inbox(content_object=item, author=author)
     inbox_item.save()
 
+    # unlisted post (send only to own inbox)
+    if (item.unlisted == True):
+        if author:
+            inbox_item = Inbox(content_object=item, author=author)
+            inbox_item.save()
+
     # friend post (send to friend inbox)
     if (item.visibility == 'FRIENDS'):
         for friend in author.friends.all():
             inbox_item = Inbox(content_object=item, author=friend)
-            inbox_item.save()
-
-    # unlisted post (send only to own inbox)
-    elif (item.visibility == 'UNLISTED'):
-        if author:
-            inbox_item = Inbox(content_object=item, author=author)
             inbox_item.save()
 
     # private post (send to shared users' inbox)
