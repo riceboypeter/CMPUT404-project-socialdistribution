@@ -992,7 +992,7 @@ def share_object(item, author, shared_user, data):
             #check the host to see if the friend is a foreign and send post to them.
             friend_id = friend.id
             host = friend.host
-            if host != 'https://sociallydistributed.herokuapp.com/':
+            if host != settings.HOST_NAME:
                 sendPost(host, data, friend_id)
             else:
                 inbox_item = Inbox(content_object=item, author=friend)
@@ -1008,5 +1008,8 @@ def share_object(item, author, shared_user, data):
     elif (item.visibility == 'PRIVATE'):
         for id in shared_user:
             share = Author.objects.get(id=id)
+            host = share.host
+            if host != settings.HOST_NAME:
+                sendPost(host, data, id)
             inbox_item = Inbox(content_object=item, author=share)
             inbox_item.save()
