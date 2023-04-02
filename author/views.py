@@ -492,18 +492,30 @@ class InboxSerializerObjects:
         print(data)
         type1 = data["type"]
         print(type1)
+        
         obj = None
         if type1 is None:
             raise exceptions
-        
         if type1 == Post.get_api_type():
             try:
                 obj = Post.objects.get(id=(data["id"].split("/")[-1]))
             except Post.DoesNotExist:
-                error_msg = "Post not found"
-                return Response(error_msg, status=status.HTTP_404_NOT_FOUND)
-            serializer = PostSerializer
-            context={'author_id': pk_a,'id':data["id"].split("/")[-1]}
+                # there is an except outside the function, so idk why this is here
+                #error_msg = "Post not found"
+                #return Response(error_msg, status=status.HTTP_404_NOT_FOUND)
+                
+                # handle image posts
+                if "image/png" in data["contentType"]:
+                    # make a mutable version of the querydict so that we can use
+                    # our special image field
+                    data = data.copy()
+                    data = handle_image(data)
+                    serializer = ImageSerializer
+                # normal post
+                else:
+                    serializer = PostSerializer
+                context={'author_id': pk_a,'id':data["id"].split("/")[-1]}
+
         elif type1 == Like.get_api_type():
             # TODO: Add a check to see if the author liked that object before, then just return obj
             print("its a like")
@@ -522,6 +534,7 @@ class InboxSerializerObjects:
             actor = data.get("actor")
             context={'object_id': pk_a, 'actor_':actor}
             return serializer(data={}, context=context, partial=True)
+        print("finish")
         return obj or serializer(data=data, context=context, partial=True)
     
 class Inbox_list(APIView, InboxSerializerObjects, PageNumberPagination):
@@ -557,9 +570,8 @@ class Inbox_list(APIView, InboxSerializerObjects, PageNumberPagination):
             2. If object in database: TYPE, id.
         """
         try:
-            print("in Post")
+            # print("in Post")
             author = Author.objects.get(pk=pk_a, host=settings.HOST_NAME)
-            print("author")
             print("found author locally")
         except Author.DoesNotExist:
             print("couldnt find author locally")
@@ -569,7 +581,6 @@ class Inbox_list(APIView, InboxSerializerObjects, PageNumberPagination):
             #     return response
         #issue here
         print("deserialize")
-        print(self.request.data)
         serializer = self.deserialize_objects(self.request.data, pk_a)
         # Case 1: friend author is outside the server, we create all these objects in our database (not sure)
         try:
