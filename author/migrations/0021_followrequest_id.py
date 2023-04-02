@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AddField(
-            model_name='followrequest',
+            model_name='FollowRequest',
             name='id',
             field=models.BigAutoField(default='2', primary_key=True, serialize=False),
         ),

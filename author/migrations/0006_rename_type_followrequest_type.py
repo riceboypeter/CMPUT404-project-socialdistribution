@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RenameField(
-            model_name='followrequest',
+            model_name='FollowRequest',
             old_name='Type',
             new_name='type',
         ),

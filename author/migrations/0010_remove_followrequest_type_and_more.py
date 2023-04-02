@@ -11,11 +11,11 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RemoveField(
-            model_name='followrequest',
+            model_name='FollowRequest',
             name='type',
         ),
         migrations.AlterField(
-            model_name='followrequest',
+            model_name='FollowRequest',
             name='Summary',
             field=models.CharField(default='', max_length=255),
         ),
