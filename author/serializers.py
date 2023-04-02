@@ -67,7 +67,7 @@ class FollowRequestSerializer(serializers.ModelSerializer):
     object = AuthorSerializer(required=False)
 
     print("DELETING")
-    FollowRequest.objects.delete()
+    FollowRequest.objects.all().delete()
 
     def create(self,validated_data):
         print("in follow req create")
