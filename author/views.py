@@ -500,6 +500,7 @@ class InboxSerializerObjects:
         type1 = data["type"]
         print(type1)
         obj = None
+
         if type1 is None:
             raise exceptions
         if type1 == Post.get_api_type():
@@ -534,7 +535,7 @@ class InboxSerializerObjects:
         elif type1 == Comment.get_api_type():
             serializer = CommentSerializer
             context={'author_id': pk_a,'id':data["id"].split("/")[-1]}
-        elif type1 == FollowRequest.get_api_type():
+        elif type1 == FollowRequest.get_api_type() or type1 == "follow":
             print("deser follow")
             serializer = FollowRequestSerializer
             actor = data.get("actor")

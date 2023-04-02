@@ -32,14 +32,12 @@ def getAllPosts_app2():
         return(json_response)
 
 def getAllPosts_Yoshi():
-    authors = getNodeAllAuthors_Yoshi()
-    posts = []
-    for author in authors:
-        author_id = getAuthorId(author["id"])
-        items,_ = getNodePost_Yoshi(author_id)
-        items = items["items"]
-        posts = posts + items
-    return posts
+    url = 'https://yoshi-connect.herokuapp.com/posts/public'
+    headers = yoshi_headers()
+    response = requests.get(url, headers=headers)
+    if response.status_code == 200:
+        json_response = response.json()
+        return(json_response["items"])
 
 def getNodePost_social_distro(author_id):
     url = 'https://social-distro.herokuapp.com/api/authors/'
@@ -50,7 +48,6 @@ def getNodePost_social_distro(author_id):
     status_code = response.status_code
     if status_code == 200:
         json_response = response.json()
-        print(json_response)
         return(json_response)
     
 def getAllPosts_Distro():
@@ -65,12 +62,37 @@ def getAllPosts_Distro():
                 posts.append(item)
     return posts
 
+def getNodePosts_P2(author_id):
+    url = 'https://p2psd.herokuapp.com/authors/'
+
+    url = url + author_id + '/posts/'
+
+    response = requests.get(url, headers=p2_headers())
+    status_code = response.status_code
+    if status_code == 200:
+        json_response = response.json()
+        return(json_response)
+
+def getAllPosts_P2():
+    authors = getNodeAllAuthors_P2()
+    posts = []
+    for author in authors:
+        author_id = getAuthorId(author["id"])
+        items = getNodePosts_P2(author_id)
+        items = items["items"]
+        for item in items:
+            if item['visibility'] == 'PUBLIC':
+                posts.append(item)
+    return posts
+
 def getAllPublicPosts():
     posts1 = getAllPosts_app2()
     posts2 = getAllPosts_Yoshi()
     posts3 = getAllPosts_Distro()
-    posts = posts1+ posts2 + posts3
+    posts4 = getAllPosts_P2()
+    posts = posts1+ posts2 + posts3 + posts4
     return posts
+
 
 def sendPost(host, data, auth_id):
     print(data)
