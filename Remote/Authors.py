@@ -110,3 +110,8 @@ def getRemoteAuthorsDisplayName(displayName):
     author3 = checkDisplayName(getNodeAllAuthors_distro(), displayName)
     authorList = author1 + author2 + author3
     return authorList
+
+
+def getAuthorId(url):
+    arr = url.split("/")
+    return arr[-1]
