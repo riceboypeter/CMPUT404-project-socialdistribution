@@ -85,6 +85,7 @@ class Inbox(models.Model):
         ordering = ['-published']
 
 class FollowRequest(models.Model):
+    id = models.BigAutoField(primary_key=True)
     #type =models.CharField(max_length=255, blank=True)
     actor = models.ForeignKey(Author, related_name='actor', on_delete=models.CASCADE)
     object = models.ForeignKey(Author, related_name='object', on_delete=models.CASCADE)
