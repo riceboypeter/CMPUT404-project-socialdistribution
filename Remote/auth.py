@@ -19,10 +19,15 @@ def distro_headers():
     return headers
 
 def yoshi_headers():
-    username = 'minion'
-    password = 'minion'
+    username = 'minion-yoshi'
+    password = '123'
     credentials = f'{username}:{password}'
     encoded_credentials = base64.b64encode(credentials.encode("utf-8")).decode("utf-8")
     authorization_header = f'Basic {encoded_credentials}'
+    headers = {'Authorization': authorization_header}
+    return headers
+
+def p2_headers():
+    authorization_header = f'Basic cDJwYWRtaW46cDJwYWRtaW4='
     headers = {'Authorization': authorization_header}
     return headers

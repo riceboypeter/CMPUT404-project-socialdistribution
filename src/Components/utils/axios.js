@@ -39,17 +39,56 @@ export let createReqInstance = (baseUrl) => {
 			password = localStorage.getItem("password");
 			break;
 		case "https://yoshi-connect.herokuapp.com/":
-			username = "minion";
-			password = "minion";
-			break;
+			username = "minion-yoshi";
+			password = "123";
+			return axios.create({
+				headers: {
+					"X-CSRFToken": token,
+				},
+				baseURL: baseUrl,
+				auth: {
+					username: username,
+					password: password,
+				},
+			});
 		case "https://social-distro.herokuapp.com/":
 			username = "team24";
 			password = "team24";
-			break;
+			return axios.create({
+				headers: {
+					"X-CSRFToken": token,
+				},
+				baseURL: baseUrl,
+				auth: {
+					username: username,
+					password: password,
+				},
+			});
 		case "https://killme.herokuapp.com/":
 			username = "app1team15";
 			password = "hari1234";
-			break;
+			return axios.create({
+				headers: {
+					"X-CSRFToken": token,
+				},
+				baseURL: baseUrl,
+				auth: {
+					username: username,
+					password: password,
+				},
+			});
+		case "http://p2psd.herokuapp.com/":
+			return axios.create({
+				headers: {
+					"X-CSRFToken": token,
+					Authorization: "Basic cDJwYWRtaW46cDJwYWRtaW4=",
+				},
+				baseURL: baseUrl,
+				auth: {
+					username: username,
+					password: password,
+				},
+			});
 		default:
 			throw new Error(`Invalid base URL: ${baseUrl}`);
 	}
