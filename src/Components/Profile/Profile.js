@@ -92,7 +92,7 @@ function PROFILE() {
 	const handleExploreClick = () => {
 		if (curPage !== "explore") {
 			setCurPage("explore");
-			navigate("explore");
+			navigate("/explore");
 		}
 	};
 

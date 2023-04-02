@@ -18,6 +18,7 @@ from drf_yasg.utils import swagger_auto_schema
 import base64
 from client import *
 from .image_renderer import JPEGRenderer, PNGRenderer
+from Remote.Post import *
 
 
 custom_parameter = openapi.Parameter(
