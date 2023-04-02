@@ -14,6 +14,7 @@ import { getAuthorId } from "../utils/auth";
 import { useNavigate } from "react-router-dom";
 import { reqInstance } from "../utils/axios";
 import PROFILEIMAGE from "../Profile/ProfileImage";
+import CopyIcon from "@rsuite/icons/Copy";
 // Component Imports
 
 function POST({ postobj, edit, explore }) {
@@ -111,8 +112,10 @@ function POST({ postobj, edit, explore }) {
 	};
 
 	const handleUrlClick = () => {
-		const host = process.env.REACT_APP_HOST_NAME;
-		var path = new URL(post["id"]);
+		const postid = getAuthorId(post["id"]);
+		const authorid = getAuthorId(post["author"]["id"]);
+		const host = `https://sociallydistributed.herokuapp.com/`;
+		var path = `author/${authorid}/post/${postid}`;
 		var url = host + path;
 		navigator.clipboard.writeText(url);
 	};
@@ -146,13 +149,12 @@ function POST({ postobj, edit, explore }) {
 				onClick={handleDeletePost}
 				icon={<TrashIcon />}
 			/>
-			<Button
+			<IconButton
 				style={{ float: "right", marginRight: "10px" }}
 				appearance="subtle"
 				onClick={handleUrlClick}
-			>
-				Share Post by Url
-			</Button>
+				icon={<CopyIcon />}
+			/>
 		</div>
 	);
 
@@ -169,7 +171,7 @@ function POST({ postobj, edit, explore }) {
 				style={{ float: "left" }}
 				circle
 				src={post["author"]["profileImage"]}
-				size={size}
+				size="md"
 			></Avatar>
 			<div
 				style={{

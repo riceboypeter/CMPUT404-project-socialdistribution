@@ -29,7 +29,7 @@ import { createReqInstance } from "../utils/axios";
 // Component Imports
 
 function SINGLEPOST({ explore }) {
-	const [post, set_post] = useState();
+	const [post, set_post] = useState({ author: { profileImage: "" }, id: "" });
 	const [likes, setLikes] = useState({ items: [] });
 	const [open, setOpen] = useState(false);
 	const [addOpen, setAddOpen] = useState(false);
@@ -38,27 +38,31 @@ function SINGLEPOST({ explore }) {
 	let navigate = useNavigate();
 	let { author, post_id } = useParams();
 
-	useEffect(() => {
+	useLayoutEffect(() => {
 		if (!localStorage.getItem("loggedIn")) {
 			navigate("/signin");
 		} else {
-			const host = "";
+			let host = "";
 			reqInstance({ method: "get", url: `authors/${author}` }).then(
 				(res) => {
 					if (res.status === 200) {
+						console.log(res.data);
 						host = res.data.host;
 						let reqInstance = createReqInstance(host);
 						let url = getUrl();
-						reqInstance({ method: "get", url: url }).then((res) => {
-							if (res.status == 200) {
-								set_post(res.data);
-							} else {
+						reqInstance({ method: "get", url: url })
+							.then((res) => {
+								console.log(res);
+								if (res.status == 200) {
+									set_post(res.data);
+								}
+							})
+							.catch((err) => {
 								navigate("/");
 								notifyFailedPost(
 									"We couldnt find the post you were looking for or the post doesnt exist"
 								);
-							}
-						});
+							});
 					}
 				}
 			);
@@ -245,7 +249,12 @@ function SINGLEPOST({ explore }) {
 				borderBottom: "0.5px solid grey",
 			}}
 		>
-			<PROFILEIMAGE size="md" />
+			<Avatar
+				style={{ float: "left" }}
+				circle
+				src={post["author"]["profileImage"]}
+				size="md"
+			></Avatar>
 			<div
 				style={{
 					marginLeft: "10px",
