@@ -18,7 +18,6 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='FollowRequest',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('Type', models.CharField(blank=True, max_length=255)),
                 ('Summary', models.CharField(blank=True, max_length=255)),
                 ('accepted', models.BooleanField(default=False)),

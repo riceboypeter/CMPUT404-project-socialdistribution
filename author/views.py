@@ -439,7 +439,7 @@ class FriendRequestView(APIView):
             
             type = "Follow"
             summary = displaynamefrom + " wants to follow " + displaynameto
-            follow = FollowRequest(Type = type,Summary=summary,actor=actor, object=objects)
+            follow = FollowRequest(summary=summary,actor=actor, object=objects)
             follow.save()
             serializer = FollowRequestSerializer(follow)
             return Response(serializer.data)
