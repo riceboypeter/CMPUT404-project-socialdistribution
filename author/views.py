@@ -200,7 +200,7 @@ class AuthorsListView(APIView, PageNumberPagination):
         }
         
         # create a list of our own authors
-        authors = Author.objects.filter(host=(settings.APP_NAME+'/'))
+        authors = Author.objects.filter(host=(settings.HOST_NAME))
         serializer = AuthorSerializer(authors, many=True)
         data_list = serializer.data
         # get remote authors and add to list
@@ -354,7 +354,7 @@ class FollowersView(APIView):
         author.save()
         try: 
             follow = FollowRequest.objects.get(actor=new_follower,object=author)
-            Inbox.objects.get(object_id=follow.id).delete()
+            Inbox.objects.get(object=follow).delete()
         except:
             pass
 
@@ -420,7 +420,7 @@ class FriendRequestView(APIView):
             
             type = "Follow"
             summary = displaynamefrom + " wants to follow " + displaynameto
-            follow = FollowRequest(Type = type,Summary=summary,actor=actor, object=objects)
+            follow = FollowRequest(summary=summary,actor=actor, object=objects)
             follow.save()
             serializer = FollowRequestSerializer(follow)
             return Response(serializer.data)

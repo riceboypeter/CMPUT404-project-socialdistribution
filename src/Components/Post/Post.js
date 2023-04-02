@@ -44,7 +44,7 @@ function POST({ postobj, edit, explore }) {
 		) {
 			let tempAuthorId = (postobj.author.id + "").split("/").slice(-1);
 			let tempPostId = (postobj.id + "").split("/").slice(-1);
-			let HOST = "https://sociallydistributed.herokuapp.com/";
+			let HOST = process.env.REACT_APP_HOST_NAME + "/";
 			let posturl =
 				HOST +
 				"posts/authors/" +
