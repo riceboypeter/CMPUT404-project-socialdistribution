@@ -200,7 +200,7 @@ class AuthorsListView(APIView, PageNumberPagination):
         }
         
         # create a list of our own authors
-        authors = Author.objects.filter(host=(settings.APP_NAME+'/'))
+        authors = Author.objects.filter(host=(settings.HOST_NAME))
         serializer = AuthorSerializer(authors, many=True)
         data_list = serializer.data
         # get remote authors and add to list
