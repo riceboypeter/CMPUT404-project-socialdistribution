@@ -28,7 +28,9 @@ class AuthorSerializer(serializers.ModelSerializer):
             except Author.DoesNotExist:
                 raise exceptions.ValidationError("Author does not exist")
         try:
-            updated_author = Author.objects.get(id=author["id"])
+            print("AUTHOR ID", author["id"])
+            id = author["id"].split("/")[-1]
+            updated_author = Author.objects.get(id=id)
         except Author.DoesNotExist:
             updated_author = Author(**author)
             updated_author.save()

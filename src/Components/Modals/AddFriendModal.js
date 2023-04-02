@@ -29,7 +29,6 @@ function ADD_FRIEND_MODAL({ open, handleClose }) {
 		const params = {
 			type: "Follow",
 			actor: user,
-			object: obj,
 		};
 		return axiosInstance({ method: "post", url: url2, data: params })
 			.then((res) => {

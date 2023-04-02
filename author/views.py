@@ -21,7 +21,7 @@ from client import *
 from django.core.paginator import Paginator
 from social.pagination import CustomPagination
 from posts.github.utils import get_github_activities
-from Remote.Authors import getRemoteAuthorsDisplayName
+from Remote.Authors import *
 
 custom_parameter = openapi.Parameter(
     name='custom_param',
@@ -200,7 +200,7 @@ class AuthorsListView(APIView, PageNumberPagination):
         }
         
         # create a list of our own authors
-        authors = Author.objects.filter(host=(settings.APP_NAME+'/'))
+        authors = Author.objects.filter(host=(settings.HOST_NAME))
         serializer = AuthorSerializer(authors, many=True)
         data_list = serializer.data
         # get remote authors and add to list
@@ -266,12 +266,10 @@ class AuthorView(APIView):
             author = Author.objects.get(pk=pk_a)
         # if local author isn't there, see if it's from remote
         except Author.DoesNotExist:
-            try: 
-                # repurposed those foreign node calls to a helper function
-                return get_foreign_authors(pk_a)
-            except Exception as e:
-                print(e)
-                # author is not found, so 404
+            author, found = getRemoteAuthorsById(pk_a)
+            if found == True:
+                return Response(author, status=status.HTTP_200_OK)
+            else:
                 error_msg = "Author id not found"
                 return Response(error_msg, status=status.HTTP_404_NOT_FOUND)
         # return the data
@@ -382,7 +380,7 @@ class FollowersView(APIView):
         author.save()
         try: 
             follow = FollowRequest.objects.get(actor=new_follower,object=author)
-            Inbox.objects.get(object_id=follow.id).delete()
+            Inbox.objects.get(object=follow).delete()
         except:
             pass
 
@@ -448,7 +446,7 @@ class FriendRequestView(APIView):
             
             type = "Follow"
             summary = displaynamefrom + " wants to follow " + displaynameto
-            follow = FollowRequest(Type = type,Summary=summary,actor=actor, object=objects)
+            follow = FollowRequest(summary=summary,actor=actor, object=objects)
             follow.save()
             serializer = FollowRequestSerializer(follow)
             return Response(serializer.data)
