@@ -26,3 +26,8 @@ def yoshi_headers():
     authorization_header = f'Basic {encoded_credentials}'
     headers = {'Authorization': authorization_header}
     return headers
+
+def p2_headers():
+    authorization_header = f'Basic cDJwYWRtaW46cDJwYWRtaW4='
+    headers = {'Authorization': authorization_header}
+    return headers
