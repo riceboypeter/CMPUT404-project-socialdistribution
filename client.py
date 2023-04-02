@@ -26,6 +26,10 @@ def handle_image(dirty):
     # foreign formats use "content" to store them
     if dirty.get('image') is None:
         dirty['image'] = dirty['content']
+        # base64imagefield HATES base64 images that don't have
+        # proper padding, so this is to make sure that it works
+        if dirty['image'][-1] != '=':
+            dirty['image'] += '='
     return dirty
 
 # helper function that works on lists of foreign formats
