@@ -63,7 +63,7 @@ function GITHUB() {
 		reqInstance.post("dlogout/").then((res) => {
 			if (res.status === 202) {
 				unsetCurrentUser();
-				navigate("/signinn");
+				navigate("/signin");
 			}
 		});
 	}
