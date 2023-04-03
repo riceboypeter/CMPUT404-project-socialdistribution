@@ -43,10 +43,9 @@ function POST({ postobj, edit, explore, github }) {
 			post["contentType"] === "image/png"
 		) {
 			let imageurl = post["origin"];
-			if (imageurl.charAt(imageurl.length - 1) === '/'){
+			if (imageurl.charAt(imageurl.length - 1) === "/") {
 				imageurl = imageurl + "image";
-			}
-			else {
+			} else {
 				imageurl = imageurl + "/image";
 			}
 			return (
@@ -156,6 +155,13 @@ function POST({ postobj, edit, explore, github }) {
 	);
 
 	// need to make a get request to get the post obj and set post obj to that.
+	const profileImage = (url) => {
+		if (url === "") {
+			return "https://i.imgur.com/J95WCOD.jpg";
+		} else {
+			return url;
+		}
+	};
 
 	const header = (
 		<div
@@ -167,7 +173,7 @@ function POST({ postobj, edit, explore, github }) {
 			<Avatar
 				style={{ float: "left" }}
 				circle
-				src={post["author"]["profileImage"]}
+				src={profileImage(post["author"]["profileImage"])}
 				size="md"
 			></Avatar>
 			<div
@@ -178,13 +184,16 @@ function POST({ postobj, edit, explore, github }) {
 			>
 				{post["author"]["displayName"]}
 			</div>
-			{!github ?
+			{!github ? (
 				<IconButton
 					style={{ float: "right", marginRight: "10px" }}
 					appearance="subtle"
 					onClick={sharePost}
 					icon={<ShareIcon />}
-				/> : <div />}
+				/>
+			) : (
+				<div />
+			)}
 			{!github ? <LIKE postObj={postobj} /> : <div />}
 
 			{edit ? delEditBtn : <div />}
@@ -220,29 +229,31 @@ function POST({ postobj, edit, explore, github }) {
 							fontFamily: "Times New Roman",
 							fontWeight: "bold",
 							fontSize: "15px",
-
 						}}
 					>
 						{post["description"]}
 					</div>
 					{body()}
 				</div>
-				{!github ?
-					< Panel bordered collapsible header="Comments">
+				{!github ? (
+					<Panel bordered collapsible header="Comments">
 						<COMMENTS postobj={postobj}></COMMENTS>
 					</Panel>
-					: <div />}
+				) : (
+					<div />
+				)}
 			</Panel>
-			{
-				!github ?
-					<EDITPOSTMODAL
-						open={open}
-						obj={postobj}
-						handleClose={handleModalClose}
-					/> : <div />
-			}
+			{!github ? (
+				<EDITPOSTMODAL
+					open={open}
+					obj={postobj}
+					handleClose={handleModalClose}
+				/>
+			) : (
+				<div />
+			)}
 			{explore ? likesmodal : <div />}
-		</div >
+		</div>
 	);
 }
 

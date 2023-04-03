@@ -99,10 +99,9 @@ function SINGLEPOST({ explore }) {
 			post["contentType"] === "image/png"
 		) {
 			let imageurl = post["origin"];
-			if (imageurl.charAt(imageurl.length - 1) === '/'){
+			if (imageurl.charAt(imageurl.length - 1) === "/") {
 				imageurl = imageurl + "image";
-			}
-			else {
+			} else {
 				imageurl = imageurl + "/image";
 			}
 			console.log(imageurl);
@@ -239,7 +238,13 @@ function SINGLEPOST({ explore }) {
 		</div>
 	);
 
-	// need to make a get request to get the post obj and set post obj to that.
+	const profileImage = (url) => {
+		if (url === "") {
+			return "https://i.imgur.com/J95WCOD.jpg";
+		} else {
+			return url;
+		}
+	};
 
 	const header = (
 		<div
@@ -251,7 +256,7 @@ function SINGLEPOST({ explore }) {
 			<Avatar
 				style={{ float: "left" }}
 				circle
-				src={post["author"]["profileImage"]}
+				src={profileImage(post["author"]["profileImage"])}
 				size="md"
 			></Avatar>
 			<div
