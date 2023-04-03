@@ -32,7 +32,7 @@ class PostSerializer(WritableNestedModelSerializer):
         return post
 
     def to_internal_value(self, data):
-        data["categories"] - ','.join(data["categories"])
+        data["categories"] = ','.join(data["categories"])
         return super().to_internal_value(data)
         
 
