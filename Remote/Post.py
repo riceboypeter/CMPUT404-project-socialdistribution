@@ -105,10 +105,10 @@ def getAllPosts_big():
 def getAllPublicPosts():
     posts1 = getAllPosts_app2()
     posts2 = getAllPosts_Yoshi()
-    posts3 = getAllPosts_Distro()
-    posts4 = getAllPosts_P2()
+    # posts3 = getAllPosts_Distro()
+    # posts4 = getAllPosts_P2()
     posts5 = getAllPosts_big()
-    posts = posts1+ posts2 + posts3 + posts4
+    posts = posts1+ posts2 + posts5
     return posts
 
 
