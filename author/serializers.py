@@ -23,8 +23,6 @@ class AuthorSerializer(serializers.ModelSerializer):
     def _update(validated_data):
         
         print("AUTHOR ID", validated_data["id"])
-        validated_data["id"] = validated_data["id"][:-1] if validated_data["id"].endswith('/') else validated_data["id"]
-        validated_data["id"] = validated_data["id"].split("/")[-1]
         author = Author.objects.get(id=validated_data["id"])
         author_data = AuthorSerializer(author).update(instance=author,validated_data=validated_data)
         return author_data
@@ -46,6 +44,9 @@ class AuthorSerializer(serializers.ModelSerializer):
             except Author.DoesNotExist:
                 return Response("Author does not exist here!", status=status.HTTP_404_NOT_FOUND)
         updated_author = None
+        if validated_data: 
+            validated_data["id"] = validated_data["id"][:-1] if validated_data["id"].endswith('/') else validated_data["id"]
+            validated_data["id"] = validated_data["id"].split("/")[-1]
         try:
             updated_author = AuthorSerializer._update(validated_data)
         except Author.DoesNotExist:
