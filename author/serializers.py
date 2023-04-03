@@ -15,14 +15,19 @@ class AuthorSerializer(serializers.ModelSerializer):
     url = serializers.URLField(source="get_absolute_url",read_only=True)
     displayName = serializers.CharField(default = 'x')
     
+    def update(self, instance, validated_data):
+        print(validated_data)
+        return super().update(instance,validated_data)
+
     @staticmethod
     def _update(validated_data):
         
         print("AUTHOR ID", validated_data["id"])
-        id = validated_data["id"].split("/")[-1]
-        author = Author.objects.get(id=id)
-        return author
-        #return super().update(author,validated_data)
+        validated_data["id"] = validated_data["id"][:-1] if validated_data["id"].endswith('/') else validated_data["id"]
+        validated_data["id"] = validated_data["id"].split("/")[-1]
+        author = Author.objects.get(id=validated_data["id"])
+        author_data = AuthorSerializer(author).update(instance=author,validated_data=validated_data)
+        return author_data
     
     @staticmethod
     def _upcreate(validated_data):
