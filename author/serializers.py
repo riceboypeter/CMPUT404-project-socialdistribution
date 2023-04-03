@@ -18,7 +18,8 @@ class AuthorSerializer(serializers.ModelSerializer):
         print("AUTHOR ID", validated_data["id"])
         id = validated_data["id"].split("/")[-1]
         author = Author.objects.get(id=id)
-        return super().update(author,validated_data)
+        return author
+        #return super().update(author,validated_data)
     
     @staticmethod
     def _upcreate(validated_data):
@@ -91,7 +92,7 @@ class FollowRequestSerializer(serializers.ModelSerializer):
     # https://www.django-rest-framework.org/api-guide/serializers/
     def to_internal_value(self, data):
         print("to_internal_value")
-        actor = AuthorSerializer.extract_and_upcreate_author(author=self.context["actor_"])
+        actor = AuthorSerializer.extract_and_upcreate_author(self.context["actor_"])
         object = Author.objects.get(id=self.context["object_id"])
 
         # Perform the data validation.

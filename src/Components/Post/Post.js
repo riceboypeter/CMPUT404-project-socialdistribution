@@ -114,7 +114,7 @@ function POST({ postobj, edit, explore }) {
 	const handleUrlClick = () => {
 		const postid = getAuthorId(post["id"]);
 		const authorid = getAuthorId(post["author"]["id"]);
-		const host = `https://sociallydistributed.herokuapp.com/`;
+		const host = process.env.REACT_APP_HOST_NAME + `/`;
 		var path = `author/${authorid}/post/${postid}`;
 		var url = host + path;
 		navigator.clipboard.writeText(url);

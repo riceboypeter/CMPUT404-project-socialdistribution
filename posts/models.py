@@ -152,7 +152,7 @@ class Like(models.Model):
     def get_object(self):
         return self.object if self.object.endswith('/') else self.object + '/' 
 
-    def get_summary(self):
+    def get_summary(self):    
         return self.author.displayName + " Likes your " + str(self.object).split('/')[-2][:-1]
 
     @staticmethod
@@ -160,7 +160,4 @@ class Like(models.Model):
         return 'Like'
     
     def __str__(self):
-        return 'Liked by {}'.format(self.author)
-    
-    ### HOW TO CONTRAINT HOW MANY TIMES AN AUTHOR LIKES AN IMAGEike'
-    
+        return 'Liked by {}'.format(self.author)    
