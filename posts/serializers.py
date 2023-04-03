@@ -70,28 +70,53 @@ class CommentSerializer(serializers.ModelSerializer):
     type = serializers.CharField(default="comment",source="get_api_type",read_only=True)
     id = serializers.URLField(source="get_public_id",read_only=True)
     author = AuthorSerializer()
+  
 
     def create(self, validated_data):
-        author = AuthorSerializer.extract_and_upcreate_author(None,author_id=self.context["author_id"])
-        id = validated_data.pop('id') if validated_data.get('id') else None
+        author = validated_data["author"]
+        #id = validated_data.pop('id') if validated_data.get('id') else None
+        comment = validated_data["comment"]
         
-        if not id:
-            id = self.context["id"]
-        comment = Comment.objects.create(**validated_data, author = author, id = id, post=self.context["post"])
+       # if not id:
+        #    id = self.context["id"]
+        comment = Comment.objects.create(author = author,  comment = comment, post=self.context["object"])
         comment.save()
+
         return comment
+    
+    def to_internal_value(self, data):
+        print("to_internal_value")
+        author = AuthorSerializer.extract_and_upcreate_author(self.context["author"])
+        print("reached internal value")
+        print(author)
+  
+        # object = Author.objects.get(id=self.context["object"])
+       
+        comment = self.context["comment"]
+
+        # Perform the data validation.
+        if not author:
+            raise serializers.ValidationError({
+                'author': 'This field is required.'
+            })
+       
+        
+        return {
+            'author': author,
+            'comment':comment,
+        }
 
     class Meta:
         model = Comment
         fields = [
+            'id',
             'type', 
             'author',
             'comment',
             'contentType',
             'published',
-            'id',       
+           
         ]
-
 class LikeSerializer(serializers.ModelSerializer):
     type = serializers.CharField(default="like",source="get_api_type",read_only=True)
     author = AuthorSerializer(required=True)

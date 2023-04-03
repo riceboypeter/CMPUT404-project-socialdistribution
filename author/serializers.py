@@ -6,6 +6,8 @@ from rest_framework import status
 from rest_framework.response import Response
 import client
 from Remote.Authors import getNodeAuthor_App2
+from Remote.Authors import *
+
 
 class AuthorSerializer(serializers.ModelSerializer):
     type = serializers.CharField(default="author",source="get_api_type",read_only=True)
@@ -15,6 +17,7 @@ class AuthorSerializer(serializers.ModelSerializer):
     
     @staticmethod
     def _update(validated_data):
+        
         print("AUTHOR ID", validated_data["id"])
         id = validated_data["id"].split("/")[-1]
         author = Author.objects.get(id=id)
@@ -24,6 +27,9 @@ class AuthorSerializer(serializers.ModelSerializer):
     @staticmethod
     def _upcreate(validated_data):
         print("in the other upcreate function")
+        print(validated_data)
+        validated_data = clean_author(validated_data)
+        print(validated_data)
         return Author(**validated_data)
     
     @staticmethod
