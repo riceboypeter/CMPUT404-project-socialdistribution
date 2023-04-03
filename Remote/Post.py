@@ -119,12 +119,12 @@ def sendPost(host, data, auth_id):
     print(host)
     print(auth_id)
     # encode image from data[image] as base64 string in data[content]
-    if "image/" in data.contentType:
-        with open("."+data.image,'rb') as file:
+    if "image/" in data['contentType']:
+        with open("."+data["image"],'rb') as file:
             # encode image
             encoded_image = base64.b64encode(file.read())
             # properly pad the image + cast to string
-            data.content = "data:image/png;base64,"+str(encoded_image)[2:-1]
+            data['content'] = "data:image/png;base64,"+str(encoded_image)[2:-1]
 
     if 'yoshi' in host:
         response, status_code = sendPostYoshi(data, auth_id)
