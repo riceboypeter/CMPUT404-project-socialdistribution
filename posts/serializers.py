@@ -41,13 +41,11 @@ class PostSerializer(WritableNestedModelSerializer):
 
     def to_representation(self, instance):
         id = instance.get_public_id()
-        categories_list = instance.categories.split(",")
         comments_list = Comment.objects.filter(post=instance).order_by('-published')[0:5]
         commentsSrc = [CommentSerializer(comment,many=False).data for comment in comments_list]
         return {
             **super().to_representation(instance),
             'id': id,
-            'categories':[category for category in categories_list],
             'commentsSrc': commentsSrc,
             'count': len(commentsSrc)
         }
