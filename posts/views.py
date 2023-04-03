@@ -475,7 +475,7 @@ Publicpostget = {
 
     )}
 
-class post_list(APIView, PageNumberPagination):
+class PostListView(APIView, PageNumberPagination):
     authentication_classes = [BasicAuthentication]
     permission_classes = [IsAuthenticated]
     serializer_class = PostSerializer
@@ -502,7 +502,7 @@ class post_list(APIView, PageNumberPagination):
         # filter the posts and then paginate
         # privacy is all handled when post is created, except for image posts
 
-        posts = Post.objects.filter(author=author)
+        posts = Post.objects.filter(author=author, is_github=False)
         posts = self.paginator.paginate_queryset(posts, self.request, view=self)
 
         serializer = PostSerializer(posts, many=True)
@@ -527,7 +527,6 @@ class post_list(APIView, PageNumberPagination):
         except Author.DoesNotExist:
             error_msg = "Author id not found"
             return Response(error_msg, status=status.HTTP_404_NOT_FOUND)
-
         # handle an image post
         if 'image' in request.data['contentType']:
             # format is similar to post: a JSON object with: { title, contentType, content, image }
@@ -559,6 +558,7 @@ class CommentDetailView(APIView):
         try:
             # get a specific comment 
             comment = Comment.objects.get(id=pk_m)
+ 
             serializer = CommentSerializer(comment, many=False)
             return Response(serializer.data)
         # 404 if comment doesn't exist
@@ -782,8 +782,7 @@ class PostLikesView(APIView):
             error_msg = "Post not found"
             return Response(error_msg,status=status.HTTP_404_NOT_FOUND)
         # filter for all the likes on that post
-        url = post.url[:-1] if post.url.endswith('/') else post.url
-        likes = Like.objects.filter(object=url)
+        likes = Like.objects.filter(object=post.url)
         serializer = LikeSerializer(likes, many=True)
         return Response(serializer.data)
 
@@ -814,22 +813,6 @@ class ImageView(APIView):
         if not post.image:
             error_msg = {"message":"Post does not contain an image!"}
             return Response(error_msg,status=status.HTTP_404_NOT_FOUND)
-        
-        # image privacy protection settings
-        # unlisted does not need to be addressed here
-        # if it is private or friends, only continue if author is trying to access it:
-        if "PRIVATE" in post.visibility:
-            # check if the author is not the one accessing it, return a 403 if not:
-            if post.author != authenticated_user:
-                error_msg = {"message":"You do not have access to this image!"}
-                return Response(error_msg,status=status.HTTP_403_FORBIDDEN)
-
-        # otherwise, handle it for friends:
-        elif "FRIENDS" in post.visibility:
-            # if the author or friends are trying to access it, return a 403 if not:
-            if post.author not in authenticated_user.friends and post.author != authenticated_user:
-                error_msg = {"message":"You do not have access to this image!"}
-                return Response(error_msg,status=status.HTTP_403_FORBIDDEN)
 
         # return the image!
         # post.image refers to an image in the database 
@@ -863,8 +846,10 @@ class CommentView(APIView, PageNumberPagination):
         
         post = Post.objects.get(id=pk)
         post_data = PostSerializer(post).data
+      
         # filter for all comments on specific post
-        comments = Comment.objects.filter(post=post)
+        comments = Comment.objects.filter(post=post_data['id']) #Changed cause i changed the comment model , post is now the source url of the post, not the post object, done to match with spec
+   
 
         authenticated_user = Author.objects.get(id=pk_a)
         
@@ -947,6 +932,7 @@ class ShareView(APIView):
         categories=post.categories,
         published=post.published,
         visibility=post.visibility,
+        unlisted=post.unlisted,
         )
 
         # update the source and origin fields
@@ -973,7 +959,7 @@ class PublicPostsView(APIView):
         posts = Post.objects.filter(visibility='PUBLIC')
         serializer = PostSerializer(posts, many=True)
         data_list = serializer.data
-        if (request.GET.get("local") == "true") :
+        if (request.GET.get("local") == "true"):
             remotePosts = getAllPublicPosts()
             data_list = data_list + remotePosts
             data_list.sort(key=lambda x: x['published'])
@@ -986,6 +972,12 @@ def share_object(item, author, shared_user, data):
     inbox_item = Inbox(content_object=item, author=author)
     inbox_item.save()
 
+    # unlisted post (send only to own inbox)
+    if (item.unlisted == True):
+        if author:
+            inbox_item = Inbox(content_object=item, author=author)
+            inbox_item.save()
+
     # friend post (send to friend inbox)
     if (item.visibility == 'FRIENDS'):
         for friend in author.friends.all():
@@ -997,12 +989,6 @@ def share_object(item, author, shared_user, data):
             else:
                 inbox_item = Inbox(content_object=item, author=friend)
                 inbox_item.save()
-
-    # unlisted post (send only to own inbox)
-    elif (item.visibility == 'UNLISTED'):
-        if author:
-            inbox_item = Inbox(content_object=item, author=author)
-            inbox_item.save()
 
     # private post (send to shared users' inbox)
     elif (item.visibility == 'PRIVATE'):

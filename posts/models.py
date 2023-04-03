@@ -11,14 +11,12 @@ from django.conf import settings
 PUBLIC = 'PUBLIC'
 PRIVATE = 'PRIVATE'
 FRIENDS = 'FRIENDS'
-UNLISTED = 'UNLISTED'
 
 # 
 visbility_choices = [
     (PUBLIC, 'Public'),
     (PRIVATE, 'Private'),
-    (FRIENDS, 'Friends'),
-    (UNLISTED, 'Unlisted')
+    (FRIENDS, 'Friends')
 ]
 
 MARKDOWN = 'text/markdown'
@@ -50,6 +48,7 @@ class Post(models.Model):
     count = models.PositiveIntegerField(default=0, blank=True)
     commentsSrc = models.CharField(max_length=255, default="", blank=True)
     is_github = models.BooleanField(default=False)
+    unlisted = models.BooleanField(default=False)
     
     image = models.ImageField(null=True,blank=True, default="")  # reference to an image in the DB
 
@@ -68,7 +67,7 @@ class Post(models.Model):
     # get public id of post
     def get_public_id(self):
         self.get_absolute_url()
-        return (self.url[:-1]) or str(self.id)
+        return (self.url) or str(self.id)
     
     # get comments url
     def get_comments_source(self):
@@ -89,7 +88,7 @@ class Post(models.Model):
     def get_absolute_url(self):
         url = reverse('posts:detail', args=[str(self.author.id), str(self.id)])
         url = settings.APP_NAME + url
-        self.url = url if url.endswith('/') else url + '/'
+        self.url = url[:-1] if url.endswith('/') else url 
         self.save()
         return self.url
 
@@ -100,8 +99,9 @@ class Post(models.Model):
         
     def get_origin(self):
         #set post origin (URL to origin)
-        self.get_absolute_url()
-        return self.url
+        if not self.origin:
+            self.get_absolute_url()
+            return self.url
     
     @staticmethod
     def get_api_type():
@@ -114,7 +114,7 @@ class Comment(models.Model):
     id = models.CharField(primary_key=True, editable=False, default= uuid.uuid4, max_length=255)  # ID of comment
     url = models.URLField(editable=False, max_length=500)  # URL of comment
     author = models.ForeignKey(Author, related_name = 'comments', on_delete=models.CASCADE)  # author of comment
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)  # post of the commenT
+    post = models.URLField(max_length=500) # post of the commenT
     comment = models.TextField()  # the comment
     published = models.DateTimeField(auto_now_add=True)  # date published
     contentType = models.CharField(choices=content_types, default=PLAIN, max_length=20)  # type of content
@@ -126,8 +126,17 @@ class Comment(models.Model):
         self.get_absolute_url()
         return (self.url[:-1]) or str(self.id)
     
+    def get_object(self):
+        return self.post if self.post.endswith('/') else self.post + '/' 
+    
     def get_absolute_url(self):
-        url = reverse('posts:comment_detail', args=[str(self.author.id), str(self.post.id), str(self.id)])
+        print(self.id)
+        print(self.post)
+        self.post = self.post[:-1] if self.post.endswith('/') else self.post
+        print(self.post)
+        post = Post.objects.get(id=str(self.post.split("/")[-1]))
+        url = reverse('posts:comment_detail', args=[post.id, str(self.post.split("/")[-1]), str(self.id)])
+        print("Comment recieved")
         url = settings.APP_NAME + url
         self.url = url if url.endswith('/') else url + '/'
         self.save()
@@ -153,7 +162,7 @@ class Like(models.Model):
     def get_object(self):
         return self.object if self.object.endswith('/') else self.object + '/' 
 
-    def get_summary(self):
+    def get_summary(self):    
         return self.author.displayName + " Likes your " + str(self.object).split('/')[-2][:-1]
 
     @staticmethod
@@ -161,7 +170,4 @@ class Like(models.Model):
         return 'Like'
     
     def __str__(self):
-        return 'Liked by {}'.format(self.author)
-    
-    ### HOW TO CONTRAINT HOW MANY TIMES AN AUTHOR LIKES AN IMAGEike'
-    
+        return 'Liked by {}'.format(self.author)    

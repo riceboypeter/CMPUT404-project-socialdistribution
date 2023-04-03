@@ -21,7 +21,7 @@ from client import *
 from django.core.paginator import Paginator
 from social.pagination import CustomPagination
 from posts.github.utils import get_github_activities
-from Remote.Authors import getRemoteAuthorsDisplayName
+from Remote.Authors import *
 
 custom_parameter = openapi.Parameter(
     name='custom_param',
@@ -214,6 +214,32 @@ class AuthorsListView(APIView, PageNumberPagination):
         # paginate + send
         return Response(ViewPaginatorMixin.paginate(self,object_list=data_list, page=int(self.request.GET.get('page', 1)), size=int(self.request.GET.get('size', 50))))
 
+# made the foreign author getter a helper function instead to work with inbox
+def get_foreign_authors(pk_a):
+    print("getting foreign")
+    try:
+        # get yoshi's author at node
+        author_json, status_code = getNodeAuthor_Yoshi(pk_a)
+        if status_code == 200:
+            # author_dict = json.loads(author_json)
+            # author = Author(id = author_json['authorId'], displayName= author_json['displayname'], url=author_json['url'], profileImage=author_json['profileImage'], github=author_json['github'], host=author_json['host'])
+            return Response(author_json)
+        # get social distro's authors and format their data to our style
+        else:
+            author_json, status_code = getNodeAuthor_social_distro(pk_a)
+            if status_code == 200:
+                """# formatting (theirs is nonetype while ours is empty string)
+                if author_json['profileImage'] == None:
+                    profileImage = ''
+                if author_json['github'] == None:
+                    github = ''
+                author = Author(id = pk_a, displayName= author_json['displayName'], url=author_json['url'], profileImage=profileImage, github=github, host=author_json['host'])"""
+                return Response(author_json)
+                
+    except:
+        error_msg = "Author id not found"
+        return Response(error_msg, status=status.HTTP_404_NOT_FOUND)
+    
 class AuthorView(APIView):
     authentication_classes = [BasicAuthentication]
     permission_classes = [IsAuthenticated]
@@ -240,29 +266,10 @@ class AuthorView(APIView):
             author = Author.objects.get(pk=pk_a)
         # if local author isn't there, see if it's from remote
         except Author.DoesNotExist:
-            try: 
-                # get yoshi's author at node
-                author_json, status_code = getNodeAuthor_Yoshi(pk_a)
-                if status_code == 200:
-                    author_dict = json.loads(author_json)
-                    author = Author(id = author_json['authorId'], displayName= author_json['displayname'], url=author_json['url'], profileImage=author_json['profileImage'], github=author_json['github'], host=author_json['host'])
-                    return Response(author_json)
-                # get social distro's authors and format their data to our style
-                else:
-                    author_json, status_code = getNodeAuthor_social_distro(pk_a)
-                    if status_code == 200:
-                        # formatting (theirs is nonetype while ours is empty string)
-                        if author_json['profileImage'] == None:
-                            profileImage = ''
-                        if author_json['github'] == None:
-                            github = ''
-                        author = Author(id = pk_a, displayName= author_json['displayName'], url=author_json['url'], profileImage=profileImage, github=github, host=author_json['host'])
-                    else:
-                        error_msg = "Author id not found"
-                        return Response(error_msg, status=status.HTTP_404_NOT_FOUND)
-            except Exception as e:
-                print(e)
-                # author is not found, so 404
+            author, found = getRemoteAuthorsById(pk_a)
+            if found == True:
+                return Response(author, status=status.HTTP_200_OK)
+            else:
                 error_msg = "Author id not found"
                 return Response(error_msg, status=status.HTTP_404_NOT_FOUND)
         # return the data
@@ -489,21 +496,33 @@ class InboxSerializerObjects:
     
     def deserialize_objects(self, data, pk_a):
         # return serializer of objects to be added to inbox (so we get the object)
-        print(data)
+        # print(data)
         type1 = data["type"]
         print(type1)
         obj = None
+
         if type1 is None:
             raise exceptions
-        
         if type1 == Post.get_api_type():
             try:
                 obj = Post.objects.get(id=(data["id"].split("/")[-1]))
             except Post.DoesNotExist:
-                error_msg = "Post not found"
-                return Response(error_msg, status=status.HTTP_404_NOT_FOUND)
-            serializer = PostSerializer
-            context={'author_id': pk_a,'id':data["id"].split("/")[-1]}
+                try:
+                    # handle image posts
+                    if "image/png" in data["contentType"]:
+                        # make a mutable version of the querydict so that we can use
+                        # our special image field
+                        data = data.copy()
+                        data = handle_image(data)
+                        serializer = ImageSerializer
+                    # normal post
+                    else:
+                        serializer = PostSerializer
+                except:
+                    error_msg = "Post not found"
+                    return Response(error_msg, status=status.HTTP_404_NOT_FOUND)
+            context={}
+
         elif type1 == Like.get_api_type():
             # TODO: Add a check to see if the author liked that object before, then just return obj
             print("its a like")
@@ -515,14 +534,23 @@ class InboxSerializerObjects:
             # context={'author_id': data["author_id"]}
         elif type1 == Comment.get_api_type():
             serializer = CommentSerializer
-            context={'author_id': pk_a,'id':data["id"].split("/")[-1]}
-        elif type1 == FollowRequest.get_api_type():
+            author = data.get("author")
+            comment = data.get("comment")
+            object = data.get("object")
+           # context={'author': author,'id':data["id"].split("/")[-1]}
+            context={'author': author, 'object':object,'comment':comment}
+            return serializer(data={}, context=context, partial=True)
+        elif type1 == FollowRequest.get_api_type() or type1 == "follow":
             print("deser follow")
             serializer = FollowRequestSerializer
             actor = data.get("actor")
             context={'object_id': pk_a, 'actor_':actor}
             return serializer(data={}, context=context, partial=True)
-        return obj or serializer(data=data, context=context, partial=True)
+        print("finish")
+        if obj is not None:
+            return obj
+        else:
+            return serializer(data=data, context=context, partial=True)
     
 class Inbox_list(APIView, InboxSerializerObjects, PageNumberPagination):
     """
@@ -557,19 +585,17 @@ class Inbox_list(APIView, InboxSerializerObjects, PageNumberPagination):
             2. If object in database: TYPE, id.
         """
         try:
-            print("in Post")
+            # print("in Post")
             author = Author.objects.get(pk=pk_a, host=settings.HOST_NAME)
-            print("author")
             print("found author locally")
         except Author.DoesNotExist:
-            print("couldnt find author locally")
+            print("couldnt find author in foreign or local")
             return Response("Author not Found", status=status.HTTP_404_NOT_FOUND)
             # if request.data['type'] == "Follow":
             #     response = client.postFollow(request.data, pk_a)
             #     return response
         #issue here
         print("deserialize")
-        print(self.request.data)
         serializer = self.deserialize_objects(self.request.data, pk_a)
         # Case 1: friend author is outside the server, we create all these objects in our database (not sure)
         try:
@@ -595,7 +621,6 @@ class Inbox_list(APIView, InboxSerializerObjects, PageNumberPagination):
         inbox_item = Inbox(content_object=item, author=author)
         inbox_item.save()
         return Response({'request': self.request.data, 'saved': model_to_dict(inbox_item)})
-    
     
     @swagger_auto_schema(operation_summary="Delete all the objects in the inbox")
     def delete(self, request, pk_a):

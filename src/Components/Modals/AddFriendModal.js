@@ -24,8 +24,8 @@ function ADD_FRIEND_MODAL({ open, handleClose }) {
 		const url2 = obj.id + "/inbox";
 		const user = JSON.parse(localStorage.getItem("user"));
 		const axiosInstance = createReqInstance(obj.host);
-		user["id"] = AUTHOR_ID;
 		delete user["type"];
+		console.log(user);
 		const params = {
 			type: "Follow",
 			actor: user,
@@ -62,6 +62,17 @@ function ADD_FRIEND_MODAL({ open, handleClose }) {
 		const url = `authors/displayName/${displayName}/`;
 		await reqInstance({ method: "get", url: url }).then(async (res) => {
 			setusers(res.data);
+			if (res.data.length === 0) {
+				toaster.push(
+					<Message type="error">
+						There are no users with this displayName.
+					</Message>,
+					{
+						placement: "topEnd",
+						duration: 5000,
+					}
+				);
+			}
 		});
 	}
 

@@ -37,32 +37,71 @@ export let createReqInstance = (baseUrl) => {
 		case process.env.REACT_APP_HOST_NAME + "/":
 			username = localStorage.getItem("username");
 			password = localStorage.getItem("password");
+			return axios.create({
+				headers: {
+					"X-CSRFToken": token,
+				},
+				baseURL: baseUrl,
+				auth: {
+					username: username,
+					password: password,
+				},
+			});
 			break;
 		case "https://yoshi-connect.herokuapp.com/":
-			username = "minion";
-			password = "minion";
-			break;
+			username = "minion-yoshi";
+			password = "123";
+			return axios.create({
+				headers: {
+					"X-CSRFToken": token,
+				},
+				baseURL: baseUrl,
+				auth: {
+					username: username,
+					password: password,
+				},
+			});
 		case "https://social-distro.herokuapp.com/":
 			username = "team24";
 			password = "team24";
-			break;
+			return axios.create({
+				headers: {
+					"X-CSRFToken": token,
+				},
+				baseURL: baseUrl,
+				auth: {
+					username: username,
+					password: password,
+				},
+			});
 		case "https://killme.herokuapp.com/":
 			username = "app1team15";
 			password = "hari1234";
-			break;
+			return axios.create({
+				headers: {
+					"X-CSRFToken": token,
+				},
+				baseURL: baseUrl,
+				auth: {
+					username: username,
+					password: password,
+				},
+			});
+		case "https://p2psd.herokuapp.com":
+			return axios.create({
+				headers: {
+					"X-CSRFToken": token,
+					Authorization: "Basic cDJwYWRtaW46cDJwYWRtaW4=",
+				},
+				baseURL: baseUrl,
+				auth: {
+					username: username,
+					password: password,
+				},
+			});
 		default:
 			throw new Error(`Invalid base URL: ${baseUrl}`);
 	}
-	return axios.create({
-		headers: {
-			"X-CSRFToken": token,
-		},
-		baseURL: baseUrl,
-		auth: {
-			username: username,
-			password: password,
-		},
-	});
 };
 
 // export let yoshiInstance = axios.create({

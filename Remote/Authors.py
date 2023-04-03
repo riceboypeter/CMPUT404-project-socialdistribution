@@ -2,6 +2,7 @@ import requests
 import base64
 from rest_framework.response import Response
 from rest_framework import status
+from Remote.auth import *
 
 def getNodeAuthor_social_distro(author_id):
     url = 'https://social-distro.herokuapp.com/api/authors/'
@@ -53,6 +54,17 @@ def getNodeAuthor_App2(author_id):
         return(json_response, status_code)
     else: return (None, status_code)
 
+def getNodeAuthor_P2(author_id):
+    headers = p2_headers()
+    url = "https://p2psd.herokuapp.com/authors/" + author_id
+    response = requests.get(url, headers=headers)
+
+    status_code = response.status_code
+    if status_code == 200:
+        json_response = response.json()
+        return(json_response, status_code)
+    else: return (None, status_code)
+
 def getNodeAllAuthors_Yoshi():
     url = 'https://yoshi-connect.herokuapp.com/authors'
     response = requests.get(url)
@@ -96,6 +108,15 @@ def getNodeAllAuthors_distro():
     authors = json_response['results']
     return authors
 
+def getNodeAllAuthors_P2():
+    headers = p2_headers()
+    url = "https://p2psd.herokuapp.com/authors/"
+    response = requests.get(url, headers=headers)
+   
+    status_code = response.status_code
+    json_response = response.json()
+    authors = json_response['items']
+    return authors
 
 def checkDisplayName(list, displayName):
     author_list = []
@@ -107,11 +128,57 @@ def checkDisplayName(list, displayName):
 def getRemoteAuthorsDisplayName(displayName):
     author1 = checkDisplayName(getNodeAllAuthors_Yoshi(), displayName)
     author2 = checkDisplayName(getNodeAllAuthors_App2(), displayName)
-    author3 = checkDisplayName(getNodeAllAuthors_distro(), displayName)
-    authorList = author1 + author2 + author3
+    author3 = checkDisplayName(getNodeAllAuthors_distro(), displayName) 
+    author4 = checkDisplayName(getNodeAllAuthors_P2(), displayName)
+    authorList = author1 + author2 + author3 + author4
     return authorList
-
 
 def getAuthorId(url):
     arr = url.split("/")
     return arr[-1]
+
+def checkId(list, id):
+    author = {}
+    found = False
+    for item in list:
+        item_id = getAuthorId(item["id"])
+        if item_id == id:
+            author = item
+            found = True
+    return author, found
+
+def getRemoteAuthorsById(id):
+    author1, found = checkId(getNodeAllAuthors_Yoshi(), id)
+    if found == False:
+        author2, found = checkId(getNodeAllAuthors_App2(), id)
+        if found == False:
+            author3, found = checkId(getNodeAllAuthors_distro(), id)
+            if found == False:
+                author4, found = checkId(getNodeAllAuthors_P2(), id)
+                if found == False:
+                   return "author not found", False
+                else: 
+                   return author4, True
+            else:
+                return author3, True
+        else:
+            return author2, True
+    else:
+        return author1, True
+    
+def clean_author(author):
+    if type(author) is dict:
+
+        if "type" in author:
+            del author["type"]
+        if "pronouns" in author:
+            del author["pronouns"]
+        if "email" in author:
+            del author["email"]
+        if "about" in author:
+            del author["about"]
+        return author
+
+
+
+

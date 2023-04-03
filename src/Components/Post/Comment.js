@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useLayoutEffect } from "react";
 import { Input, InputGroup } from "rsuite";
-import { reqInstance } from "../utils/axios";
+import { createReqInstance } from "../utils/axios";
 import { getAuthorId, getCsrfToken } from "../utils/auth";
 // Component Imports
 import COMMENTLIKE from "./LikeComment";
@@ -52,6 +52,7 @@ function COMMENTS({ postobj }) {
 		const post_id = getAuthorId(postObj.id);
 		const params = { comment: new_comment, author_id: author_id };
 		const url = `posts/authors/${FAID}/posts/${post_id}/comments/`;
+		const reqInstance = createReqInstance(postObj.author.host);
 		reqInstance({ method: "post", url: url, data: params })
 			.then(async (res) => {
 				if (res.status === 200) {
