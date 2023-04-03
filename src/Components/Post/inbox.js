@@ -37,7 +37,7 @@ function INBOX() {
 
 	const item = (obj) => {
 		if (obj.type === "post") {
-			return <POST key={obj.id} postobj={obj} explore={true} />;
+			return <POST key={obj.id} postobj={obj} explore={true} github={false} />;
 		}
 		if (obj.type === "Like") {
 			return <LIKEINBOX key={obj.id} likeobj={obj} />;
@@ -116,7 +116,7 @@ function INBOX() {
 					</Nav.Menu>
 				</Nav>
 				<Nav pullRight>
-					<Nav.Item onClick={handleGithubClick}>Github</Nav.Item>
+					<Nav.Item onClick={handleGithubClick}>GitHub</Nav.Item>
 				</Nav>
 				<Nav pullRight>
 					<Nav.Item onClick={handleProfileClick}>Profile</Nav.Item>

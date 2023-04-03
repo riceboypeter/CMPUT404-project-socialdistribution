@@ -14,7 +14,7 @@ export let reqInstance = axios.create({
 	headers: {
 		"X-CSRFToken": token,
 	},
-	baseURL: process.env.REACT_APP_HOST_NAME + "/",
+	baseURL: `${process.env.REACT_APP_HOST_NAME}/`,
 	auth: {
 		username: username,
 		password: password,

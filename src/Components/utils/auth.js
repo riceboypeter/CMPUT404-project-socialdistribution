@@ -34,7 +34,7 @@ export async function getCurrentUser(author_id) {
 		return await axios({
 			method: "get",
 			url: `authors/${author_id}`,
-			baseURL: process.env.REACT_APP_HOST_NAME + '/',
+			baseURL: `${process.env.REACT_APP_HOST_NAME}/`,
 		})
 			.then((response) => {
 				const user = response.data;
@@ -50,7 +50,7 @@ export async function getCsrfToken() {
 	let _csrfToken = null;
 	const API_HOST = process.env.REACT_APP_HOST_NAME;
 	if (_csrfToken === null) {
-		const response = await fetch(`${API_HOST}/csrf/`, {
+		const response = await fetch(`${API_HOST} / csrf / `, {
 			credentials: "include",
 		});
 		const data = await response.json();

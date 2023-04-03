@@ -156,7 +156,7 @@ function PROFILE() {
 					<Nav.Item onClick={handleInboxClick}>Inbox</Nav.Item>
 				</Nav>
 				<Nav pullRight>
-					<Nav.Item onClick={handleGithubClick}>Github</Nav.Item>
+					<Nav.Item onClick={handleGithubClick}>GitHub</Nav.Item>
 				</Nav>
 				<Nav pullRight>
 					<Nav.Item onClick={handleExploreClick}>Explore</Nav.Item>
