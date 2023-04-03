@@ -42,7 +42,7 @@ function POST({ postobj, edit, explore, github }) {
 			post["contentType"] === "image/jpeg" ||
 			post["contentType"] === "image/png"
 		) {
-			let imageurl = postobj.origin + 'image';
+			let imageurl = postobj.origin + '/image';
 			return (
 				<p style={{ padding: "5px" }}>
 					<img src={imageurl} alt="image" />
