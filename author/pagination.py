@@ -18,9 +18,9 @@ class ViewPaginatorMixin(object):
           if size < min_size:
               size = min_size
           if size > max_size:
-              size = self.max_size
+              size = max_size
       except (ValueError, TypeError):
-          size = self.max_size
+          size = max_size
 
       paginator = Paginator(object_list, size)
       try:

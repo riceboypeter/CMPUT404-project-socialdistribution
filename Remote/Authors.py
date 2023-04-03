@@ -87,7 +87,7 @@ def getNodeAllAuthors_App2():
     response = session.get(url)
 
     json_response = response.json()
-    authors = json_response['data']
+    authors = json_response['items']
     return authors
 
 def getNodeAllAuthors_distro():
