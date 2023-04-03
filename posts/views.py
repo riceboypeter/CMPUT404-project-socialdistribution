@@ -957,7 +957,7 @@ class PublicPostsView(APIView):
         posts = Post.objects.filter(visibility='PUBLIC')
         serializer = PostSerializer(posts, many=True)
         data_list = serializer.data
-        if (request.GET.get("local") == "true") :
+        if (request.GET.get("local") == "true"):
             remotePosts = getAllPublicPosts()
             data_list = data_list + remotePosts
             data_list.sort(key=lambda x: x['published'])

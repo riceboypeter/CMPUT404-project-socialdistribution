@@ -43,7 +43,8 @@ class AuthorSerializer(serializers.ModelSerializer):
             print("no author", updated_author)
             return Response("Author does not exist here!", status=status.HTTP_404_NOT_FOUND)
         else:
-            return updated_author.save()            
+            updated_author.save() 
+            return updated_author     
     
     def to_representation(self, instance):
         id = instance.get_public_id()
