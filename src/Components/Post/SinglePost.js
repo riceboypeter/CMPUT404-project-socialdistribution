@@ -98,7 +98,14 @@ function SINGLEPOST({ explore }) {
 			post["contentType"] === "image/jpeg" ||
 			post["contentType"] === "image/png"
 		) {
-			let imageurl = post["origin"] + '/image';
+			let imageurl = post["origin"];
+			if (imageurl.charAt(imageurl.length - 1) === '/'){
+				imageurl = imageurl + "image";
+			}
+			else {
+				imageurl = imageurl + "/image";
+			}
+			console.log(imageurl);
 			return (
 				<p style={{ padding: "5px" }}>
 					<img src={imageurl} alt="image" />
