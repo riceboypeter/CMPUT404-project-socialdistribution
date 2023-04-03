@@ -99,7 +99,7 @@ function SINGLEPOST({ explore }) {
 		) {
 			let tempAuthorId = (post.author.id + "").split("/").slice(-1);
 			let tempPostId = (post.id + "").split("/").slice(-1);
-			let HOST = "https://sociallydistributed.herokuapp.com/";
+			let HOST = process.env.REACT_APP_HOST_NAME + "/";
 			let posturl =
 				HOST +
 				"posts/authors/" +

@@ -112,7 +112,7 @@ class LikeSerializer(serializers.ModelSerializer):
     
     def to_internal_value(self, data):
         print("to_internal_value")
-        author = AuthorSerializer.extract_and_upcreate_author(author=self.context["author"])
+        author = AuthorSerializer.extract_and_upcreate_author(self.context["author"])
         # object = Author.objects.get(id=self.context["object"])
         object = self.context["object"]
 
