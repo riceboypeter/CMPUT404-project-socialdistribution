@@ -956,7 +956,7 @@ class PublicPostsView(APIView):
 
     @swagger_auto_schema(responses =Publicpostget, operation_summary="List all Public posts on all servers")
     def get(self, request):
-        posts = Post.objects.filter(visibility='PUBLIC', is_github=False)
+        posts = Post.objects.filter(visibility='PUBLIC', is_github= False)
         serializer = PostSerializer(posts, many=True)
         data_list = serializer.data
         if (request.GET.get("local") == "true"):
