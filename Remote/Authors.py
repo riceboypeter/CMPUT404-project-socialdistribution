@@ -205,6 +205,7 @@ def clean_author(author):
             author["github"] = ''
         if author["profileImage"] is None or author["profileImage"] == 'null':
             author["github"] = ''
+        
         return author
 
 
