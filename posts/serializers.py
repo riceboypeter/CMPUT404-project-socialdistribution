@@ -105,7 +105,7 @@ class LikeSerializer(serializers.ModelSerializer):
             return "already liked"
         else:
             id = str(uuid.uuid4())
-            like = Like.objects.create(**validated_data, id = id)
+            like = Like.objects.create(**validated_data)
             like.save()
             print("successful")
             return like
