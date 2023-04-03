@@ -519,7 +519,7 @@ class InboxSerializerObjects:
                     else:
                         serializer = PostSerializer
                     context={}
-                    return serializer(data=data, context=context, partial=Truez)
+                    return serializer(data=data, context=context, partial=True)
                 except:
                     error_msg = "Post not found"
                     return Response(error_msg, status=status.HTTP_404_NOT_FOUND)
