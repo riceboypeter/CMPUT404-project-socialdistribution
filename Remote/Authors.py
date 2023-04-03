@@ -82,9 +82,12 @@ def getNodeAllAuthors_Yoshi():
     url = 'https://yoshi-connect.herokuapp.com/authors'
     response = requests.get(url, params={"size": 100})
     status_code = response.status_code
-    json_response = response.json()
-    authors = json_response['items']
-    return authors
+
+    if status_code == 200:
+        json_response = response.json()
+        authors = json_response['items']
+        return(authors, status_code)
+    else: return (None, status_code)
 
 def getNodeAllAuthors_App2():
     url = 'https://sociallydistributed.herokuapp.com/authors/'
@@ -92,11 +95,13 @@ def getNodeAllAuthors_App2():
 
     headers = app2_headers()
     response = requests.get(url, headers=headers, params=params)
-    json_response = response.json()
-    authors = json_response['items']
-    return authors
+    status_code = response.status_code
+    if status_code == 200:
+        json_response = response.json()
+        authors = json_response['items']
+        return(authors, status_code)
+    else: return (None, status_code)
 
-getNodeAllAuthors_App2()
 
 def getNodeAllAuthors_distro():
     url = 'https://social-distro.herokuapp.com/api/authors/'
@@ -147,10 +152,10 @@ def checkDisplayName(list, displayName):
 def getRemoteAuthorsDisplayName(displayName):
     author1 = checkDisplayName(getNodeAllAuthors_Yoshi(), displayName)
     author2 = checkDisplayName(getNodeAllAuthors_App2(), displayName)
-    author3 = checkDisplayName(getNodeAllAuthors_distro(), displayName) 
-    author4 = checkDisplayName(getNodeAllAuthors_P2(), displayName)
+    # author3 = checkDisplayName(getNodeAllAuthors_distro(), displayName) 
+    # author4 = checkDisplayName(getNodeAllAuthors_P2(), displayName)
     author5 = checkDisplayName(getNodeAllAuthors_big(), displayName)
-    authorList = author1 + author2 + author3 + author4 + author5
+    authorList = author1 + author2  + author5
     return authorList
 
 def getAuthorId(url):
