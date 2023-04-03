@@ -22,16 +22,19 @@ class PostSerializer(WritableNestedModelSerializer):
         try:
             author = AuthorSerializer.extract_and_upcreate_author(validated_data['author'], None)
             post = Post.objects.create(**validated_data)
+            print("Create Post/ extract and upcreate")
         except:
             author = AuthorSerializer.extract_and_upcreate_author(None, author_id=self.context["author_id"])
             id = validated_data.pop('id') if validated_data.get('id') else None
             if not id:
                 id = self.context["id"]
             post = Post.objects.create(**validated_data, author = author, id = id)
-
+            print("except create post object")
+        print(post)
         return post
 
     def to_internal_value(self, data):
+        print("internal value")
         data["categories"] = ','.join(data["categories"])
         return super().to_internal_value(data)
         
