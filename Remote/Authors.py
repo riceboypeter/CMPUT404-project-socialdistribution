@@ -114,12 +114,13 @@ def getNodeAllAuthors_distro():
 
 def getNodeAllAuthors_P2():
     headers = p2_headers()
-    url = "https://p2psd.herokuapp.com/authors/"
-    response = requests.get(url, headers=headers, params={"size": 100})
+    url = "https://p2psd.herokuapp.com/authors"
+    response = requests.get(url, headers=headers)
    
     status_code = response.status_code
     json_response = response.json()
     authors = json_response['items']
+    print(authors)
     return authors
 
 def getNodeAllAuthors_big():
