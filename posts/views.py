@@ -782,8 +782,7 @@ class PostLikesView(APIView):
             error_msg = "Post not found"
             return Response(error_msg,status=status.HTTP_404_NOT_FOUND)
         # filter for all the likes on that post
-        url = post.url[:-1] if post.url.endswith('/') else post.url
-        likes = Like.objects.filter(object=url)
+        likes = Like.objects.filter(object=post.url)
         serializer = LikeSerializer(likes, many=True)
         return Response(serializer.data)
 

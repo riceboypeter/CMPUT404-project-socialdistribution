@@ -67,7 +67,7 @@ class Post(models.Model):
     # get public id of post
     def get_public_id(self):
         self.get_absolute_url()
-        return (self.url[:-1]) or str(self.id)
+        return (self.url) or str(self.id)
     
     # get comments url
     def get_comments_source(self):
@@ -88,7 +88,7 @@ class Post(models.Model):
     def get_absolute_url(self):
         url = reverse('posts:detail', args=[str(self.author.id), str(self.id)])
         url = settings.APP_NAME + url
-        self.url = url if url.endswith('/') else url + '/'
+        self.url = url[:-1] if url.endswith('/') else url 
         self.save()
         return self.url
 
@@ -99,8 +99,9 @@ class Post(models.Model):
         
     def get_origin(self):
         #set post origin (URL to origin)
-        self.get_absolute_url()
-        return self.url
+        if not self.origin:
+            self.get_absolute_url()
+            return self.url
     
     @staticmethod
     def get_api_type():
