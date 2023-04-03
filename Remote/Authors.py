@@ -93,7 +93,6 @@ def getNodeAllAuthors_App2():
     headers = app2_headers()
     response = requests.get(url, headers=headers, params=params)
     json_response = response.json()
-    print(json_response)
     authors = json_response['items']
     return authors
 
