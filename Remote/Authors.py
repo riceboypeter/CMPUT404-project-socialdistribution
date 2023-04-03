@@ -5,6 +5,7 @@ from rest_framework import status
 import json
 from Remote.auth import *
 # from auth import *
+params={"size": 100}
 
 def getNodeAuthor_social_distro(author_id):
     url = 'https://social-distro.herokuapp.com/api/authors/'
@@ -46,8 +47,6 @@ def getNodeAuthor_App2(author_id):
 
     url = url + author_id
 
-    print("in node 2 authors")
-
     response = requests.get(url)
     status_code = response.status_code
     
@@ -69,18 +68,16 @@ def getNodeAuthor_P2(author_id):
 
 def getNodeAuthor_big(author_id):
     url = "https://bigger-yoshi.herokuapp.com/api/authors/" + author_id
-    response= requests.get(url)
+    response= requests.get(url, params={"size": 100})
     status_code = response.status_code
     if status_code == 200:
         json_response = response.json()
         return(json_response, status_code)
     else: return (None, status_code)
 
-getNodeAuthor_big("fbb151df-f021-42b3-8714-5f1ae78ab062")
-
 def getNodeAllAuthors_Yoshi():
     url = 'https://yoshi-connect.herokuapp.com/authors'
-    response = requests.get(url)
+    response = requests.get(url, params={"size": 100})
     status_code = response.status_code
     json_response = response.json()
     authors = json_response['items']
@@ -90,14 +87,8 @@ def getNodeAllAuthors_App2():
     url = 'https://sociallydistributed.herokuapp.com/authors/'
     hosturl = "https://sociallydistributed.herokuapp.com/"
 
-    username = 'app1team15'
-    password = 'hari1234'
-
-    session = requests.Session()
-    session.auth = (username, password)
-
-    auth = session.post(hosturl)
-    response = session.get(url)
+    headers = app2_headers()
+    response = requests.get(url, headers=headers, params={"size": 100})
 
     json_response = response.json()
     authors = json_response['items']
@@ -114,7 +105,7 @@ def getNodeAllAuthors_distro():
     authorization_header = f'Basic {encoded_credentials}'
     headers = {'Authorization': authorization_header}
 
-    response = requests.get(url, headers=headers)
+    response = requests.get(url, headers=headers, params={"size": 100})
    
     status_code = response.status_code
     json_response = response.json()
@@ -124,7 +115,7 @@ def getNodeAllAuthors_distro():
 def getNodeAllAuthors_P2():
     headers = p2_headers()
     url = "https://p2psd.herokuapp.com/authors/"
-    response = requests.get(url, headers=headers)
+    response = requests.get(url, headers=headers, params={"size": 100})
    
     status_code = response.status_code
     json_response = response.json()
@@ -133,7 +124,7 @@ def getNodeAllAuthors_P2():
 
 def getNodeAllAuthors_big():
     url = "https://bigger-yoshi.herokuapp.com/api/authors"
-    response = requests.get(url)
+    response = requests.get(url, params={"size": 100})
     text = response.json()
     items = text["items"]
     
