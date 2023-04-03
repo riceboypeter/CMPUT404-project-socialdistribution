@@ -16,12 +16,15 @@ class PostSerializer(WritableNestedModelSerializer):
     source = serializers.URLField(source="get_source", read_only=True, max_length=500)  # source of post
     origin = serializers.URLField(source="get_origin", read_only=True, max_length=500)  # origin of post
     categories = serializers.CharField(max_length=300, default="")
+    print("PSOT INIT")
     
     def create(self, validated_data):
         print("validated post data",validated_data)
         try:
+            print("POST TRY BLOCK")
             post = Post.objects.create(**validated_data)
         except:
+            print("POST SERIALIZER ELSE")
             author = AuthorSerializer.extract_and_upcreate_author(None, author_id=self.context["author_id"])
             id = validated_data.pop('id') if validated_data.get('id') else None
             if not id:
@@ -31,6 +34,7 @@ class PostSerializer(WritableNestedModelSerializer):
         return post
 
     def to_internal_value(self, data):
+        print("INTERNAL FOR POST SERIALIZER",data)
         try: 
             data["author"] = AuthorSerializer.extract_and_upcreate_author(data['author'], None)
             data["categories"] = ','.join(data["categories"])
@@ -189,8 +193,10 @@ class ImageSerializer(serializers.ModelSerializer):
     id = serializers.URLField(source="get_public_id",read_only=True)
     author = AuthorSerializer(required=False)
     image = Base64ImageField()
+    print("IMAGE INIT")
     
     def create(self, validated_data):
+        print("IMAGE")
         try:
             author = AuthorSerializer.extract_and_upcreate_author(validated_data['author'], None)
             post = Post.objects.create(**validated_data)
