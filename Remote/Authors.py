@@ -3,8 +3,8 @@ import base64
 from rest_framework.response import Response
 from rest_framework import status
 import json
-# from Remote.auth import *
-from auth import *
+from Remote.auth import *
+# from auth import *
 
 def getNodeAuthor_social_distro(author_id):
     url = 'https://social-distro.herokuapp.com/api/authors/'
