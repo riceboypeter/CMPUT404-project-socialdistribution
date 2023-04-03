@@ -95,7 +95,7 @@ export let createReqInstance = (baseUrl) => {
 					"X-CSRFToken": token
 					// Authorization: "Basic cDJwYWRtaW46cDJwYWRtaW4=",
 				},
-				baseURL: baseUrl + "/api/",
+				baseURL: baseUrl,
 				auth: {
 					username: username,
 					password: password,
