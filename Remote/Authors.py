@@ -40,7 +40,7 @@ def getNodeAuthor_Yoshi(author_id):
     else: return (None, status_code)
 
 def getNodeAuthor_App2(author_id):
-    url = 'https://killme.herokuapp.com/authors/'
+    url = 'https://sociallydistributed.herokuapp.com/authors/'
 
     url = url + author_id
 
@@ -74,8 +74,8 @@ def getNodeAllAuthors_Yoshi():
     return authors
 
 def getNodeAllAuthors_App2():
-    url = 'https://killme.herokuapp.com/authors/'
-    hosturl = "https://killme.herokuapp.com/"
+    url = 'https://sociallydistributed.herokuapp.com/authors/'
+    hosturl = "https://sociallydistributed.herokuapp.com/"
 
     username = 'app1team15'
     password = 'hari1234'

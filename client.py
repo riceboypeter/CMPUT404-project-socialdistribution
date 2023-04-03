@@ -65,8 +65,8 @@ def clean_list(dirty):
 
 def getNodeApp2():
     #https://social-distro.herokuapp.com/api/authors/15/
-    url = 'https://killme.herokuapp.com/authors/'
-    hosturl = 'https://killme.herokuapp.com/'
+    url = 'https://sociallydistributed.herokuapp.com/authors/'
+    hosturl = 'https://sociallydistributed.herokuapp.com/'
 
     username = 'app1team15'
     password = 'hari1234'
@@ -122,8 +122,8 @@ def getNodeAuthor_Yoshi(author_id):
 
 
 def getNodeAuthor_App2(author_id):
-    url = 'https://killme.herokuapp.com/authors/'
-    hosturl = 'https://killme.herokuapp.com/'
+    url = 'https://sociallydistributed.herokuapp.com/authors/'
+    hosturl = 'https://sociallydistributed.herokuapp.com/'
 
     url = url + author_id
 
@@ -179,8 +179,8 @@ def getNodePost_Yoshi(author_id):
     else: return (None, status_code)
 
 def getNodePost_app2(author_id):
-    url = 'https://killme.herokuapp.com/posts/authors/'
-    hosturl = 'https://killme.herokuapp.com/'
+    url = 'https://sociallydistributed.herokuapp.com/posts/authors/'
+    hosturl = 'https://sociallydistributed.herokuapp.com/'
 
     url = url + author_id + '/posts/'
     username = 'app1team15'
