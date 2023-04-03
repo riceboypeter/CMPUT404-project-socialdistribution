@@ -102,44 +102,4 @@ export let createReqInstance = (baseUrl) => {
 		default:
 			throw new Error(`Invalid base URL: ${baseUrl}`);
 	}
-	return axios.create({
-		headers: {
-			"X-CSRFToken": token,
-		},
-		baseURL: baseUrl,
-		auth: {
-			username: username,
-			password: password,
-		},
-	});
 };
-
-// export let yoshiInstance = axios.create({
-// 	headers: {
-// 		"X-CSRFToken": token,
-// 	},
-// 	auth: {
-// 		username: "minion",
-// 		password: "minion",
-// 	},
-// });
-
-// export let distroInstance = axios.create({
-// 	headers: {
-// 		"X-CSRFToken": token,
-// 	},
-// 	auth: {
-// 		username: "team24",
-// 		password: "team24",
-// 	},
-// });
-
-// export let app2Instance = axios.create({
-// 	headers: {
-// 		"X-CSRFToken": token,
-// 	},
-// 	auth: {
-// 		username: "app2team15",
-// 		password: "hari1234",
-// 	},
-// });
