@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { IconButton, useToaster, Message } from "rsuite";
 import ThumbsUpIcon from "@rsuite/icons/legacy/ThumbsUp";
 import { reqInstance } from "../utils/axios";
-import { getAuthorId } from "../utils/auth";
+import { getAuthorId, getCurrentUser } from "../utils/auth";
 
 // Component Imports
 function COMMENTLIKE({ obj }) {
@@ -13,6 +13,7 @@ function COMMENTLIKE({ obj }) {
 	//Confirm the name of the button
 	async function handleSubmitClick() {
 		const curr_author_id = getAuthorId(null);
+		const author = getCurrentUser();
 		var FAID = "";
 		const url2 = obj;
 
@@ -22,7 +23,7 @@ function COMMENTLIKE({ obj }) {
 
 		const params = {
 			type: "Like",
-			author_id: curr_author_id,
+			author: author,
 			object: url2,
 		};
 		const url = `authors/${FAID}/inbox/`;
