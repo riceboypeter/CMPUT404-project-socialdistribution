@@ -46,13 +46,11 @@ function SINGLEPOST({ explore }) {
 			reqInstance({ method: "get", url: `authors/${author}` }).then(
 				(res) => {
 					if (res.status === 200) {
-						console.log(res.data);
 						host = res.data.host;
 						let reqInstance = createReqInstance(host);
 						let url = getUrl();
 						reqInstance({ method: "get", url: url })
 							.then((res) => {
-								console.log(res);
 								if (res.status == 200) {
 									set_post(res.data);
 								}
@@ -99,13 +97,11 @@ function SINGLEPOST({ explore }) {
 			post["contentType"] === "image/png"
 		) {
 			let imageurl = post["origin"];
-			if (imageurl.charAt(imageurl.length - 1) === '/'){
+			if (imageurl.charAt(imageurl.length - 1) === "/") {
 				imageurl = imageurl + "image";
-			}
-			else {
+			} else {
 				imageurl = imageurl + "/image";
 			}
-			console.log(imageurl);
 			return (
 				<p style={{ padding: "5px" }}>
 					<img src={imageurl} alt="image" />

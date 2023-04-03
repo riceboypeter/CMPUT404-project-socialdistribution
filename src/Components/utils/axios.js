@@ -47,7 +47,6 @@ export let createReqInstance = (baseUrl) => {
 					password: password,
 				},
 			});
-			break;
 		case "https://yoshi-connect.herokuapp.com/":
 			username = "minion-yoshi";
 			password = "123";
@@ -87,13 +86,25 @@ export let createReqInstance = (baseUrl) => {
 					password: password,
 				},
 			});
+		case "https://killme.herokuapp.com//":
+			username = "app1team15";
+			password = "hari1234";
+			return axios.create({
+				headers: {
+					"X-CSRFToken": token,
+				},
+				baseURL: baseUrl,
+				auth: {
+					username: username,
+					password: password,
+				},
+			});
 		case "https://bigger-yoshi.herokuapp.com/api/":
 			username = "man4";
 			password = "123";
-			console.log("we are here")
 			return axios.create({
 				headers: {
-					"X-CSRFToken": token
+					"X-CSRFToken": token,
 					// Authorization: "Basic cDJwYWRtaW46cDJwYWRtaW4=",
 				},
 				baseURL: baseUrl,
@@ -118,33 +129,3 @@ export let createReqInstance = (baseUrl) => {
 			throw new Error(`Invalid base URL: ${baseUrl}`);
 	}
 };
-
-// export let yoshiInstance = axios.create({
-// 	headers: {
-// 		"X-CSRFToken": token,
-// 	},
-// 	auth: {
-// 		username: "minion",
-// 		password: "minion",
-// 	},
-// });
-
-// export let distroInstance = axios.create({
-// 	headers: {
-// 		"X-CSRFToken": token,
-// 	},
-// 	auth: {
-// 		username: "team24",
-// 		password: "team24",
-// 	},
-// });
-
-// export let app2Instance = axios.create({
-// 	headers: {
-// 		"X-CSRFToken": token,
-// 	},
-// 	auth: {
-// 		username: "app2team15",
-// 		password: "hari1234",
-// 	},
-// });
