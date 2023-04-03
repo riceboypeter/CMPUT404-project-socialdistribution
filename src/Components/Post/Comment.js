@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useLayoutEffect } from "react";
 import { Input, InputGroup } from "rsuite";
-import { createReqInstance } from "../utils/axios";
+import { reqInstance, createReqInstance } from "../utils/axios";
 import { getAuthorId, getCsrfToken } from "../utils/auth";
 // Component Imports
 import COMMENTLIKE from "./LikeComment";
@@ -47,13 +47,20 @@ function COMMENTS({ postobj }) {
 	}, []);
 
 	const handleSubmitClick = () => {
-		const FAID = getAuthorId(postObj.author["id"]);
-		const author_id = getAuthorId(null);
-		const post_id = getAuthorId(postObj.id);
-		const params = { comment: new_comment, author_id: author_id };
-		const url = `posts/authors/${FAID}/posts/${post_id}/comments/`;
+		const user = JSON.parse(localStorage.getItem("user"));
+		delete user["type"];
+		const FAID = getAuthorId(postObj.author.id);
+		console.log(postObj)
+		const params = {
+			"type": "comment",
+			comment: new_comment,
+			author: user,
+			object: postObj.id,
+		};
+		console.log(FAID)
+		const url = `authors/${FAID}/inbox/`;
 		const reqInstance = createReqInstance(postObj.author.host);
-		reqInstance({ method: "post", url: url, data: params })
+		return reqInstance({ method: "post", url: url, data: params })
 			.then(async (res) => {
 				if (res.status === 200) {
 					getComments(postObj.url);
@@ -62,6 +69,7 @@ function COMMENTS({ postobj }) {
 			})
 			.catch((err) => console.log(err));
 	};
+
 
 	return (
 		<div>

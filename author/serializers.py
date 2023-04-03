@@ -30,6 +30,7 @@ class AuthorSerializer(serializers.ModelSerializer):
     @staticmethod
     def _upcreate(validated_data):
         print("in the other upcreate function")
+        print(validated_data)
         return Author(**validated_data)
     
     @staticmethod
