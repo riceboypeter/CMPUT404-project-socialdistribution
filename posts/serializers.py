@@ -79,7 +79,7 @@ class CommentSerializer(serializers.ModelSerializer):
         
        # if not id:
         #    id = self.context["id"]
-        comment = Comment.objects.create(author = author,  comment = comment, post=self.context["object"])
+        comment = Comment.objects.create(author = author,  comment = comment, post=validated_data["post"])
         comment.save()
 
         return comment
@@ -87,8 +87,12 @@ class CommentSerializer(serializers.ModelSerializer):
     def to_internal_value(self, data):
         print("to_internal_value")
         author = AuthorSerializer.extract_and_upcreate_author(self.context["author"])
+        print("OBJECT",self.context["object"])
+        post = self.context["object"]
         print("reached internal value")
-        print(author)
+        print("AUTHOR HERE",author)
+
+        print("POST",post)
   
         # object = Author.objects.get(id=self.context["object"])
        
@@ -99,11 +103,20 @@ class CommentSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({
                 'author': 'This field is required.'
             })
+        if not post:
+            raise serializers.ValidationError({
+                'post': 'This field is required.'
+            })
+        if not comment:
+            raise serializers.ValidationError({
+                'comment': 'This field is required.'
+            })
        
         
         return {
             'author': author,
             'comment':comment,
+            'post': post,
         }
 
     class Meta:

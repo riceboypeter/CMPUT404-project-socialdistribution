@@ -539,7 +539,6 @@ class InboxSerializerObjects:
             object = data.get("object")
            # context={'author': author,'id':data["id"].split("/")[-1]}
             context={'author': author, 'object':object,'comment':comment}
-            return serializer(data={}, context=context, partial=True)
         elif type1 == FollowRequest.get_api_type() or type1 == "follow":
             print("deser follow")
             serializer = FollowRequestSerializer
@@ -550,7 +549,7 @@ class InboxSerializerObjects:
         if obj is not None:
             return obj
         else:
-            return serializer(data=data, context=context, partial=True)
+            return serializer(data={}, context=context, partial=True)
     
 class Inbox_list(APIView, InboxSerializerObjects, PageNumberPagination):
     """

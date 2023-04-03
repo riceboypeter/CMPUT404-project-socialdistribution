@@ -93,23 +93,15 @@ function SINGLEPOST({ explore }) {
 		}
 
 		// handle images
+		// handle images
 		if (
 			post["contentType"] === "image/jpeg" ||
 			post["contentType"] === "image/png"
 		) {
-			let tempAuthorId = (post.author.id + "").split("/").slice(-1);
-			let tempPostId = (post.id + "").split("/").slice(-1);
-			let HOST = process.env.REACT_APP_HOST_NAME + "/";
-			let posturl =
-				HOST +
-				"posts/authors/" +
-				tempAuthorId +
-				"/posts/" +
-				tempPostId +
-				"/image";
+			let imageurl = post["origin"] + 'image';
 			return (
 				<p style={{ padding: "5px" }}>
-					<img src={posturl} alt="image" />
+					<img src={imageurl} alt="image" />
 				</p>
 			);
 		}

@@ -8,6 +8,11 @@ from Authors import *
 from datetime import datetime, date
 import json
 
+params= {
+    "size": 5,
+    "page": 1 
+}
+
 def getNodePost_Yoshi(author_id):
     url = 'https://yoshi-connect.herokuapp.com/authors/'
 
@@ -26,7 +31,7 @@ def getAllPosts_app2():
     url = 'https://sociallydistributed.herokuapp.com/posts/public'
 
     headers = app2_headers()
-    response = requests.get(url, headers=headers)
+    response = requests.get(url, headers=headers, params=params)
     if response.status_code == 200:
         json_response = response.json()
         return(json_response)
@@ -34,7 +39,7 @@ def getAllPosts_app2():
 def getAllPosts_Yoshi():
     url = 'https://yoshi-connect.herokuapp.com/posts/public'
     headers = yoshi_headers()
-    response = requests.get(url, headers=headers)
+    response = requests.get(url, headers=headers, params=params)
     if response.status_code == 200:
         json_response = response.json()
         return(json_response["items"])
@@ -44,7 +49,7 @@ def getNodePost_social_distro(author_id):
 
     url = url + author_id + '/posts/'
 
-    response = requests.get(url, headers=distro_headers())
+    response = requests.get(url, headers=distro_headers(), params=params)
     status_code = response.status_code
     if status_code == 200:
         json_response = response.json()
@@ -81,8 +86,9 @@ def getAllPosts_P2():
         items = getNodePosts_P2(author_id)
         items = items["items"]
         for item in items:
-            if item['visibility'] == 'PUBLIC':
-                posts.append(item)
+            while len(posts) <= 5:
+                if item['visibility'] == 'PUBLIC':
+                    posts.append(item)
     return posts
 
 def getAllPosts_big():
@@ -107,8 +113,18 @@ def getAllPublicPosts():
     return posts
 
 
+
+
 def sendPost(host, data, auth_id):
-    print(data)
+  
+    # encode image from data[image] as base64 string in data[content]
+    if "image/" in data.contentType:
+        with open("."+data.image,'rb') as file:
+            # encode image
+            encoded_image = base64.b64encode(file.read())
+            # properly pad the image + cast to string
+            data.content = "data:image/png;base64,"+str(encoded_image)[2:-1]
+
     if 'yoshi' in host:
         response, status_code = sendPostYoshi(data, auth_id)
     elif 'social-distro' in host:
@@ -117,14 +133,25 @@ def sendPost(host, data, auth_id):
         response, status_code = sendPostApp2(data, auth_id)
     elif 'p2psd' in host:
         response, status_code = sendPostP2(data, auth_id)
+    elif 'bigger-yoshi' in host:
+        response, status_code = sendPostBiggerYoshi(data, auth_id)
     return response
 
-def sendPostYoshi(data, auth_id):
-    url = 'https://yoshi-connect.herokuapp.com/authors/' + auth_id + '/inbox'
+def sendPostBiggerYoshi(data, auth_id):
+    url = 'https://bigger-yoshi.herokuapp.com/api/authors/' + auth_id + '/inbox'
 
 
     #update the data to be sent in proper format maybe
     
+    response = requests.post(url=url, data=data)
+    status_code = response.status_code
+    json_response = response.json()
+    return json_response, status_code
+
+def sendPostYoshi(data, auth_id):
+    url = 'https://yoshi-connect.herokuapp.com/authors/' + auth_id + '/inbox'
+
+    #update the data to be sent in proper format maybe
     response = requests.post(url=url, headers=yoshi_headers(), data=data)
     status_code = response.status_code
     json_response = response.json()
