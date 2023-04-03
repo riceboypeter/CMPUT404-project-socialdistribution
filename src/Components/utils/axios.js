@@ -87,7 +87,7 @@ export let createReqInstance = (baseUrl) => {
 					password: password,
 				},
 			});
-		case "bigger-yoshi.herokuapp.com/":
+		case "https://bigger-yoshi.herokuapp.com":
 			username = "man4";
 			password = "123";
 			return axios.create({
@@ -95,7 +95,7 @@ export let createReqInstance = (baseUrl) => {
 					"X-CSRFToken": token,
 					Authorization: "Basic cDJwYWRtaW46cDJwYWRtaW4=",
 				},
-				baseURL: baseUrl,
+				baseURL: baseUrl + "/api/",
 				auth: {
 					username: username,
 					password: password,
