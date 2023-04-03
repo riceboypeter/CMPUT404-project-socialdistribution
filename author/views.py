@@ -603,6 +603,7 @@ class Inbox_list(APIView, InboxSerializerObjects, PageNumberPagination):
                 # if self.request.data['type'] == "Follow":
                 #     objectid = self.request.data['object']['id']
                 #     author = get_object_or_404(Author,pk=objectid)
+                print("IS VALID")
                 if item=="already liked":
                     return Response("Post Already Liked!", status=status.HTTP_400_BAD_REQUEST)
                 if item == "already sent":
