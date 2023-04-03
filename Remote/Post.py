@@ -3,8 +3,8 @@ import base64
 from rest_framework.response import Response
 from rest_framework import status
 
-from Remote.auth import *
-from Remote.Authors import *
+from auth import *
+from Authors import *
 from datetime import datetime, date
 import json
 
@@ -85,11 +85,24 @@ def getAllPosts_P2():
                 posts.append(item)
     return posts
 
+def getAllPosts_big():
+    url = 'https://bigger-yoshi.herokuapp.com/api/authors/posts'
+
+    response = requests.get(url)
+    print(response)
+    if response.status_code == 200:
+        json_response = response.json()
+        print(json_response)
+        return(json_response)
+    
+getAllPosts_big()
+
 def getAllPublicPosts():
     posts1 = getAllPosts_app2()
     posts2 = getAllPosts_Yoshi()
     posts3 = getAllPosts_Distro()
     posts4 = getAllPosts_P2()
+    posts5 = getAllPosts_big()
     posts = posts1+ posts2 + posts3 + posts4
     return posts
 
