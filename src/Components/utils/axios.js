@@ -74,7 +74,7 @@ export let createReqInstance = (baseUrl) => {
 					password: password,
 				},
 			});
-		case "https://killme.herokuapp.com/":
+		case "https://sociallydistributed.herokuapp.com/":
 			username = "app1team15";
 			password = "hari1234";
 			return axios.create({
