@@ -20,7 +20,6 @@ class PostSerializer(WritableNestedModelSerializer):
     def create(self, validated_data):
         print("validated post data",validated_data)
         try:
-            author = AuthorSerializer.extract_and_upcreate_author(validated_data['author'], None)
             post = Post.objects.create(**validated_data)
         except:
             author = AuthorSerializer.extract_and_upcreate_author(None, author_id=self.context["author_id"])
@@ -32,19 +31,21 @@ class PostSerializer(WritableNestedModelSerializer):
         return post
 
     def to_internal_value(self, data):
-        data["categories"] = ','.join(data["categories"])
+        try: 
+            data["categories"] = ','.join(data["categories"])
+            data["author"] = AuthorSerializer.extract_and_upcreate_author(data['author'], None)
+        except: 
+            pass
         return super().to_internal_value(data)
         
 
     def to_representation(self, instance):
         id = instance.get_public_id()
-        categories_list = instance.categories.split(",")
         comments_list = Comment.objects.filter(post=instance).order_by('-published')[0:5]
         commentsSrc = [CommentSerializer(comment,many=False).data for comment in comments_list]
         return {
             **super().to_representation(instance),
             'id': id,
-            'categories':[category for category in categories_list],
             'commentsSrc': commentsSrc,
             'count': len(commentsSrc)
         }
