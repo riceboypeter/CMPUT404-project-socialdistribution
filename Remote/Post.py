@@ -115,7 +115,9 @@ def getAllPublicPosts():
 
 
 def sendPost(host, data, auth_id):
-  
+    print(data)
+    print(host)
+    print(auth_id)
     # encode image from data[image] as base64 string in data[content]
     if "image/" in data.contentType:
         with open("."+data.image,'rb') as file:
@@ -133,7 +135,9 @@ def sendPost(host, data, auth_id):
     elif 'p2psd' in host:
         response, status_code = sendPostP2(data, auth_id)
     elif 'bigger-yoshi' in host:
+        print("sending to bigger yoshi")
         response, status_code = sendPostBiggerYoshi(data, auth_id)
+    print("returning their response")
     return response
 
 def sendPostBiggerYoshi(data, auth_id):
@@ -141,10 +145,11 @@ def sendPostBiggerYoshi(data, auth_id):
 
 
     #update the data to be sent in proper format maybe
-    
+    print("sending a request")
     response = requests.post(url=url, data=data)
     status_code = response.status_code
     json_response = response.json()
+    print("got a response")
     return json_response, status_code
 
 def sendPostYoshi(data, auth_id):

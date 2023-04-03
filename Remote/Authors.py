@@ -2,7 +2,9 @@ import requests
 import base64
 from rest_framework.response import Response
 from rest_framework import status
+import json
 from Remote.auth import *
+# from auth import *
 
 def getNodeAuthor_social_distro(author_id):
     url = 'https://social-distro.herokuapp.com/api/authors/'
@@ -129,12 +131,15 @@ def getNodeAllAuthors_P2():
     authors = json_response['items']
     return authors
 
-def getNodeAllAuhtors_big():
+def getNodeAllAuthors_big():
     url = "https://bigger-yoshi.herokuapp.com/api/authors"
     response = requests.get(url)
-   
+    text = response.json()
+    items = text["items"]
+    
     status_code = response.status_code
-    return response
+    return items
+
 
 def checkDisplayName(list, displayName):
     author_list = []
@@ -148,7 +153,7 @@ def getRemoteAuthorsDisplayName(displayName):
     author2 = checkDisplayName(getNodeAllAuthors_App2(), displayName)
     author3 = checkDisplayName(getNodeAllAuthors_distro(), displayName) 
     author4 = checkDisplayName(getNodeAllAuthors_P2(), displayName)
-    author5 = checkDisplayName(getNodeAllAuhtors_big(), displayName)
+    author5 = checkDisplayName(getNodeAllAuthors_big(), displayName)
     authorList = author1 + author2 + author3 + author4 + author5
     return authorList
 
@@ -175,7 +180,7 @@ def getRemoteAuthorsById(id):
             if found == False:
                 author4, found = checkId(getNodeAllAuthors_P2(), id)
                 if found == False:
-                    author5, found = checkId(getNodeAllAuhtors_big(),id)
+                    author5, found = checkId(getNodeAllAuthors_big(),id)
                     if found == False:
                         return "author not found", False
                     else: 
