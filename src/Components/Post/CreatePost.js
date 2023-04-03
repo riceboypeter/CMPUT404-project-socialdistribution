@@ -150,12 +150,13 @@ function CREATEPOST({ refresh }) {
 		});
 	};
 
-	const toBase64 = file => new Promise((resolve, reject) => {
-		const reader = new FileReader();
-		reader.readAsDataURL(file);
-		reader.onload = () => resolve(reader.result);
-		reader.onerror = error => reject(error);
-	});
+	const toBase64 = (file) =>
+		new Promise((resolve, reject) => {
+			const reader = new FileReader();
+			reader.readAsDataURL(file);
+			reader.onload = () => resolve(reader.result);
+			reader.onerror = (error) => reject(error);
+		});
 
 	async function handlePostClick() {
 		const author = JSON.parse(localStorage.getItem("user"));
@@ -171,13 +172,11 @@ function CREATEPOST({ refresh }) {
 			unlisted: unlisted,
 			authors: [],
 		};
-		
-		console.log(params);
 
 		if (post_status === "PRIVATE") {
 			params["authors"] = authors;
 		}
-	
+
 		if (post_type === "image/png" || post_type === "image/jpeg") {
 			const imagefile = document.getElementById("file").files[0];
 			if (imagefile) {
@@ -188,8 +187,6 @@ function CREATEPOST({ refresh }) {
 		if (categories.length > 0) {
 			params["categories"] = categories;
 		}
-
-		console.log(params);
 
 		reqInstance({ method: "post", url: url, data: params })
 			.then((res) => {
@@ -234,10 +231,7 @@ function CREATEPOST({ refresh }) {
 				<Dropdown.Item eventKey="FRIENDS">Friends</Dropdown.Item>
 				<Dropdown.Item eventKey="PRIVATE">Private</Dropdown.Item>
 			</Dropdown>
-			<Checkbox 
-				onChange={(e) => setUnlisted(true)}>
-					Unlisted
-			</Checkbox>
+			<Checkbox onChange={(e) => setUnlisted(true)}>Unlisted</Checkbox>
 			<Dropdown
 				title={post_type}
 				activeKey={post_type}
@@ -249,7 +243,7 @@ function CREATEPOST({ refresh }) {
 				<Dropdown.Item eventKey="image/png">Png</Dropdown.Item>
 				<Dropdown.Item eventKey="image/jpeg">Jpeg</Dropdown.Item>
 			</Dropdown>
-			
+
 			<>
 				<CheckPicker
 					style={{

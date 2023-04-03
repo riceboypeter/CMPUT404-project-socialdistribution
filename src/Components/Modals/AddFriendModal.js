@@ -25,12 +25,11 @@ function ADD_FRIEND_MODAL({ open, handleClose }) {
 		const user = JSON.parse(localStorage.getItem("user"));
 		const axiosInstance = createReqInstance(obj.host);
 		delete user["type"];
-		console.log(user);
 		const params = {
 			type: "Follow",
 			summary: "follow request",
 			actor: user,
-			object: obj
+			object: obj,
 		};
 		return axiosInstance({ method: "post", url: url2, data: params })
 			.then((res) => {

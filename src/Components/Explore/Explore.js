@@ -27,7 +27,6 @@ function EXPLORE() {
 				url: url,
 				params: { local: true },
 			}).then((res) => {
-				console.log(res);
 				setInbox(res.data);
 			});
 		}
@@ -35,7 +34,14 @@ function EXPLORE() {
 
 	const item = (obj) => {
 		if (obj.type === "post") {
-			return <POST key={obj.id} postobj={obj} explore={false} github={false} />;
+			return (
+				<POST
+					key={obj.id}
+					postobj={obj}
+					explore={false}
+					github={false}
+				/>
+			);
 		}
 	};
 
@@ -96,7 +102,8 @@ function EXPLORE() {
 				</Nav>
 				<Nav pullRight>
 					<Nav.Item onClick={handleGithubClick}>Github</Nav.Item>
-				</Nav>`1`
+				</Nav>
+				`1`
 				<Nav pullRight>
 					<Nav.Item onClick={handleProfileClick}>Profile</Nav.Item>
 				</Nav>

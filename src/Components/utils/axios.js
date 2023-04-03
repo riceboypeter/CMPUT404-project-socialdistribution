@@ -103,7 +103,6 @@ export let createReqInstance = (baseUrl) => {
 		case "https://bigger-yoshi.herokuapp.com/api/":
 			username = "man4";
 			password = "123";
-			console.log("we are here");
 			return axios.create({
 				headers: {
 					"X-CSRFToken": token,
