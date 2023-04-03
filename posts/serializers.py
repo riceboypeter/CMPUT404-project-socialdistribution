@@ -18,7 +18,7 @@ class PostSerializer(WritableNestedModelSerializer):
     categories = serializers.CharField(max_length=300, default="")
     
     def create(self, validated_data):
-        print(validated_data)
+        print("validated post data",validated_data)
         try:
             author = AuthorSerializer.extract_and_upcreate_author(validated_data['author'], None)
             post = Post.objects.create(**validated_data)
@@ -30,6 +30,11 @@ class PostSerializer(WritableNestedModelSerializer):
             post = Post.objects.create(**validated_data, author = author, id = id)
 
         return post
+
+    def to_internal_value(self, data):
+        data["categories"] - ','.join(data["categories"])
+        return super().to_internal_value(data)
+        
 
     def to_representation(self, instance):
         id = instance.get_public_id()
