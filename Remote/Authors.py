@@ -3,7 +3,7 @@ import base64
 from rest_framework.response import Response
 from rest_framework import status
 import json
-from auth import *
+from Remote.auth import *
 # from auth import *
 params = {
     "size" : 100
