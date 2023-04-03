@@ -165,6 +165,19 @@ def getRemoteAuthorsById(id):
             return author2, True
     else:
         return author1, True
+    
+def clean_author(author):
+    if type(author) is dict:
+
+        if "type" in author:
+            del author["type"]
+        if "pronouns" in author:
+            del author["pronouns"]
+        if "email" in author:
+            del author["email"]
+        if "about" in author:
+            del author["about"]
+        return author
 
 
 
