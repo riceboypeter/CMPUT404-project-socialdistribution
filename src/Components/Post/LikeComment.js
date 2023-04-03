@@ -27,7 +27,7 @@ function COMMENTLIKE({ obj }) {
 			object: url2,
 		};
 		const url = `authors/${FAID}/inbox/`;
-
+		console.log(author);
 		//Confirm what to add into the params and send inbox
 		reqInstance({ method: "post", url: url, data: params })
 			.then((res) => {
