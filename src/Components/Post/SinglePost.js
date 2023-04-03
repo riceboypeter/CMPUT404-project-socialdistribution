@@ -93,23 +93,22 @@ function SINGLEPOST({ explore }) {
 		}
 
 		// handle images
+		// handle images
 		if (
 			post["contentType"] === "image/jpeg" ||
 			post["contentType"] === "image/png"
 		) {
-			let tempAuthorId = (post.author.id + "").split("/").slice(-1);
-			let tempPostId = (post.id + "").split("/").slice(-1);
-			let HOST = process.env.REACT_APP_HOST_NAME + "/";
-			let posturl =
-				HOST +
-				"posts/authors/" +
-				tempAuthorId +
-				"/posts/" +
-				tempPostId +
-				"/image";
+			let imageurl = post["origin"];
+			if (imageurl.charAt(imageurl.length - 1) === '/'){
+				imageurl = imageurl + "image";
+			}
+			else {
+				imageurl = imageurl + "/image";
+			}
+			console.log(imageurl);
 			return (
 				<p style={{ padding: "5px" }}>
-					<img src={posturl} alt="image" />
+					<img src={imageurl} alt="image" />
 				</p>
 			);
 		}
@@ -289,7 +288,7 @@ function SINGLEPOST({ explore }) {
 					></Nav.Menu>
 				</Nav>
 				<Nav pullRight>
-					<Nav.Item onClick={handleGithubClick}>Github</Nav.Item>
+					<Nav.Item onClick={handleGithubClick}>GitHub</Nav.Item>
 				</Nav>
 				<Nav pullRight>
 					<Nav.Item onClick={handleProfileClick}>Profile</Nav.Item>

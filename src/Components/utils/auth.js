@@ -34,7 +34,7 @@ export async function getCurrentUser(author_id) {
 		return await axios({
 			method: "get",
 			url: `authors/${author_id}`,
-			baseURL: process.env.REACT_APP_HOST_NAME + '/',
+			baseURL: `${process.env.REACT_APP_HOST_NAME}/`,
 		})
 			.then((response) => {
 				const user = response.data;

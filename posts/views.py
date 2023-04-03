@@ -979,13 +979,16 @@ def share_object(item, author, shared_user, data):
             inbox_item.save()
 
     # friend post (send to friend inbox)
-    if (item.visibility == 'FRIENDS'):
+    if (item.visibility == 'FRIENDS' or item.visbility == 'PUBLIC'):
+        print("Friend or public Post")
         for friend in author.friends.all():
             #check the host to see if the friend is a foreign and send post to them.
             friend_id = friend.id
             host = friend.host
             if host != settings.HOST_NAME:
+                print("sending post to foreign authors")
                 sendPost(host, data, friend_id)
+                print("post sent")
             else:
                 inbox_item = Inbox(content_object=item, author=friend)
                 inbox_item.save()

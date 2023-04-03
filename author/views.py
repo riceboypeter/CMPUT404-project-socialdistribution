@@ -522,6 +522,7 @@ class InboxSerializerObjects:
                     error_msg = "Post not found"
                     return Response(error_msg, status=status.HTTP_404_NOT_FOUND)
             context={}
+            return serializer(data=data, context=context, partial=True)
 
         elif type1 == Like.get_api_type():
             # TODO: Add a check to see if the author liked that object before, then just return obj
@@ -539,7 +540,6 @@ class InboxSerializerObjects:
             object = data.get("object")
            # context={'author': author,'id':data["id"].split("/")[-1]}
             context={'author': author, 'object':object,'comment':comment}
-            return serializer(data={}, context=context, partial=True)
         elif type1 == FollowRequest.get_api_type() or type1 == "follow":
             print("deser follow")
             serializer = FollowRequestSerializer
@@ -550,7 +550,7 @@ class InboxSerializerObjects:
         if obj is not None:
             return obj
         else:
-            return serializer(data=data, context=context, partial=True)
+            return serializer(data={}, context=context, partial=True)
     
 class Inbox_list(APIView, InboxSerializerObjects, PageNumberPagination):
     """
@@ -604,6 +604,7 @@ class Inbox_list(APIView, InboxSerializerObjects, PageNumberPagination):
                 # if self.request.data['type'] == "Follow":
                 #     objectid = self.request.data['object']['id']
                 #     author = get_object_or_404(Author,pk=objectid)
+                print("IS VALID")
                 if item=="already liked":
                     return Response("Post Already Liked!", status=status.HTTP_400_BAD_REQUEST)
                 if item == "already sent":

@@ -8,6 +8,7 @@ import {
 	Uploader,
 	Button,
 	CheckPicker,
+	Checkbox,
 } from "rsuite";
 import { reqInstance } from "../utils/axios";
 import "react-toastify/dist/ReactToastify.css";
@@ -18,6 +19,7 @@ import PROFILEIMAGE from "../Profile/ProfileImage";
 function CREATEPOST({ refresh }) {
 	const [post_status, set_post_status] = useState("PUBLIC");
 	const [post_type, set_post_type] = useState("text/plain");
+	const [unlisted, setUnlisted] = useState(false);
 	const [text, setText] = useState("");
 	const [title, setTitle] = useState("");
 	const [description, setDescription] = useState("");
@@ -166,8 +168,11 @@ function CREATEPOST({ refresh }) {
 			content: text,
 			contentType: post_type,
 			visibility: post_status,
+			unlisted: unlisted,
 			authors: [],
 		};
+		
+		console.log(params);
 
 		if (post_status === "PRIVATE") {
 			params["authors"] = authors;
@@ -195,6 +200,7 @@ function CREATEPOST({ refresh }) {
 					setCategories("");
 					set_post_status("PUBLIC");
 					set_post_type("text/plain");
+					setUnlisted(false);
 					setMarkdown("");
 					setAuthors([]);
 					window.location.reload();
@@ -227,8 +233,11 @@ function CREATEPOST({ refresh }) {
 				<Dropdown.Item eventKey="PUBLIC">Public</Dropdown.Item>
 				<Dropdown.Item eventKey="FRIENDS">Friends</Dropdown.Item>
 				<Dropdown.Item eventKey="PRIVATE">Private</Dropdown.Item>
-				<Dropdown.Item eventKey="UNLISTED">Unlisted</Dropdown.Item>
 			</Dropdown>
+			<Checkbox 
+				onChange={(e) => setUnlisted(true)}>
+					Unlisted
+			</Checkbox>
 			<Dropdown
 				title={post_type}
 				activeKey={post_type}
@@ -240,6 +249,7 @@ function CREATEPOST({ refresh }) {
 				<Dropdown.Item eventKey="image/png">Png</Dropdown.Item>
 				<Dropdown.Item eventKey="image/jpeg">Jpeg</Dropdown.Item>
 			</Dropdown>
+			
 			<>
 				<CheckPicker
 					style={{
