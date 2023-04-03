@@ -3,7 +3,7 @@ import base64
 from rest_framework.response import Response
 from rest_framework import status
 import json
-from auth import *
+from Remote.auth import *
 # from auth import *
 params = {
     "size" : 100
@@ -27,8 +27,8 @@ def getNodeAuthor_social_distro(author_id):
 
     if status_code == 200:
         json_response = response.json()
-        return(json_response, status_code)
-    else: return (None, status_code)
+        return(json_response)
+    else: return ([])
 
 
 def getNodeAuthor_Yoshi(author_id):
@@ -41,8 +41,8 @@ def getNodeAuthor_Yoshi(author_id):
     
     if status_code == 200:
         json_response = response.json()
-        return(json_response, status_code)
-    else: return (None, status_code)
+        return(json_response)
+    else: return ([])
 
 def getNodeAuthor_App2(author_id):
     url = 'https://killme.herokuapp.com/authors/'
