@@ -102,16 +102,6 @@ export let createReqInstance = (baseUrl) => {
 		default:
 			throw new Error(`Invalid base URL: ${baseUrl}`);
 	}
-	return axios.create({
-		headers: {
-			"X-CSRFToken": token,
-		},
-		baseURL: baseUrl,
-		auth: {
-			username: username,
-			password: password,
-		},
-	});
 };
 
 // export let yoshiInstance = axios.create({

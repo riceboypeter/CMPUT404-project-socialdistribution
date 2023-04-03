@@ -17,7 +17,7 @@ function LIKESMODAL({ postobj }) {
 		} else {
 			const author_id = getAuthorId(postobj.author.id);
 			const post_id = getAuthorId(postobj.id);
-			const url = `https://sociallydistributed.herokuapp.com/posts/authors/${author_id}/posts/${post_id}/likes`;
+			const url = `posts/authors/${author_id}/posts/${post_id}/likes`;
 			const reqInstance = createReqInstance(postobj.author.host);
 			reqInstance({ method: "get", url: url }).then((res) => {
 				console.log(url);
