@@ -146,7 +146,7 @@ def sendPostBiggerYoshi(data, auth_id):
 
     #update the data to be sent in proper format maybe
     print("sending a request")
-    response = requests.post(url=url, data=data)
+    response = requests.post(url=url, json=data)
     status_code = response.status_code
     json_response = response.json()
     print("got a response")
