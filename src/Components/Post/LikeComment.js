@@ -12,8 +12,7 @@ function COMMENTLIKE({ obj }) {
 
 	//Confirm the name of the button
 	async function handleSubmitClick() {
-		const curr_author_id = getAuthorId(null);
-		const author = getCurrentUser();
+		const author = JSON.parse(localStorage.getItem("user"));
 		var FAID = "";
 		const url2 = obj;
 
@@ -27,18 +26,28 @@ function COMMENTLIKE({ obj }) {
 			object: url2,
 		};
 		const url = `authors/${FAID}/inbox/`;
-		console.log(author);
 		//Confirm what to add into the params and send inbox
 		reqInstance({ method: "post", url: url, data: params })
 			.then((res) => {
-				console.log(res);
-				toaster.push(
-					<Message type="success">Successful Like</Message>,
-					{
-						placement: "topEnd",
-						duration: 5000,
-					}
-				);
+				if (res.status == 200) {
+					toaster.push(
+						<Message type="success">Successful Like</Message>,
+						{
+							placement: "topEnd",
+							duration: 5000,
+						}
+					);
+				} else if (res.status == 400) {
+					toaster.push(
+						<Message type="error">
+							You already liked this post
+						</Message>,
+						{
+							placement: "topEnd",
+							duration: 5000,
+						}
+					);
+				}
 			})
 			.catch((err) => {
 				toaster.push(<Message type="error">{err}</Message>, {
@@ -53,6 +62,7 @@ function COMMENTLIKE({ obj }) {
 			style={{ float: "right", marginRight: "10px" }}
 			appearance="subtle"
 			icon={<ThumbsUpIcon />}
+			size="xs"
 			onClick={handleSubmitClick}
 		/>
 	);

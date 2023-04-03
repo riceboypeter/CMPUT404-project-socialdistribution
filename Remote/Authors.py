@@ -87,7 +87,7 @@ def getNodeAllAuthors_App2():
     response = session.get(url)
 
     json_response = response.json()
-    authors = json_response['data']
+    authors = json_response['items']
     return authors
 
 def getNodeAllAuthors_distro():
@@ -165,6 +165,23 @@ def getRemoteAuthorsById(id):
             return author2, True
     else:
         return author1, True
+    
+def clean_author(author):
+    if type(author) is dict:
+
+        if "type" in author:
+            del author["type"]
+        if "pronouns" in author:
+            del author["pronouns"]
+        if "email" in author:
+            del author["email"]
+        if "about" in author:
+            del author["about"]
+        if author["github"] is None or author["github"] == 'null':
+            author["github"] = ''
+        if author["profileImage"] is None or author["profileImage"] == 'null':
+            author["github"] = ''
+        return author
 
 
 
