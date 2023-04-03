@@ -2,7 +2,7 @@ import requests
 import base64
 from rest_framework.response import Response
 from rest_framework import status
-from Remote.auth import *
+from auth import *
 
 def getNodeAuthor_social_distro(author_id):
     url = 'https://social-distro.herokuapp.com/api/authors/'
@@ -65,6 +65,17 @@ def getNodeAuthor_P2(author_id):
         return(json_response, status_code)
     else: return (None, status_code)
 
+def getNodeAuthor_big(author_id):
+    url = "https://bigger-yoshi.herokuapp.com/api/authors/" + author_id
+    response= requests.get(url)
+    status_code = response.status_code
+    if status_code == 200:
+        json_response = response.json()
+        return(json_response, status_code)
+    else: return (None, status_code)
+
+getNodeAuthor_big("fbb151df-f021-42b3-8714-5f1ae78ab062")
+
 def getNodeAllAuthors_Yoshi():
     url = 'https://yoshi-connect.herokuapp.com/authors'
     response = requests.get(url)
@@ -118,6 +129,13 @@ def getNodeAllAuthors_P2():
     authors = json_response['items']
     return authors
 
+def getNodeAllAuhtors_big():
+    url = "https://bigger-yoshi.herokuapp.com/api/authors"
+    response = requests.get(url)
+   
+    status_code = response.status_code
+    return response
+
 def checkDisplayName(list, displayName):
     author_list = []
     for item in list:
@@ -130,7 +148,8 @@ def getRemoteAuthorsDisplayName(displayName):
     author2 = checkDisplayName(getNodeAllAuthors_App2(), displayName)
     author3 = checkDisplayName(getNodeAllAuthors_distro(), displayName) 
     author4 = checkDisplayName(getNodeAllAuthors_P2(), displayName)
-    authorList = author1 + author2 + author3 + author4
+    author5 = checkDisplayName(getNodeAllAuhtors_big(), displayName)
+    authorList = author1 + author2 + author3 + author4 + author5
     return authorList
 
 def getAuthorId(url):
@@ -156,7 +175,11 @@ def getRemoteAuthorsById(id):
             if found == False:
                 author4, found = checkId(getNodeAllAuthors_P2(), id)
                 if found == False:
-                   return "author not found", False
+                    author5, found = checkId(getNodeAllAuhtors_big(),id)
+                    if found == False:
+                        return "author not found", False
+                    else: 
+                        return author5
                 else: 
                    return author4, True
             else:

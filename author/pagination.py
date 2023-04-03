@@ -5,7 +5,7 @@ class ViewPaginatorMixin(object):
 
     def paginate(self, object_list, page=1, size=10, **kwargs):
       min_size = 1
-      max_size = 50
+      max_size = 100
       try:
           page = int(page)
           if page < 1:

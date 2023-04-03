@@ -42,19 +42,10 @@ function POST({ postobj, edit, explore, github }) {
 			post["contentType"] === "image/jpeg" ||
 			post["contentType"] === "image/png"
 		) {
-			let tempAuthorId = (postobj.author.id + "").split("/").slice(-1);
-			let tempPostId = (postobj.id + "").split("/").slice(-1);
-			let HOST = process.env.REACT_APP_HOST_NAME + "/";
-			let posturl =
-				HOST +
-				"posts/authors/" +
-				tempAuthorId +
-				"/posts/" +
-				tempPostId +
-				"/image";
+			let imageurl = postobj.origin + 'image';
 			return (
 				<p style={{ padding: "5px" }}>
-					<img src={posturl} alt="image" />
+					<img src={imageurl} alt="image" />
 				</p>
 			);
 		}
