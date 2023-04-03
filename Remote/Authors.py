@@ -74,6 +74,7 @@ def getNodeAuthor_big(author_id):
     url = "https://bigger-yoshi.herokuapp.com/api/authors/" + author_id
     response= requests.get(url)
     status_code = response.status_code
+
     if status_code == 200:
         json_response = response.json()
         return(json_response, status_code)
@@ -82,6 +83,7 @@ def getNodeAuthor_big(author_id):
 def getNodeAllAuthors_Yoshi():
     url = 'https://yoshi-connect.herokuapp.com/authors'
     response = requests.get(url, params={"size": 100})
+
     status_code = response.status_code
     json_response = response.json()
     authors = json_response['items']
