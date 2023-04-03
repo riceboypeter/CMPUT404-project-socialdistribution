@@ -92,16 +92,15 @@ def getAllPosts_P2():
     return posts
 
 def getAllPosts_big():
-    url = 'https://bigger-yoshi.herokuapp.com/api/authors/posts'
+    url = 'https://bigger-yoshi.herokuapp.com/api/authors/posts?page=1size=5'
 
-    response = requests.get(url)
-    print(response)
+    response = requests.get(url, params=params)
     if response.status_code == 200:
         json_response = response.json()
-        print(json_response)
+        json_response = json_response["items"]
+        json_response = json_response[:4]
         return(json_response)
-    
-getAllPosts_big()
+
 
 def getAllPublicPosts():
     posts1 = getAllPosts_app2()
