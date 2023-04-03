@@ -519,10 +519,17 @@ class InboxSerializerObjects:
                     else:
                         serializer = PostSerializer
                 except:
+                    print("image exception")
                     error_msg = "Post not found"
                     return Response(error_msg, status=status.HTTP_404_NOT_FOUND)
             context={}
-            return serializer(data=data, context=context, partial=True)
+            new_data = data
+            # new_data["authors"] = data["sentTo"]
+            new_data["authors"] = []
+            new_data.pop("sentTo")
+            new_data.pop("type")
+            print(new_data)
+            return serializer(data=new_data, context=context, partial=True)
 
         elif type1 == Like.get_api_type():
             # TODO: Add a check to see if the author liked that object before, then just return obj

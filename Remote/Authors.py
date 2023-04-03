@@ -5,7 +5,9 @@ from rest_framework import status
 import json
 from Remote.auth import *
 # from auth import *
-params={"size": 100}
+params = {
+    "size" : 100
+}
 
 def getNodeAuthor_social_distro(author_id):
     url = 'https://social-distro.herokuapp.com/api/authors/'
@@ -70,6 +72,7 @@ def getNodeAuthor_big(author_id):
     url = "https://bigger-yoshi.herokuapp.com/api/authors/" + author_id
     response= requests.get(url, params={"size": 100})
     status_code = response.status_code
+
     if status_code == 200:
         json_response = response.json()
         return(json_response, status_code)
@@ -88,11 +91,13 @@ def getNodeAllAuthors_App2():
     hosturl = "https://sociallydistributed.herokuapp.com/"
 
     headers = app2_headers()
-    response = requests.get(url, headers=headers, params={"size": 100})
-
+    response = requests.get(url, headers=headers, params=params)
     json_response = response.json()
+    print(json_response)
     authors = json_response['items']
     return authors
+
+getNodeAllAuthors_App2()
 
 def getNodeAllAuthors_distro():
     url = 'https://social-distro.herokuapp.com/api/authors/'
@@ -105,7 +110,7 @@ def getNodeAllAuthors_distro():
     authorization_header = f'Basic {encoded_credentials}'
     headers = {'Authorization': authorization_header}
 
-    response = requests.get(url, headers=headers, params={"size": 100})
+    response = requests.get(url, headers=headers, params=params)
    
     status_code = response.status_code
     json_response = response.json()

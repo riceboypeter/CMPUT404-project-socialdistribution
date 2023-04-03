@@ -102,7 +102,6 @@ function SINGLEPOST({ explore }) {
 			} else {
 				imageurl = imageurl + "/image";
 			}
-			console.log(imageurl);
 			return (
 				<p style={{ padding: "5px" }}>
 					<img src={imageurl} alt="image" />
