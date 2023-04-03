@@ -17,7 +17,7 @@ import PROFILEIMAGE from "../Profile/ProfileImage";
 import CopyIcon from "@rsuite/icons/Copy";
 // Component Imports
 
-function POST({ postobj, edit, explore }) {
+function POST({ postobj, edit, explore, github }) {
 	const [post, set_post] = useState(postobj);
 	const [likes, setLikes] = useState({ items: [] });
 	const [open, setOpen] = useState(false);
@@ -172,13 +172,15 @@ function POST({ postobj, edit, explore }) {
 			>
 				{post["author"]["displayName"]}
 			</div>
-			<IconButton
-				style={{ float: "right", marginRight: "10px" }}
-				appearance="subtle"
-				onClick={sharePost}
-				icon={<ShareIcon />}
-			/>
-			<LIKE postObj={postobj} />
+			{!github ?
+				<IconButton
+					style={{ float: "right", marginRight: "10px" }}
+					appearance="subtle"
+					onClick={sharePost}
+					icon={<ShareIcon />}
+				/> : <div />}
+			{!github ? <LIKE postObj={postobj} /> : <div />}
+
 			{edit ? delEditBtn : <div />}
 		</div>
 	);
@@ -212,23 +214,29 @@ function POST({ postobj, edit, explore }) {
 							fontFamily: "Times New Roman",
 							fontWeight: "bold",
 							fontSize: "15px",
+
 						}}
 					>
 						{post["description"]}
 					</div>
 					{body()}
 				</div>
-				<Panel bordered collapsible header="Comments">
-					<COMMENTS postobj={postobj}></COMMENTS>
-				</Panel>
+				{!github ?
+					< Panel bordered collapsible header="Comments">
+						<COMMENTS postobj={postobj}></COMMENTS>
+					</Panel>
+					: <div />}
 			</Panel>
-			<EDITPOSTMODAL
-				open={open}
-				obj={postobj}
-				handleClose={handleModalClose}
-			/>
+			{
+				!github ?
+					<EDITPOSTMODAL
+						open={open}
+						obj={postobj}
+						handleClose={handleModalClose}
+					/> : <div />
+			}
 			{explore ? likesmodal : <div />}
-		</div>
+		</div >
 	);
 }
 

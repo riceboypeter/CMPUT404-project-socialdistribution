@@ -21,24 +21,25 @@ function GITHUB() {
 		if (!localStorage.getItem("loggedIn")) {
 			navigate("/signin");
 		} else {
-			const author_id = getAuthorId();
-			const user = getCurrentUser();
-			if (user["github"] !== "") {
-				const url = ` authors/${author_id}/github/`;
-				reqInstance({
-					method: "get",
-					url: url,
-				}).then((res) => {
-					console.log(res);
-					setInbox(res.data);
-				});
-			}
+			const author_id = getAuthorId(null);
+			console.log("ID ID", author_id)
+			const url = `authors/${author_id}/github/`;
+			console.log("GITHUB", process.env.REACT_APP_HOST_NAME + "/");
+			reqInstance({
+				method: "get",
+				url: url,
+			}).then((res) => {
+				console.log("DATA", res);
+				setInbox(res.data);
+				console.log("INBOX", inbox)
+			});
+
 		}
 	}, []);
 
 	const item = (obj) => {
 		if (obj.type === "post") {
-			return <POST key={obj.id} postobj={obj} explore={false} />;
+			return <POST key={obj.id} postobj={obj} explore={false} github={true} />;
 		}
 	};
 
@@ -91,7 +92,7 @@ function GITHUB() {
 					></Nav.Menu>
 				</Nav>
 				<Nav pullRight>
-					<Nav.Item>Github</Nav.Item>
+					<Nav.Item>GitHub</Nav.Item>
 				</Nav>
 				<Nav pullRight>
 					<Nav.Item onClick={handleProfileClick}>Profile</Nav.Item>

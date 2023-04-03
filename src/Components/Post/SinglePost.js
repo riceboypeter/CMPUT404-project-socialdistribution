@@ -281,7 +281,7 @@ function SINGLEPOST({ explore }) {
 					></Nav.Menu>
 				</Nav>
 				<Nav pullRight>
-					<Nav.Item onClick={handleGithubClick}>Github</Nav.Item>
+					<Nav.Item onClick={handleGithubClick}>GitHub</Nav.Item>
 				</Nav>
 				<Nav pullRight>
 					<Nav.Item onClick={handleProfileClick}>Profile</Nav.Item>

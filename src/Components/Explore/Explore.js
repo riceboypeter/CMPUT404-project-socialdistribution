@@ -35,7 +35,7 @@ function EXPLORE() {
 
 	const item = (obj) => {
 		if (obj.type === "post") {
-			return <POST key={obj.id} postobj={obj} explore={false} />;
+			return <POST key={obj.id} postobj={obj} explore={false} github={false} />;
 		}
 	};
 
