@@ -92,8 +92,8 @@ export let createReqInstance = (baseUrl) => {
 			password = "123";
 			return axios.create({
 				headers: {
-					"X-CSRFToken": token,
-					Authorization: "Basic cDJwYWRtaW46cDJwYWRtaW4=",
+					"X-CSRFToken": token
+					// Authorization: "Basic cDJwYWRtaW46cDJwYWRtaW4=",
 				},
 				baseURL: baseUrl + "/api/",
 				auth: {
