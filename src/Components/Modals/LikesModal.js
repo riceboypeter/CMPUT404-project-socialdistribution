@@ -18,8 +18,8 @@ function LIKESMODAL({ postobj }) {
 			const author_id = getAuthorId(postobj.author.id);
 			const post_id = getAuthorId(postobj.id);
 			const url = `https://killme.herokuapp.com/posts/authors/${author_id}/posts/${post_id}/likes`;
-			const reqInstance = createReqInstance(postobj.author.host);
-			reqInstance({ method: "get", url: url }).then((res) => {
+			const req = createReqInstance(postobj.author.host);
+			req({ method: "get", url: url }).then((res) => {
 				console.log(url);
 				console.log("likes", res.data);
 				setLikes(res.data);
