@@ -475,7 +475,7 @@ Publicpostget = {
 
     )}
 
-class post_list(APIView, PageNumberPagination):
+class PostListView(APIView, PageNumberPagination):
     authentication_classes = [BasicAuthentication]
     permission_classes = [IsAuthenticated]
     serializer_class = PostSerializer
@@ -502,7 +502,7 @@ class post_list(APIView, PageNumberPagination):
         # filter the posts and then paginate
         # privacy is all handled when post is created, except for image posts
 
-        posts = Post.objects.filter(author=author)
+        posts = Post.objects.filter(author=author, is_github=False)
         posts = self.paginator.paginate_queryset(posts, self.request, view=self)
 
         serializer = PostSerializer(posts, many=True)
@@ -558,6 +558,7 @@ class CommentDetailView(APIView):
         try:
             # get a specific comment 
             comment = Comment.objects.get(id=pk_m)
+ 
             serializer = CommentSerializer(comment, many=False)
             return Response(serializer.data)
         # 404 if comment doesn't exist
@@ -781,8 +782,7 @@ class PostLikesView(APIView):
             error_msg = "Post not found"
             return Response(error_msg,status=status.HTTP_404_NOT_FOUND)
         # filter for all the likes on that post
-        url = post.url[:-1] if post.url.endswith('/') else post.url
-        likes = Like.objects.filter(object=url)
+        likes = Like.objects.filter(object=post.url)
         serializer = LikeSerializer(likes, many=True)
         return Response(serializer.data)
 
@@ -846,8 +846,10 @@ class CommentView(APIView, PageNumberPagination):
         
         post = Post.objects.get(id=pk)
         post_data = PostSerializer(post).data
+      
         # filter for all comments on specific post
-        comments = Comment.objects.filter(post=post)
+        comments = Comment.objects.filter(post=post_data['id']) #Changed cause i changed the comment model , post is now the source url of the post, not the post object, done to match with spec
+   
 
         authenticated_user = Author.objects.get(id=pk_a)
         
@@ -957,7 +959,7 @@ class PublicPostsView(APIView):
         posts = Post.objects.filter(visibility='PUBLIC')
         serializer = PostSerializer(posts, many=True)
         data_list = serializer.data
-        if (request.GET.get("local") == "true") :
+        if (request.GET.get("local") == "true"):
             remotePosts = getAllPublicPosts()
             data_list = data_list + remotePosts
             data_list.sort(key=lambda x: x['published'])

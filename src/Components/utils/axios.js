@@ -37,6 +37,16 @@ export let createReqInstance = (baseUrl) => {
 		case process.env.REACT_APP_HOST_NAME + "/":
 			username = localStorage.getItem("username");
 			password = localStorage.getItem("password");
+			return axios.create({
+				headers: {
+					"X-CSRFToken": token,
+				},
+				baseURL: baseUrl,
+				auth: {
+					username: username,
+					password: password,
+				},
+			});
 			break;
 		case "https://yoshi-connect.herokuapp.com/":
 			username = "minion-yoshi";
@@ -77,7 +87,7 @@ export let createReqInstance = (baseUrl) => {
 					password: password,
 				},
 			});
-		case "http://p2psd.herokuapp.com/":
+		case "https://p2psd.herokuapp.com":
 			return axios.create({
 				headers: {
 					"X-CSRFToken": token,
@@ -92,16 +102,6 @@ export let createReqInstance = (baseUrl) => {
 		default:
 			throw new Error(`Invalid base URL: ${baseUrl}`);
 	}
-	return axios.create({
-		headers: {
-			"X-CSRFToken": token,
-		},
-		baseURL: baseUrl,
-		auth: {
-			username: username,
-			password: password,
-		},
-	});
 };
 
 // export let yoshiInstance = axios.create({

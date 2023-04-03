@@ -9,7 +9,7 @@ function LIKE({ postObj }) {
 	// const [like, set_like] = useState(likeobj);
 	const [new_like, set_new_like] = useState("");
 	const toaster = useToaster();
-	const postObjUrl = JSON.stringify(postObj.id);
+	const postObjUrl = postObj.id;
 	console.log(postObjUrl)
 	// const [users, setusers] = useState([]);
 	//Confirm the name of the button
@@ -35,7 +35,7 @@ function LIKE({ postObj }) {
 		console.log(postObjUrl)
 		console.log(host)
 		// reqInstance.post({ url: url, baseurl: host, data: params })
-		reqInstance.post( url, params)
+		reqInstance.post(url, params)
 			.then((res) => {
 				toaster.push(
 					<Message type="success">Successful Like</Message>,

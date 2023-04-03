@@ -6,7 +6,7 @@ from .views import *
 app_name = 'posts'
 urlpatterns = [
   path('public/', views.PublicPostsView.as_view(), name = "explore"),
-  path('authors/<str:pk_a>/posts/', views.post_list.as_view(), name = "posts"),
+  path('authors/<str:pk_a>/posts/', views.PostListView.as_view(), name = "posts"),
   path('authors/<str:pk_a>/posts/<str:pk>/', views.post_detail.as_view(), name='detail'),
   path('authors/<str:pk_a>/posts/<str:pk>/comments/', views.CommentView.as_view(), name='comments'),
   path('authors/<str:pk_a>/posts/<str:pk>/comments/<str:pk_m>/', views.CommentDetailView.as_view(), name='comment_detail'),
