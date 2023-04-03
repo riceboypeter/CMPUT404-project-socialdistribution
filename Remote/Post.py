@@ -8,6 +8,11 @@ from Remote.Authors import *
 from datetime import datetime, date
 import json
 
+params= {
+    "size": 5,
+    "page": 1 
+}
+
 def getNodePost_Yoshi(author_id):
     url = 'https://yoshi-connect.herokuapp.com/authors/'
 
@@ -26,7 +31,7 @@ def getAllPosts_app2():
     url = 'https://sociallydistributed.herokuapp.com/posts/public'
 
     headers = app2_headers()
-    response = requests.get(url, headers=headers)
+    response = requests.get(url, headers=headers, params=params)
     if response.status_code == 200:
         json_response = response.json()
         return(json_response)
@@ -34,7 +39,7 @@ def getAllPosts_app2():
 def getAllPosts_Yoshi():
     url = 'https://yoshi-connect.herokuapp.com/posts/public'
     headers = yoshi_headers()
-    response = requests.get(url, headers=headers)
+    response = requests.get(url, headers=headers, params=params)
     if response.status_code == 200:
         json_response = response.json()
         return(json_response["items"])
@@ -44,7 +49,7 @@ def getNodePost_social_distro(author_id):
 
     url = url + author_id + '/posts/'
 
-    response = requests.get(url, headers=distro_headers())
+    response = requests.get(url, headers=distro_headers(), params=params)
     status_code = response.status_code
     if status_code == 200:
         json_response = response.json()
@@ -81,8 +86,9 @@ def getAllPosts_P2():
         items = getNodePosts_P2(author_id)
         items = items["items"]
         for item in items:
-            if item['visibility'] == 'PUBLIC':
-                posts.append(item)
+            while len(posts) <= 5:
+                if item['visibility'] == 'PUBLIC':
+                    posts.append(item)
     return posts
 
 def getAllPublicPosts():
@@ -92,6 +98,8 @@ def getAllPublicPosts():
     posts4 = getAllPosts_P2()
     posts = posts1+ posts2 + posts3 + posts4
     return posts
+
+getAllPosts_Yoshi()
 
 
 def sendPost(host, data, auth_id):
