@@ -47,7 +47,6 @@ export let createReqInstance = (baseUrl) => {
 					password: password,
 				},
 			});
-			break;
 		case "https://yoshi-connect.herokuapp.com/":
 			username = "minion-yoshi";
 			password = "123";
