@@ -6,6 +6,8 @@ from rest_framework import status
 from rest_framework.response import Response
 import client
 from Remote.Authors import getNodeAuthor_App2
+from Remote.Authors import *
+
 
 class AuthorSerializer(serializers.ModelSerializer):
     type = serializers.CharField(default="author",source="get_api_type",read_only=True)
@@ -19,6 +21,7 @@ class AuthorSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def _update(validated_data):
+        
         print("AUTHOR ID", validated_data["id"])
         author = Author.objects.get(id=validated_data["id"])
         author_data = AuthorSerializer(author).update(instance=author,validated_data=validated_data)
@@ -27,6 +30,7 @@ class AuthorSerializer(serializers.ModelSerializer):
     @staticmethod
     def _upcreate(validated_data):
         print("in the other upcreate function")
+        print(validated_data)
         return Author(**validated_data)
     
     @staticmethod
@@ -39,6 +43,7 @@ class AuthorSerializer(serializers.ModelSerializer):
                 return Response("Author does not exist here!", status=status.HTTP_404_NOT_FOUND)
         updated_author = None
         if validated_data: 
+            validated_data = clean_author(validated_data)
             validated_data["id"] = validated_data["id"][:-1] if validated_data["id"].endswith('/') else validated_data["id"]
             validated_data["id"] = validated_data["id"].split("/")[-1]
         try:

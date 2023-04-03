@@ -50,14 +50,15 @@ function COMMENTS({ postobj }) {
 		const user = JSON.parse(localStorage.getItem("user"));
 		delete user["type"];
 		const FAID = getAuthorId(postObj.author.id);
+		console.log(postObj)
 		const params = {
 			"type": "comment",
 			comment: new_comment,
 			author: user,
-			object: postObj.url,
+			object: postObj.id,
 		};
 		console.log(FAID)
-		const url = `posts/authors/${FAID}/inbox/`;
+		const url = `authors/${FAID}/inbox/`;
 		const reqInstance = createReqInstance(postObj.author.host);
 		return reqInstance({ method: "post", url: url, data: params })
 			.then(async (res) => {
