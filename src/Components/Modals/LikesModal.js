@@ -2,7 +2,7 @@ import { Modal, Button, ButtonToolbar } from "rsuite";
 import React, { useLayoutEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAuthorId } from "../utils/auth";
-import { reqInstance } from "../utils/axios";
+import { createReqInstance } from "../utils/axios";
 
 function LIKESMODAL({ postobj }) {
 	const [open, setOpen] = React.useState(false);
@@ -17,8 +17,11 @@ function LIKESMODAL({ postobj }) {
 		} else {
 			const author_id = getAuthorId(postobj.author.id);
 			const post_id = getAuthorId(postobj.id);
-			const url = `posts/authors/${author_id}/posts/${post_id}/likes/`;
+			const url = `https://sociallydistributed.herokuapp.com/posts/authors/${author_id}/posts/${post_id}/likes`;
+			const reqInstance = createReqInstance(postobj.author.host);
 			reqInstance({ method: "get", url: url }).then((res) => {
+				console.log(url);
+				console.log("likes", res.data);
 				setLikes(res.data);
 			});
 		}
