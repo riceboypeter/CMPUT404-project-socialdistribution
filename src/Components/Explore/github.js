@@ -22,24 +22,26 @@ function GITHUB() {
 			navigate("/signin");
 		} else {
 			const author_id = getAuthorId(null);
-			console.log("ID ID", author_id)
 			const url = `authors/${author_id}/github/`;
-			console.log("GITHUB", process.env.REACT_APP_HOST_NAME + "/");
 			reqInstance({
 				method: "get",
 				url: url,
 			}).then((res) => {
-				console.log("DATA", res);
 				setInbox(res.data);
-				console.log("INBOX", inbox)
 			});
-
 		}
 	}, []);
 
 	const item = (obj) => {
 		if (obj.type === "post") {
-			return <POST key={obj.id} postobj={obj} explore={false} github={true} />;
+			return (
+				<POST
+					key={obj.id}
+					postobj={obj}
+					explore={false}
+					github={true}
+				/>
+			);
 		}
 	};
 

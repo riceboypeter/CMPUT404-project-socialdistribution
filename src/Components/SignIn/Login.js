@@ -43,7 +43,7 @@ function LOGIN() {
 		return new Promise((resolve) => setTimeout(resolve, time));
 	}
 
-	delay(1000).then(() => { });
+	delay(1000).then(() => {});
 
 	async function handleLoginClick() {
 		var params = {
@@ -62,7 +62,6 @@ function LOGIN() {
 			data: params,
 		})
 			.then(async (res) => {
-				console.log(res.data);
 				if (res.status === 202) {
 					getCsrfToken();
 					setLoggedIn(true);
