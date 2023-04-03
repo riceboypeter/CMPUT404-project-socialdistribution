@@ -99,12 +99,12 @@ def getAllPublicPosts():
     posts = posts1+ posts2 + posts3 + posts4
     return posts
 
-getAllPosts_Yoshi()
+
 
 
 def sendPost(host, data, auth_id):
     print(data)
-    if 'yoshi' in host:
+    if 'yoshi-connect' in host:
         response, status_code = sendPostYoshi(data, auth_id)
     elif 'social-distro' in host:
         response, status_code = sendPostDistro(data, auth_id)
@@ -112,7 +112,20 @@ def sendPost(host, data, auth_id):
         response, status_code = sendPostApp2(data, auth_id)
     elif 'p2psd' in host:
         response, status_code = sendPostP2(data, auth_id)
+    elif 'bigger-yoshi' in host:
+        response, status_code = sendPostBiggerYoshi(data, auth_id)
     return response
+
+def sendPostBiggerYoshi(data, auth_id):
+    url = 'https://bigger-yoshi.herokuapp.com/api/authors/' + auth_id + '/inbox'
+
+
+    #update the data to be sent in proper format maybe
+    
+    response = requests.post(url=url, data=data)
+    status_code = response.status_code
+    json_response = response.json()
+    return json_response, status_code
 
 def sendPostYoshi(data, auth_id):
     url = 'https://yoshi-connect.herokuapp.com/authors/' + auth_id + '/inbox'
