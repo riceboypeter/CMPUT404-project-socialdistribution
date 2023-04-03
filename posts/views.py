@@ -558,6 +558,7 @@ class CommentDetailView(APIView):
         try:
             # get a specific comment 
             comment = Comment.objects.get(id=pk_m)
+ 
             serializer = CommentSerializer(comment, many=False)
             return Response(serializer.data)
         # 404 if comment doesn't exist
@@ -846,8 +847,10 @@ class CommentView(APIView, PageNumberPagination):
         
         post = Post.objects.get(id=pk)
         post_data = PostSerializer(post).data
+      
         # filter for all comments on specific post
-        comments = Comment.objects.filter(post=post)
+        comments = Comment.objects.filter(post=post_data['id']) #Changed cause i changed the comment model , post is now the source url of the post, not the post object, done to match with spec
+   
 
         authenticated_user = Author.objects.get(id=pk_a)
         

@@ -113,7 +113,7 @@ class Comment(models.Model):
     id = models.CharField(primary_key=True, editable=False, default= uuid.uuid4, max_length=255)  # ID of comment
     url = models.URLField(editable=False, max_length=500)  # URL of comment
     author = models.ForeignKey(Author, related_name = 'comments', on_delete=models.CASCADE)  # author of comment
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)  # post of the commenT
+    post = models.URLField(max_length=500) # post of the commenT
     comment = models.TextField()  # the comment
     published = models.DateTimeField(auto_now_add=True)  # date published
     contentType = models.CharField(choices=content_types, default=PLAIN, max_length=20)  # type of content
@@ -125,8 +125,17 @@ class Comment(models.Model):
         self.get_absolute_url()
         return (self.url[:-1]) or str(self.id)
     
+    def get_object(self):
+        return self.post if self.post.endswith('/') else self.post + '/' 
+    
     def get_absolute_url(self):
-        url = reverse('posts:comment_detail', args=[str(self.author.id), str(self.post.id), str(self.id)])
+        print(self.id)
+        print(self.post)
+        self.post = self.post[:-1] if self.post.endswith('/') else self.post
+        print(self.post)
+        post = Post.objects.get(id=str(self.post.split("/")[-1]))
+        url = reverse('posts:comment_detail', args=[post.id, str(self.post.split("/")[-1]), str(self.id)])
+        print("Comment recieved")
         url = settings.APP_NAME + url
         self.url = url if url.endswith('/') else url + '/'
         self.save()
