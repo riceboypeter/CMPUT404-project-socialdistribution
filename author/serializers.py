@@ -30,9 +30,6 @@ class AuthorSerializer(serializers.ModelSerializer):
     @staticmethod
     def _upcreate(validated_data):
         print("in the other upcreate function")
-        print(validated_data)
-        validated_data = clean_author(validated_data)
-        print(validated_data)
         return Author(**validated_data)
     
     @staticmethod
@@ -45,6 +42,7 @@ class AuthorSerializer(serializers.ModelSerializer):
                 return Response("Author does not exist here!", status=status.HTTP_404_NOT_FOUND)
         updated_author = None
         if validated_data: 
+            validated_data = clean_author(validated_data)
             validated_data["id"] = validated_data["id"][:-1] if validated_data["id"].endswith('/') else validated_data["id"]
             validated_data["id"] = validated_data["id"].split("/")[-1]
         try:
