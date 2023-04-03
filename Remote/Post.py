@@ -3,8 +3,8 @@ import base64
 from rest_framework.response import Response
 from rest_framework import status
 
-from auth import *
-from Authors import *
+from Remote.auth import *
+from Remote.Authors import *
 from datetime import datetime, date
 import json
 
