@@ -60,6 +60,6 @@ urlpatterns = [
     re_path(r"^$", render_react),
     re_path(r"^(?:.*)/?$", render_react),
 ]
-# adds the path to the media directory, we can put images in media/images/[filename] 
+# adds the path to the media directory, we can put images in social/media/[filename] 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
