@@ -120,7 +120,7 @@ def sendPost(host, data, auth_id):
     print(auth_id)
     # encode image from data[image] as base64 string in data[content]
     if "image/" in data['contentType']:
-        with open("."+data["image"],'rb') as file:
+        with open("./social"+data["image"],'rb') as file:
             # encode image
             encoded_image = base64.b64encode(file.read())
             # properly pad the image + cast to string
