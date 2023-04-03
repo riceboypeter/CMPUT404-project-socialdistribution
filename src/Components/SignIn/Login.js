@@ -50,13 +50,8 @@ function LOGIN() {
 			username: username,
 			password: password,
 		};
-		await getCsrfToken();
-		const token = localStorage.getItem("token");
 
-		let reqInstance = axios.create({
-			headers: { "X-CSRFToken": token, csrftoken: token },
-		});
-		reqInstance({
+		axios({
 			method: "post",
 			url: process.env.REACT_APP_HOST_NAME + "/login",
 			data: params,

@@ -32,17 +32,23 @@ def getAllPosts_app2():
 
     headers = app2_headers()
     response = requests.get(url, headers=headers, params=params)
-    if response.status_code == 200:
+    status_code = response.status_code
+    if status_code == 200:
         json_response = response.json()
-        return(json_response)
+        authors = json_response['items']
+        return(authors)
+    else: return ([])
 
 def getAllPosts_Yoshi():
     url = 'https://yoshi-connect.herokuapp.com/posts/public'
     headers = yoshi_headers()
     response = requests.get(url, headers=headers, params=params)
-    if response.status_code == 200:
+    status_code = response.status_code
+    if status_code == 200:
         json_response = response.json()
-        return(json_response["items"])
+        authors = json_response['items']
+        return(authors)
+    else: return ([])
 
 def getNodePost_social_distro(author_id):
     url = 'https://social-distro.herokuapp.com/api/authors/'
@@ -100,6 +106,8 @@ def getAllPosts_big():
         json_response = json_response["items"]
         json_response = json_response[:4]
         return(json_response)
+    else: 
+        return []
 
 
 def getAllPublicPosts():
@@ -108,7 +116,7 @@ def getAllPublicPosts():
     # posts3 = getAllPosts_Distro()
     # posts4 = getAllPosts_P2()
     posts5 = getAllPosts_big()
-    posts = posts1+ posts2 + posts5
+    posts = posts1 + posts2 + posts5
     return posts
 
 
@@ -171,7 +179,7 @@ def sendPostDistro(data, auth_id):
 
 
 def sendPostApp2(data, auth_id):
-    url = 'https://killme.herokuapp.com/authors/' + auth_id + '/inbox'
+    url = 'https://sociallydistributed.herokuapp.com/authors/' + auth_id + '/inbox'
     #setup data
     response = requests.post(url=url, headers=app2_headers(), data=data)
     status_code = response.status_code

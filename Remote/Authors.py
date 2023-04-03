@@ -45,11 +45,9 @@ def getNodeAuthor_Yoshi(author_id):
     else: return ([])
 
 def getNodeAuthor_App2(author_id):
-    url = 'https://killme.herokuapp.com/authors/'
+    url = 'https://sociallydistributed.herokuapp.com/authors/'
 
     url = url + author_id
-
-    print("in node 2 authors")
 
     response = requests.get(url)
     status_code = response.status_code
@@ -72,7 +70,7 @@ def getNodeAuthor_P2(author_id):
 
 def getNodeAuthor_big(author_id):
     url = "https://bigger-yoshi.herokuapp.com/api/authors/" + author_id
-    response= requests.get(url)
+    response= requests.get(url, params={"size": 100})
     status_code = response.status_code
 
     if status_code == 200:
@@ -83,7 +81,6 @@ def getNodeAuthor_big(author_id):
 def getNodeAllAuthors_Yoshi():
     url = 'https://yoshi-connect.herokuapp.com/authors'
     response = requests.get(url, params={"size": 100})
-
     status_code = response.status_code
 
     if status_code == 200:
@@ -93,8 +90,8 @@ def getNodeAllAuthors_Yoshi():
     else: return ([])
 
 def getNodeAllAuthors_App2():
-    url = 'https://killme.herokuapp.com/authors/'
-    hosturl = "https://killme.herokuapp.com/"
+    url = 'https://sociallydistributed.herokuapp.com/authors/'
+    hosturl = "https://sociallydistributed.herokuapp.com/"
 
     headers = app2_headers()
     response = requests.get(url, headers=headers, params=params)
@@ -126,17 +123,18 @@ def getNodeAllAuthors_distro():
 
 def getNodeAllAuthors_P2():
     headers = p2_headers()
-    url = "https://p2psd.herokuapp.com/authors/"
+    url = "https://p2psd.herokuapp.com/authors"
     response = requests.get(url, headers=headers)
    
     status_code = response.status_code
     json_response = response.json()
     authors = json_response['items']
+    print(authors)
     return authors
 
 def getNodeAllAuthors_big():
     url = "https://bigger-yoshi.herokuapp.com/api/authors"
-    response = requests.get(url, params=params)
+    response = requests.get(url, params={"size": 100})
     text = response.json()
     items = text["items"]
     

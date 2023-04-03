@@ -47,6 +47,19 @@ export let createReqInstance = (baseUrl) => {
 					password: password,
 				},
 			});
+		case process.env.REACT_APP_HOST_NAME + "//":
+			username = localStorage.getItem("username");
+			password = localStorage.getItem("password");
+			return axios.create({
+				headers: {
+					"X-CSRFToken": token,
+				},
+				baseURL: baseUrl,
+				auth: {
+					username: username,
+					password: password,
+				},
+			});
 		case "https://yoshi-connect.herokuapp.com/":
 			username = "minion-yoshi";
 			password = "123";
@@ -73,8 +86,8 @@ export let createReqInstance = (baseUrl) => {
 					password: password,
 				},
 			});
-		case "https://killme.herokuapp.com/":
-			username = "app1team15";
+		case "https://sociallydistributed.herokuapp.com/":
+			username = "app2team15";
 			password = "hari1234";
 			return axios.create({
 				headers: {

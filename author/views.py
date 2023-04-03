@@ -423,7 +423,7 @@ class GitHubView(APIView):
         github_posts = get_github_activities(author.github, author)
 
         serializer = PostSerializer(github_posts,many=True)
-        
+
         return Response(serializer.data)        
 
 #request_body=openapi.Schema( type=openapi.TYPE_STRING,description='A raw text input for the POST request'))
@@ -509,7 +509,8 @@ class InboxSerializerObjects:
             except Post.DoesNotExist:
                 try:
                     # handle image posts
-                    if "image/png" in data["contentType"]:
+                    if "image/" in data["contentType"]:
+                        print("in image if")
                         # make a mutable version of the querydict so that we can use
                         # our special image field
                         data = data.copy()
@@ -517,12 +518,15 @@ class InboxSerializerObjects:
                         serializer = ImageSerializer
                     # normal post
                     else:
+                        print("in post else")
                         serializer = PostSerializer
+                    print("got to send part")
                     context={}
                     new_data = data
                     # new_data["authors"] = data["sentTo"]
                     if new_data["authors"]:
                         del new_data["authors"]
+                    print("NEW DATA",new_data)
                     return serializer(data=new_data, context=context, partial=True)
 
                 except:

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useLayoutEffect } from "react";
 import { Input, InputGroup } from "rsuite";
-import { reqInstance, createReqInstance } from "../utils/axios";
+import { createReqInstance } from "../utils/axios";
 import { getAuthorId, getCsrfToken } from "../utils/auth";
 // Component Imports
 import COMMENTLIKE from "./LikeComment";

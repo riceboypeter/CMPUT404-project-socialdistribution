@@ -28,15 +28,20 @@ function GITHUB() {
 				url: url,
 			}).then((res) => {
 				setInbox(res.data);
-
 			});
-
 		}
 	}, []);
 
 	const item = (obj) => {
 		if (obj.type === "post") {
-			return <POST key={obj.id} postobj={obj} explore={false} github={true} />;
+			return (
+				<POST
+					key={obj.id}
+					postobj={obj}
+					explore={false}
+					github={true}
+				/>
+			);
 		}
 	};
 
@@ -58,7 +63,7 @@ function GITHUB() {
 		reqInstance.post("dlogout/").then((res) => {
 			if (res.status === 202) {
 				unsetCurrentUser();
-				navigate("/signinn");
+				navigate("/signin");
 			}
 		});
 	}
