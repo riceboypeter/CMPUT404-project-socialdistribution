@@ -126,7 +126,7 @@ def sendPost(host, data, auth_id):
             # properly pad the image + cast to string
             data['content'] = "data:image/png;base64,"+str(encoded_image)[2:-1]
 
-    if 'yoshi' in host:
+    if 'yoshi-connect' in host:
         response, status_code = sendPostYoshi(data, auth_id)
     elif 'social-distro' in host:
         response, status_code = sendPostDistro(data, auth_id)
