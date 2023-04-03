@@ -103,7 +103,15 @@ getAllPosts_Yoshi()
 
 
 def sendPost(host, data, auth_id):
-    print(data)
+
+    # encode image from data[image] as base64 string in data[content]
+    if "image/" in data.contentType:
+        with open("."+data.image,'rb') as file:
+            # encode image
+            encoded_image = base64.b64encode(file.read())
+            # properly pad the image + cast to string
+            data.content = "data:image/png;base64,"+str(encoded_image)[2:-1]
+
     if 'yoshi' in host:
         response, status_code = sendPostYoshi(data, auth_id)
     elif 'social-distro' in host:
@@ -117,9 +125,7 @@ def sendPost(host, data, auth_id):
 def sendPostYoshi(data, auth_id):
     url = 'https://yoshi-connect.herokuapp.com/authors/' + auth_id + '/inbox'
 
-
     #update the data to be sent in proper format maybe
-    
     response = requests.post(url=url, headers=yoshi_headers(), data=data)
     status_code = response.status_code
     json_response = response.json()
