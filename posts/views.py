@@ -475,7 +475,7 @@ Publicpostget = {
 
     )}
 
-class post_list(APIView, PageNumberPagination):
+class PostListView(APIView, PageNumberPagination):
     authentication_classes = [BasicAuthentication]
     permission_classes = [IsAuthenticated]
     serializer_class = PostSerializer
@@ -502,7 +502,7 @@ class post_list(APIView, PageNumberPagination):
         # filter the posts and then paginate
         # privacy is all handled when post is created, except for image posts
 
-        posts = Post.objects.filter(author=author)
+        posts = Post.objects.filter(author=author, is_github=False)
         posts = self.paginator.paginate_queryset(posts, self.request, view=self)
 
         serializer = PostSerializer(posts, many=True)
