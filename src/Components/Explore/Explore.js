@@ -103,7 +103,6 @@ function EXPLORE() {
 				<Nav pullRight>
 					<Nav.Item onClick={handleGithubClick}>Github</Nav.Item>
 				</Nav>
-				`1`
 				<Nav pullRight>
 					<Nav.Item onClick={handleProfileClick}>Profile</Nav.Item>
 				</Nav>

@@ -3,7 +3,7 @@ import base64
 from rest_framework.response import Response
 from rest_framework import status
 import json
-from Remote.auth import *
+from auth import *
 # from auth import *
 params = {
     "size" : 100
@@ -54,8 +54,8 @@ def getNodeAuthor_App2(author_id):
     
     if status_code == 200:
         json_response = response.json()
-        return(json_response, status_code)
-    else: return (None, status_code)
+        return(json_response)
+    else: return ([])
 
 def getNodeAuthor_P2(author_id):
     headers = p2_headers()
@@ -65,8 +65,8 @@ def getNodeAuthor_P2(author_id):
     status_code = response.status_code
     if status_code == 200:
         json_response = response.json()
-        return(json_response, status_code)
-    else: return (None, status_code)
+        return(json_response)
+    else: return ([])
 
 def getNodeAuthor_big(author_id):
     url = "https://bigger-yoshi.herokuapp.com/api/authors/" + author_id
@@ -75,8 +75,8 @@ def getNodeAuthor_big(author_id):
 
     if status_code == 200:
         json_response = response.json()
-        return(json_response, status_code)
-    else: return (None, status_code)
+        return(json_response)
+    else: return ([])
 
 def getNodeAllAuthors_Yoshi():
     url = 'https://yoshi-connect.herokuapp.com/authors'
@@ -86,8 +86,8 @@ def getNodeAllAuthors_Yoshi():
     if status_code == 200:
         json_response = response.json()
         authors = json_response['items']
-        return(authors, status_code)
-    else: return (None, status_code)
+        return(authors)
+    else: return ([])
 
 def getNodeAllAuthors_App2():
     url = 'https://sociallydistributed.herokuapp.com/authors/'
@@ -99,8 +99,8 @@ def getNodeAllAuthors_App2():
     if status_code == 200:
         json_response = response.json()
         authors = json_response['items']
-        return(authors, status_code)
-    else: return (None, status_code)
+        return(authors)
+    else: return ([])
 
 
 def getNodeAllAuthors_distro():
@@ -151,12 +151,15 @@ def checkDisplayName(list, displayName):
     
 def getRemoteAuthorsDisplayName(displayName):
     author1 = checkDisplayName(getNodeAllAuthors_Yoshi(), displayName)
+
     author2 = checkDisplayName(getNodeAllAuthors_App2(), displayName)
     # author3 = checkDisplayName(getNodeAllAuthors_distro(), displayName) 
     # author4 = checkDisplayName(getNodeAllAuthors_P2(), displayName)
     author5 = checkDisplayName(getNodeAllAuthors_big(), displayName)
     authorList = author1 + author2  + author5
     return authorList
+
+print(getNodeAllAuthors_Yoshi())
 
 def getAuthorId(url):
     arr = url.split("/")
