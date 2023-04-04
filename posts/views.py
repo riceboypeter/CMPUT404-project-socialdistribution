@@ -956,12 +956,16 @@ class PublicPostsView(APIView, PageNumberPagination):
 
     @swagger_auto_schema(responses =Publicpostget, operation_summary="List all Public posts on all servers")
     def get(self, request):
+        print("inside pblicposts")
         posts = Post.objects.filter(visibility='PUBLIC', is_github= False, origin__startswith=settings.HOST_NAME)
         serializer = PostSerializer(posts, many=True)
         data_list = serializer.data
+        print("datalist", data_list)
         if (request.GET.get("local") == "true"):
+            print("inside the local")
             remotePosts = getAllPublicPosts()
             data_list = data_list + remotePosts
+            print("datalist", data_list)
             data_list.sort(key=lambda x: x['published'])
         return Response(data_list)  
     
