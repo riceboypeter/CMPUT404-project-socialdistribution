@@ -109,11 +109,6 @@ def getAllPosts_big():
         return(json_response)
     else: 
         return []
-    
-print(1, getAllPosts_app2())
-print(2, getAllPosts_big())
-print(3, getAllPosts_Yoshi())
-
 
 def getAllPublicPosts():
     posts1 = getAllPosts_app2()
