@@ -9,11 +9,14 @@ import ADD_FRIEND_MODAL from "../Modals/AddFriendModal";
 import POST from "../Post/Post";
 import COMMENTINBOX from "../Post/CommentInbox";
 import { unsetCurrentUser } from "../utils/auth";
+import axios from "axios";
 
 function EXPLORE() {
 	const [inbox, setInbox] = useState([]);
 	const [curPage, setCurPage] = useState("inbox");
 	const [open, setOpen] = useState(false);
+	const [local, setLocal] = useState([]);
+	const [yoshi, setYoshi] = useState([]);
 	let navigate = useNavigate();
 
 	// Get the inbox
@@ -21,16 +24,33 @@ function EXPLORE() {
 		if (!localStorage.getItem("loggedIn")) {
 			navigate("/signin");
 		} else {
+			getYoshiPublicPosts();
 			const url = `posts/public`;
 			reqInstance({
 				method: "get",
 				url: url,
-				params: { local: "true" },
 			}).then((res) => {
 				setInbox(res.data.slice(-10));
 			});
 		}
 	}, []);
+
+	async function getYoshiPublicPosts() {
+		const url = "https://yoshi-connect.herokuapp.com/";
+		const username = "minion-yoshi";
+		const password = "123";
+		axios({
+			method: "get",
+			url: url,
+			auth: {
+				username: username,
+				password: password,
+			},
+		}).then((res) => {
+			console.log(res.data);
+			// setInbox(res.data.slice(-10));
+		});
+	}
 
 	const item = (obj) => {
 		if (obj.type === "post") {
