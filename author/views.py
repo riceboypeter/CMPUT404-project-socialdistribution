@@ -510,6 +510,8 @@ class InboxSerializerObjects:
                 try:
                     # handle image posts
                     if "image/png" in data["contentType"]:
+                        print("Image in data['contentType']")
+                        print(data["contentType"])
                         # make a mutable version of the querydict so that we can use
                         # our special image field
                         data = data.copy()
@@ -517,11 +519,14 @@ class InboxSerializerObjects:
                         serializer = ImageSerializer
                     # normal post
                     else:
+                        print("post serrializer")
                         serializer = PostSerializer
                     context={}
                     new_data = data
+                    print("new data", new_data)
                     # new_data["authors"] = data["sentTo"]
                     if new_data["authors"]:
+                        print("authors in new data")
                         del new_data["authors"]
                     return serializer(data=new_data, context=context, partial=True)
 
