@@ -25,7 +25,7 @@ function EXPLORE() {
 			reqInstance({
 				method: "get",
 				url: url,
-				params: { local: true },
+				params: { local: "true" },
 			}).then((res) => {
 				setInbox(res.data.slice(-10));
 			});

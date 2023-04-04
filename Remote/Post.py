@@ -35,8 +35,6 @@ def getAllPosts_app2():
     status_code = response.status_code
     if status_code == 200:
         json_response = response.json()
-        # print(json_response)
-        # authors = json_response['items']
         json_response = json_response[:5]
         return(json_response)
     else: return ([])
@@ -66,12 +64,12 @@ def getAllPosts_big():
         return []
 
 def getAllPublicPosts():
-    posts1 = getAllPosts_app2()
+    # posts1 = getAllPosts_app2()
     posts2 = getAllPosts_Yoshi()
     # posts3 = getAllPosts_Distro()
     # posts4 = getAllPosts_P2()
     posts5 = getAllPosts_big()
-    posts = posts1 + posts2 + posts5
+    posts = posts2 + posts5
     return posts
 
 # def getNodePost_social_distro(author_id):
