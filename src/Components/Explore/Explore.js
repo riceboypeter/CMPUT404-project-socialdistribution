@@ -95,10 +95,7 @@ function EXPLORE() {
 					<Nav.Item onClick={handleLogoutClick}>Logout</Nav.Item>
 				</Nav>
 				<Nav pullRight>
-					<Nav.Menu
-						onClick={handleInboxClick}
-						title="Inbox"
-					></Nav.Menu>
+					<Nav.Item onClick={handleInboxClick}>Inbox</Nav.Item>
 				</Nav>
 				<Nav pullRight>
 					<Nav.Item onClick={handleGithubClick}>Github</Nav.Item>

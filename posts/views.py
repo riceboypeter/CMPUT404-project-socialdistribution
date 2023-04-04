@@ -950,7 +950,7 @@ class ShareView(APIView):
             serializer = PostSerializer(new_post)
         return Response(serializer.data)
     
-class PublicPostsView(APIView, PageNumberPagination):
+class PublicPostsView(APIView):
     authentication_classes = [BasicAuthentication]
     permission_classes = [IsAuthenticated]
 
@@ -964,6 +964,7 @@ class PublicPostsView(APIView, PageNumberPagination):
         if (request.GET.get("local") == "true"):
             print("inside the local")
             remotePosts = getAllPublicPosts()
+            print("remotepost", remotePosts)
             data_list = data_list + remotePosts
             print("datalist", data_list)
             data_list.sort(key=lambda x: x['published'])
