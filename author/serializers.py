@@ -17,6 +17,7 @@ class AuthorSerializer(serializers.ModelSerializer):
     
     def update(self, instance, validated_data):
         print(validated_data)
+        print(type(validated_data))
         return super().update(instance,validated_data)
 
     @staticmethod

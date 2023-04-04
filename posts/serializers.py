@@ -35,7 +35,9 @@ class PostSerializer(WritableNestedModelSerializer):
         print(data)
         try: 
             data["author"] = AuthorSerializer.extract_and_upcreate_author(data['author'], None)
+            
             data["categories"] = ','.join(data["categories"])
+            print(data["categories"])
         except:
             pass
         return super().to_internal_value(data)
