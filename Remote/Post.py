@@ -15,20 +15,6 @@ params= {
     "page": 1 
 }
 
-# def getNodePost_Yoshi(author_id):
-#     url = 'https://yoshi-connect.herokuapp.com/authors/'
-
-#     url = url + author_id + '/posts/'
-    
-#     response = requests.get(url)
-#     status_code = response.status_code
-   
-#     if status_code == 200:
-#         json_response = response.json()
-#         return(json_response, status_code)
-#     else: return (None, status_code)
-
-
 def getAllPosts_app2():
     url = 'https://killme.herokuapp.com/posts/public'
 
@@ -45,7 +31,7 @@ def getAllPosts_Yoshi():
     url = 'https://yoshi-connect.herokuapp.com/posts/public'
     headers = yoshi_headers()
     print(headers)
-    response = requests.get(url, headers=headers, params=params)
+    response = requests.get(url, headers=headers, params=params, timeout=5)
     print(response)
     status_code = response.status_code
     if status_code == 200:
@@ -57,7 +43,6 @@ def getAllPosts_Yoshi():
         return(json_response)
     else: 
         return []
-print(getAllPosts_Yoshi())
 
 def getAllPosts_big():
     url = 'https://bigger-yoshi.herokuapp.com/api/authors/posts'
@@ -75,19 +60,10 @@ def getAllPosts_big():
         return []
     
 def getAllPublicPosts():
-    # posts1 = getAllPosts_app2()
-    st = time.time()
-    print("in getAllpublicposts")
-    # posts2 = getAllPosts_Yoshi()
-    # print("yos", posts2)
-    # posts3 = getAllPosts_Distro()
-    # posts4 = getAllPosts_P2()
+    posts1 = getAllPosts_app2()
+    posts2 = getAllPosts_Yoshi()
     posts5 = getAllPosts_big()
-    print("big", posts5)
-    et = time.time()
-    t = et -st 
-    print(st)
-    posts =  posts5
+    posts =  posts1+posts5
     print("all", posts)
     return posts
 

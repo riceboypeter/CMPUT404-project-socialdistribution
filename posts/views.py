@@ -965,8 +965,8 @@ class PublicPostsView(APIView):
             print("inside the local")
             remotePosts = getAllPublicPosts()
             print("remotepost", remotePosts)
-            yoshi_posts = getAllPosts_Yoshi()
-            print("yoshipost", yoshi_posts)
+            # yoshi_posts = getAllPosts_Yoshi()
+            # print("yoshipost", yoshi_posts)
             data_list = data_list + remotePosts
             print("datalist", data_list)
             data_list.sort(key=lambda x: x['published'])
