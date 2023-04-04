@@ -45,7 +45,7 @@ def getAllPosts_Yoshi():
     url = 'https://yoshi-connect.herokuapp.com/posts/public'
     headers = yoshi_headers()
     print(headers)
-    response = requests.get(url, headers=headers)
+    response = requests.get(url, headers=headers, params=params)
     print(response)
     status_code = response.status_code
     if status_code == 200:
@@ -57,6 +57,7 @@ def getAllPosts_Yoshi():
         return(json_response)
     else: 
         return []
+print(getAllPosts_Yoshi())
 
 def getAllPosts_big():
     url = 'https://bigger-yoshi.herokuapp.com/api/authors/posts'

@@ -36,7 +36,8 @@ function EXPLORE() {
 	}, []);
 
 	async function getYoshiPublicPosts() {
-		const url = "https://yoshi-connect.herokuapp.com/";
+		const url =
+			" https://cors-anywhere.herokuapp.com/https://yoshi-connect.herokuapp.com/";
 		const username = "minion-yoshi";
 		const password = "123";
 		axios({
@@ -45,6 +46,10 @@ function EXPLORE() {
 			auth: {
 				username: username,
 				password: password,
+			},
+			headers: {
+				"Access-Control-Allow-Origin": "*",
+				"Content-type": "application/json",
 			},
 		}).then((res) => {
 			console.log(res.data);

@@ -158,8 +158,6 @@ def getRemoteAuthorsDisplayName(displayName):
     authorList = author1 + author2  + author5
     return authorList
 
-print(getRemoteAuthorsDisplayName("Hari123"))
-
 def getAuthorId(url):
     arr = url.split("/")
     return arr[-1]
