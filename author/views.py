@@ -509,8 +509,9 @@ class InboxSerializerObjects:
             except Post.DoesNotExist:
                 try:
                     # handle image posts
-                    if "image/" in data["contentType"]:
-                        print("in image if")
+                    if "image/png" in data["contentType"]:
+                        print("Image in data['contentType']")
+                        print(data["contentType"])
                         # make a mutable version of the querydict so that we can use
                         # our special image field
                         data = data.copy()
@@ -518,15 +519,26 @@ class InboxSerializerObjects:
                         serializer = ImageSerializer
                     # normal post
                     else:
-                        print("in post else")
+                        print("post serrializer")
                         serializer = PostSerializer
                     print("got to send part")
                     context={}
+                    # try:
+                    #     author = data["author"]
+                    #     if author["host"]== 'https://bigger-yoshi.herokuapp.com/api/':
+                    #         new_data = {}
+                    # except:
                     new_data = data
+                    
+                    print("new data", new_data)
                     # new_data["authors"] = data["sentTo"]
-                    if new_data["authors"]:
-                        del new_data["authors"]
-                    print("NEW DATA",new_data)
+                    try: 
+                        print('trying to get authors')
+                        if new_data["authors"]:
+                            print("authors in new data")
+                            del new_data["authors"]
+                    except: 
+                        pass
                     return serializer(data=new_data, context=context, partial=True)
 
                 except:

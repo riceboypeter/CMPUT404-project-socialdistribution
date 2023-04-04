@@ -9,11 +9,14 @@ import ADD_FRIEND_MODAL from "../Modals/AddFriendModal";
 import POST from "../Post/Post";
 import COMMENTINBOX from "../Post/CommentInbox";
 import { unsetCurrentUser } from "../utils/auth";
+import axios from "axios";
 
 function EXPLORE() {
 	const [inbox, setInbox] = useState([]);
 	const [curPage, setCurPage] = useState("inbox");
 	const [open, setOpen] = useState(false);
+	const [local, setLocal] = useState([]);
+	const [yoshi, setYoshi] = useState([]);
 	let navigate = useNavigate();
 
 	// Get the inbox
@@ -25,9 +28,9 @@ function EXPLORE() {
 			reqInstance({
 				method: "get",
 				url: url,
-				params: { local: true },
+				params: { local: "true" },
 			}).then((res) => {
-				setInbox(res.data);
+				setInbox(res.data.slice(-10));
 			});
 		}
 	}, []);
@@ -95,10 +98,7 @@ function EXPLORE() {
 					<Nav.Item onClick={handleLogoutClick}>Logout</Nav.Item>
 				</Nav>
 				<Nav pullRight>
-					<Nav.Menu
-						onClick={handleInboxClick}
-						title="Inbox"
-					></Nav.Menu>
+					<Nav.Item onClick={handleInboxClick}>Inbox</Nav.Item>
 				</Nav>
 				<Nav pullRight>
 					<Nav.Item onClick={handleGithubClick}>Github</Nav.Item>

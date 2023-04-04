@@ -17,7 +17,9 @@ class AuthorSerializer(serializers.ModelSerializer):
     
     def update(self, instance, validated_data):
         print(validated_data)
-        return super().update(instance,validated_data)
+        print("in update",type(validated_data))
+        super().update(instance,validated_data)
+        return instance
 
     @staticmethod
     def _update(validated_data):
@@ -37,7 +39,7 @@ class AuthorSerializer(serializers.ModelSerializer):
     
     @staticmethod
     def extract_and_upcreate_author(validated_data, author_id = None):
-        print("in extract and upcreate")
+        print("in extract and upcreate", validated_data)
         if author_id is not None:
             try:
                 return Author.objects.get(id=author_id)

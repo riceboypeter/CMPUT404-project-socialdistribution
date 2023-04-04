@@ -15,8 +15,7 @@ class PostSerializer(WritableNestedModelSerializer):
     author = AuthorSerializer(required=False)
     source = serializers.URLField(source="get_source", read_only=True, max_length=500)  # source of post
     origin = serializers.URLField(source="get_origin", read_only=True, max_length=500)  # origin of post
-    categories = serializers.CharField(max_length=300, default="")
-    print("PSOT INIT")
+    categories = serializers.CharField(max_length=300, default=["None"])
     
     def create(self, validated_data):
         print("validated post data",validated_data)
@@ -34,15 +33,20 @@ class PostSerializer(WritableNestedModelSerializer):
         return post
 
     def to_internal_value(self, data):
-        print("INTERNAL FOR POST SERIALIZER",data)
+        print("to_internal_value")
+        print(data)
         try: 
             data["author"] = AuthorSerializer.extract_and_upcreate_author(data['author'], None)
+            
             data["categories"] = ','.join(data["categories"])
+            print(data["categories"])
         except:
             pass
         return super().to_internal_value(data)
 
     def to_representation(self, instance):
+        print("to_representation")
+        print(instance)
         id = instance.get_public_id()
         comments_list = Comment.objects.filter(post=instance).order_by('-published')[0:5]
         categories_list = instance.categories.split(",")
