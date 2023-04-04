@@ -60,7 +60,7 @@ function ADD_FRIEND_MODAL({ open, handleClose }) {
 	async function handleAddFriendClick() {
 		// url = authors/authors/${AUTHOR_ID}/followers/${foreign_author_id}/;
 		// reqInstance({ method: "put", url: url });
-		const url = `authors/displayName/${displayName}/`;
+		const url = `authors/displayName/${displayName}`;
 		await reqInstance({ method: "get", url: url }).then(async (res) => {
 			setusers(res.data);
 			if (res.data.length === 0) {

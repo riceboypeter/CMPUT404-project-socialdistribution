@@ -3,7 +3,7 @@ import base64
 from rest_framework.response import Response
 from rest_framework import status
 import json
-from Remote.auth import *
+from auth import *
 # from auth import *
 params = {
     "size" : 100
@@ -45,7 +45,7 @@ def getNodeAuthor_Yoshi(author_id):
     else: return (None, status_code)
 
 def getNodeAuthor_App2(author_id):
-    url = 'https://sociallydistributed.herokuapp.com/authors/'
+    url = 'https://killme.herokuapp.com/authors/'
 
     url = url + author_id
 
@@ -70,7 +70,7 @@ def getNodeAuthor_P2(author_id):
 
 def getNodeAuthor_big(author_id):
     url = "https://bigger-yoshi.herokuapp.com/api/authors/" + author_id
-    response= requests.get(url, params={"size": 100})
+    response= requests.get(url)
     status_code = response.status_code
 
     if status_code == 200:
@@ -90,11 +90,10 @@ def getNodeAllAuthors_Yoshi():
     else: return ([])
 
 def getNodeAllAuthors_App2():
-    url = 'https://sociallydistributed.herokuapp.com/authors/'
-    hosturl = "https://sociallydistributed.herokuapp.com/"
+    url = 'https://killme.herokuapp.com/authors/'
 
     headers = app2_headers()
-    response = requests.get(url, headers=headers, params=params)
+    response = requests.get(url, headers=headers)
     status_code = response.status_code
     if status_code == 200:
         json_response = response.json()
@@ -159,7 +158,7 @@ def getRemoteAuthorsDisplayName(displayName):
     authorList = author1 + author2  + author5
     return authorList
 
-print(getNodeAllAuthors_Yoshi())
+print(getRemoteAuthorsDisplayName("Hari123"))
 
 def getAuthorId(url):
     arr = url.split("/")

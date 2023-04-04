@@ -28,7 +28,7 @@ def getNodePost_Yoshi(author_id):
 
 
 def getAllPosts_app2():
-    url = 'https://sociallydistributed.herokuapp.com/posts/public'
+    url = 'https://killme.herokuapp.com/posts/public'
 
     headers = app2_headers()
     response = requests.get(url, headers=headers, params=params)
@@ -179,7 +179,7 @@ def sendPostDistro(data, auth_id):
 
 
 def sendPostApp2(data, auth_id):
-    url = 'https://sociallydistributed.herokuapp.com/authors/' + auth_id + '/inbox'
+    url = 'https://killme.herokuapp.com/authors/' + auth_id + '/inbox'
     #setup data
     response = requests.post(url=url, headers=app2_headers(), data=data)
     status_code = response.status_code
