@@ -59,6 +59,7 @@ def getAllPosts_big():
     url = 'https://bigger-yoshi.herokuapp.com/api/authors/posts'
 
     response = requests.get(url)
+    print(response)
     if response.status_code == 200:
         print("yoshi, inside the if ")
         json_response = response.json()
@@ -68,13 +69,13 @@ def getAllPosts_big():
         return(json_response)
     else: 
         return []
-
+    
 def getAllPublicPosts():
     # posts1 = getAllPosts_app2()
     st = time.time()
     print("in getAllpublicposts")
-    posts2 = getAllPosts_Yoshi()
-    print("yos", posts2)
+    # posts2 = getAllPosts_Yoshi()
+    # print("yos", posts2)
     # posts3 = getAllPosts_Distro()
     # posts4 = getAllPosts_P2()
     posts5 = getAllPosts_big()
@@ -82,7 +83,7 @@ def getAllPublicPosts():
     et = time.time()
     t = et -st 
     print(st)
-    posts = posts2 + posts5
+    posts =  posts5
     print("all", posts)
     return posts
 
