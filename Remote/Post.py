@@ -3,8 +3,8 @@ import base64
 from rest_framework.response import Response
 from rest_framework import status
 
-from Remote.auth import *
-from Remote.Authors import *
+from auth import *
+from Authors import *
 from datetime import datetime, date
 import json
 
@@ -13,30 +13,31 @@ params= {
     "page": 1 
 }
 
-def getNodePost_Yoshi(author_id):
-    url = 'https://yoshi-connect.herokuapp.com/authors/'
+# def getNodePost_Yoshi(author_id):
+#     url = 'https://yoshi-connect.herokuapp.com/authors/'
 
-    url = url + author_id + '/posts/'
+#     url = url + author_id + '/posts/'
     
-    response = requests.get(url)
-    status_code = response.status_code
+#     response = requests.get(url)
+#     status_code = response.status_code
    
-    if status_code == 200:
-        json_response = response.json()
-        return(json_response, status_code)
-    else: return (None, status_code)
+#     if status_code == 200:
+#         json_response = response.json()
+#         return(json_response, status_code)
+#     else: return (None, status_code)
 
 
 def getAllPosts_app2():
     url = 'https://killme.herokuapp.com/posts/public'
 
     headers = app2_headers()
-    response = requests.get(url, headers=headers, params=params)
+    response = requests.get(url, headers=headers)
     status_code = response.status_code
     if status_code == 200:
         json_response = response.json()
         # print(json_response)
         # authors = json_response['items']
+        json_response = json_response[:5]
         return(json_response)
     else: return ([])
 
@@ -47,65 +48,19 @@ def getAllPosts_Yoshi():
     status_code = response.status_code
     if status_code == 200:
         json_response = response.json()
-        authors = json_response['items']
-        return(authors)
+        json_response = json_response['items']
+        json_response = json_response[:5]
+        return(json_response)
     else: return ([])
 
-def getNodePost_social_distro(author_id):
-    url = 'https://social-distro.herokuapp.com/api/authors/'
-
-    url = url + author_id + '/posts/'
-
-    response = requests.get(url, headers=distro_headers(), params=params)
-    status_code = response.status_code
-    if status_code == 200:
-        json_response = response.json()
-        return(json_response)
-    
-def getAllPosts_Distro():
-    authors = getNodeAllAuthors_distro()
-    posts = []
-    for author in authors:
-        author_id = getAuthorId(author["id"])
-        items = getNodePost_social_distro(author_id)
-        items = items["results"]
-        for item in items:
-            if item['visibility'] == 'PUBLIC':
-                posts.append(item)
-    return posts
-
-def getNodePosts_P2(author_id):
-    url = 'https://p2psd.herokuapp.com/authors/'
-
-    url = url + author_id + '/posts/'
-
-    response = requests.get(url, headers=p2_headers())
-    status_code = response.status_code
-    if status_code == 200:
-        json_response = response.json()
-        return(json_response)
-
-def getAllPosts_P2():
-    authors = getNodeAllAuthors_P2()
-    posts = []
-    for author in authors:
-        author_id = getAuthorId(author["id"])
-        items = getNodePosts_P2(author_id)
-        items = items["items"]
-        for item in items:
-            while len(posts) <= 5:
-                if item['visibility'] == 'PUBLIC':
-                    posts.append(item)
-    return posts
-
 def getAllPosts_big():
-    url = 'https://bigger-yoshi.herokuapp.com/api/authors/posts?page=1size=5'
+    url = 'https://bigger-yoshi.herokuapp.com/api/authors/posts?size=5'
 
     response = requests.get(url, params=params)
     if response.status_code == 200:
         json_response = response.json()
         json_response = json_response["items"]
-        json_response = json_response[:4]
+        json_response = json_response[:5]
         return(json_response)
     else: 
         return []
@@ -119,6 +74,53 @@ def getAllPublicPosts():
     posts = posts1 + posts2 + posts5
     return posts
 
+
+# def getNodePost_social_distro(author_id):
+#     url = 'https://social-distro.herokuapp.com/api/authors/'
+
+#     url = url + author_id + '/posts/'
+
+#     response = requests.get(url, headers=distro_headers(), params=params)
+#     status_code = response.status_code
+#     if status_code == 200:
+#         json_response = response.json()
+#         return(json_response)
+    
+# def getAllPosts_Distro():
+#     authors = getNodeAllAuthors_distro()
+#     posts = []
+#     for author in authors:
+#         author_id = getAuthorId(author["id"])
+#         items = getNodePost_social_distro(author_id)
+#         items = items["results"]
+#         for item in items:
+#             if item['visibility'] == 'PUBLIC':
+#                 posts.append(item)
+#     return posts
+
+# def getNodePosts_P2(author_id):
+#     url = 'https://p2psd.herokuapp.com/authors/'
+
+#     url = url + author_id + '/posts/'
+
+#     response = requests.get(url, headers=p2_headers())
+#     status_code = response.status_code
+#     if status_code == 200:
+#         json_response = response.json()
+#         return(json_response)
+
+# def getAllPosts_P2():
+#     authors = getNodeAllAuthors_P2()
+#     posts = []
+#     for author in authors:
+#         author_id = getAuthorId(author["id"])
+#         items = getNodePosts_P2(author_id)
+#         items = items["items"]
+#         for item in items:
+#             while len(posts) <= 5:
+#                 if item['visibility'] == 'PUBLIC':
+#                     posts.append(item)
+#     return posts
 
 
 

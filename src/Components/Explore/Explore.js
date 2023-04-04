@@ -27,7 +27,7 @@ function EXPLORE() {
 				url: url,
 				params: { local: true },
 			}).then((res) => {
-				setInbox(res.data);
+				setInbox(res.data.slice(-10));
 			});
 		}
 	}, []);

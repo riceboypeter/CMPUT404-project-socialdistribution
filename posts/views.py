@@ -950,13 +950,13 @@ class ShareView(APIView):
             serializer = PostSerializer(new_post)
         return Response(serializer.data)
     
-class PublicPostsView(APIView):
+class PublicPostsView(APIView, PageNumberPagination):
     authentication_classes = [BasicAuthentication]
     permission_classes = [IsAuthenticated]
 
     @swagger_auto_schema(responses =Publicpostget, operation_summary="List all Public posts on all servers")
     def get(self, request):
-        posts = Post.objects.filter(visibility='PUBLIC', is_github= False)
+        posts = Post.objects.filter(visibility='PUBLIC', is_github= False, origin__startswith=settings.HOST_NAME)
         serializer = PostSerializer(posts, many=True)
         data_list = serializer.data
         if (request.GET.get("local") == "true"):
@@ -964,7 +964,7 @@ class PublicPostsView(APIView):
             data_list = data_list + remotePosts
             data_list.sort(key=lambda x: x['published'])
         return Response(data_list)  
-        
+    
         
 # share a post to an inbox
 # post = item 
