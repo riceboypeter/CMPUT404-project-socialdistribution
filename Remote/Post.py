@@ -35,8 +35,9 @@ def getAllPosts_app2():
     status_code = response.status_code
     if status_code == 200:
         json_response = response.json()
-        authors = json_response['items']
-        return(authors)
+        # print(json_response)
+        # authors = json_response['items']
+        return(json_response)
     else: return ([])
 
 def getAllPosts_Yoshi():
@@ -108,6 +109,10 @@ def getAllPosts_big():
         return(json_response)
     else: 
         return []
+    
+print(1, getAllPosts_app2())
+print(2, getAllPosts_big())
+print(3, getAllPosts_Yoshi())
 
 
 def getAllPublicPosts():
