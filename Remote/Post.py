@@ -8,6 +8,8 @@ from Remote.Authors import *
 from datetime import datetime, date
 import json
 
+import time
+
 params= {
     "size": 5,
     "page": 1 
@@ -45,9 +47,11 @@ def getAllPosts_Yoshi():
     response = requests.get(url, headers=headers)
     status_code = response.status_code
     if status_code == 200:
+        print("yoshi, inside the if ")
         json_response = response.json()
         json_response = json_response['items']
         json_response = json_response[:5]
+        print("yoshi ", json_response)
         return(json_response)
     else: return ([])
 
@@ -56,20 +60,30 @@ def getAllPosts_big():
 
     response = requests.get(url)
     if response.status_code == 200:
+        print("yoshi, inside the if ")
         json_response = response.json()
         json_response = json_response["items"]
         json_response = json_response[:5]
+        print("yoshi ", json_response)
         return(json_response)
     else: 
         return []
 
 def getAllPublicPosts():
     # posts1 = getAllPosts_app2()
+    st = time.time()
+    print("in getAllpublicposts")
     posts2 = getAllPosts_Yoshi()
+    print("yos", posts2)
     # posts3 = getAllPosts_Distro()
     # posts4 = getAllPosts_P2()
     posts5 = getAllPosts_big()
+    print("big", posts5)
+    et = time.time()
+    t = et -st 
+    print(st)
     posts = posts2 + posts5
+    print("all", posts)
     return posts
 
 # def getNodePost_social_distro(author_id):
@@ -135,12 +149,12 @@ def sendPost(host, data, auth_id):
 
     if 'yoshi-connect' in host:
         response, status_code = sendPostYoshi(data, auth_id)
-    elif 'social-distro' in host:
-        response, status_code = sendPostDistro(data, auth_id)
-    elif 'killme' in host:
-        response, status_code = sendPostApp2(data, auth_id)
-    elif 'p2psd' in host:
-        response, status_code = sendPostP2(data, auth_id)
+    # elif 'social-distro' in host:
+    #     response, status_code = sendPostDistro(data, auth_id)
+    # elif 'killme' in host:
+    #     response, status_code = sendPostApp2(data, auth_id)
+    # elif 'p2psd' in host:
+    #     response, status_code = sendPostP2(data, auth_id)
     elif 'bigger-yoshi' in host:
         print("sending to bigger yoshi")
         response, status_code = sendPostBiggerYoshi(data, auth_id)

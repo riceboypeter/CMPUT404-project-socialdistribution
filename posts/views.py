@@ -787,9 +787,9 @@ class PostLikesView(APIView):
         return Response(serializer.data)
 
 # specifically for displaying image from the path authors/<str:pk_a>/posts/<str:pk>/image/
+@authentication_classes([])
+@permission_classes([])
 class ImageView(APIView):
-    authentication_classes = [BasicAuthentication]
-    permission_classes = [IsAuthenticated]
     # a renderer for displaying the image
     renderer_classes = [JPEGRenderer, PNGRenderer]
 
@@ -957,7 +957,7 @@ class PublicPostsView(APIView):
     @swagger_auto_schema(responses =Publicpostget, operation_summary="List all Public posts on all servers")
     def get(self, request):
         print("inside pblicposts")
-        posts = Post.objects.filter(visibility='PUBLIC', is_github= False, origin__startswith=settings.HOST_NAME)
+        posts = Post.objects.filter(visibility='PUBLIC', is_github= False)
         serializer = PostSerializer(posts, many=True)
         data_list = serializer.data
         print("datalist", data_list)
