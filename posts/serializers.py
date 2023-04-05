@@ -23,6 +23,9 @@ class PostSerializer(WritableNestedModelSerializer):
             print("POST TRY BLOCK")
             validated_data["id"] = validated_data["id"][:-1] if validated_data["id"].endswith('/') else validated_data["id"]
             validated_data["id"] = validated_data["id"].split("/")[-1]
+
+            validated_data.pop("type")
+            print("valid",validated_data )
             post = Post.objects.create(**validated_data)
         except:
             print("POST SERIALIZER ELSE")
@@ -31,7 +34,6 @@ class PostSerializer(WritableNestedModelSerializer):
             if not id:
                 id = self.context["id"]
             post = Post.objects.create(**validated_data, author = author, id = id)
-
         return post
 
     def to_internal_value(self, data):
