@@ -213,6 +213,9 @@ def clean_author(author):
         if "_id" in author:
             author["id"] = author["_id"]
             del author["_id"]
+        if 'authorId' in author:
+            author["id"] = author["authorId"]
+            del author["authorId"]
         author["id"] = author["id"][:-1] if author["id"].endswith('/') else author["id"]
         author["id"] = author["id"].split("/")[-1]
         
