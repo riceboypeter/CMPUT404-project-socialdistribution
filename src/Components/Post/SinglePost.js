@@ -68,7 +68,7 @@ function SINGLEPOST({ explore }) {
 	}, []);
 
 	const getUrl = (host) => {
-		let url = `/posts/authors/${author}/posts/${post_id}`;
+		let url = `/authors/${author}/posts/${post_id}`;
 		if (host === "https://yoshi-connect.herokuapp.com/") {
 			url = `authors/${author}/posts/${post_id}`;
 		} else if (host === "https://social-distro.herokuapp.com/") {
@@ -142,7 +142,7 @@ function SINGLEPOST({ explore }) {
 		const author_id = getAuthorId(null);
 		const origin_author_id = getAuthorId(post.author.id);
 		const post_id = getAuthorId(post.id);
-		const url = `posts/authors/${origin_author_id}/posts/${post_id}/share/${author_id}/`;
+		const url = `authors/${origin_author_id}/posts/${post_id}/share/${author_id}/`;
 		reqInstance({ method: "post", url: url })
 			.then((res) => {
 				if (res.status === 200) {
@@ -206,7 +206,7 @@ function SINGLEPOST({ explore }) {
 	async function handleDeletePost() {
 		const author_id = getAuthorId(null);
 		const post_id = getAuthorId(post.id);
-		const url = `posts/authors/${author_id}/posts/${post_id}/`;
+		const url = `authors/${author_id}/posts/${post_id}/`;
 		reqInstance({ method: "delete", url: url })
 			.then((res) => {
 				if (res.status === 204) {

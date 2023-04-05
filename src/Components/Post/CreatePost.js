@@ -161,7 +161,7 @@ function CREATEPOST({ refresh }) {
 	async function handlePostClick() {
 		const author = JSON.parse(localStorage.getItem("user"));
 		const author_id = getAuthorId(null);
-		const url = `posts/authors/${author_id}/posts/`;
+		const url = `authors/${author_id}/posts/`;
 
 		var params = {
 			title: title,
