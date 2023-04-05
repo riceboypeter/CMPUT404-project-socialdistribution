@@ -194,6 +194,18 @@ def sendPostP2(data, auth_id):
     json_response = response.json()
     return json_response, status_code
 
+
+def clean_post(data):
+    if "type" in data:
+        data.pop("type")
+    if "comments" in data:
+        data.pop("comments")
+    
+    data["id"] = data["id"][:-1] if data["id"].endswith('/') else data["id"]
+    data["id"] = data["id"].split("/")[-1]
+
+    return data
+
 # post for yoshi connect:
 # 
 #

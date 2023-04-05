@@ -4,7 +4,7 @@ from .models import Post
 from author.serializers import AuthorSerializer
 from drf_writable_nested.serializers import WritableNestedModelSerializer
 from drf_base64.fields import Base64ImageField
-import uuid 
+from Remote.Post import clean_post 
 
 class PostSerializer(WritableNestedModelSerializer):
     type = serializers.CharField(default="post",source="get_api_type",read_only=True)
@@ -21,43 +21,25 @@ class PostSerializer(WritableNestedModelSerializer):
         print("validated post data",validated_data)
         try:
             print("POST TRY BLOCK")
-            validated_data["id"] = validated_data["id"][:-1] if validated_data["id"].endswith('/') else validated_data["id"]
-            validated_data["id"] = validated_data["id"].split("/")[-1]
-
-            validated_data.pop("type")
-            validated_data.pop("comments")
+            validated_data = clean_post(validated_data)
             print("valid",validated_data )
             post = Post(**validated_data)
         except Exception as e:
             print(e)
             print("POST SERIALIZER ELSE")
             author = AuthorSerializer.extract_and_upcreate_author(None, author_id=self.context["author_id"])
-            id = validated_data.pop('id') if validated_data.get('id') else None
-            if not id:
-                id = self.context["id"]
             #maybe pop the authors in this?***
             validated_data.pop('authors')
-            post = Post.objects.create(**validated_data, author = author, id = id)
+            post = Post.objects.create(**validated_data, author = author)
         return post
 
     def to_internal_value(self, data):
         print("to_internal_value")
-        if "id" in data:
-            pass
-        else:
-            print("skip internal")
-            return data
-        print(data)
-        if not data["origin"]:
-            print("origin is null")
-            data["origin"] = data["source"]
-        try: 
-            data["author"] = AuthorSerializer.extract_and_upcreate_author(data['author'], None)
-            if type(data["categories"]) is list:
-                data["categories"] = ','.join(data["categories"])                
-            print(data["categories"])
-        except:
-            pass
+        if not ("id" in data): return data
+        data["author"] = AuthorSerializer.extract_and_upcreate_author(data['author'])
+        if type(data["categories"]) is list:
+            data["categories"] = ','.join(data["categories"])                
+
         return {
             'id': data["id"],
             'type': data["type"],
