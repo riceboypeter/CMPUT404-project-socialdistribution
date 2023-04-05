@@ -200,7 +200,7 @@ function CREATEPOST({ refresh }) {
 					setUnlisted(false);
 					setMarkdown("");
 					setAuthors([]);
-					window.location.reload();
+					// window.location.reload();
 					notifySuccessPost();
 				} else {
 					notifyFailedPost(res.data);
