@@ -46,8 +46,26 @@ class PostSerializer(WritableNestedModelSerializer):
             print(data["categories"])
         except:
             pass
-        return super().to_internal_value(data)
-
+        return {
+            'id': data["id"],
+            'type': data["type"],
+            'categories': data["categories"],
+            'author': data["author"],
+            'contentType': data["contentType"],
+            'content': data["content"],
+            'visibility': data["visibility"],
+            'comments': data["comments"],
+            'description': data["description"],
+            'origin': data["origin"],
+            'published': data["published"],
+            "source": data["source"],
+            "title": data["title"],
+            "unlisted": data["unlisted"], 
+            'count': 0,
+            'is_github': False,
+            'commentsSrc': {}
+            
+        }
     def to_representation(self, instance):
         print("to_representation")
         print(instance)
