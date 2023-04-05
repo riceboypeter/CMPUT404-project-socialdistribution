@@ -160,6 +160,7 @@ def sendPostYoshi(data, auth_id):
     response = requests.post(url=url, headers=yoshi_headers(), data=data)
     status_code = response.status_code
     json_response = response.content
+    print("YOSHI content", json_response)
     return json_response, status_code
 
 def sendPostDistro(data, auth_id):
