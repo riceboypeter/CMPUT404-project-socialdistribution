@@ -56,6 +56,20 @@ class Post(models.Model):
     def __str__(self):
         return self.title + " (" + str(self.id) + ")"
     
+    def get_source(self):
+        #set post source (URL to source)
+        if not self.source:
+            self.get_absolute_url()
+            return self.url
+        return self.source
+        
+    def get_origin(self):
+        #set post origin (URL to origin)
+        if not self.origin:
+            self.get_absolute_url()
+            return self.url     
+        return self.origin
+    
     # get visbility status
     def get_visilibility(self):
         return self.Visibility(self.visibility).label
@@ -71,7 +85,7 @@ class Post(models.Model):
     
     # get comments url
     def get_comments_source(self):
-        return self.url + '/comments/'
+        return self.source + '/comments/'
         
     def get_likes_count(self):
         return self.likes.count()
@@ -89,23 +103,11 @@ class Post(models.Model):
             self.url = url[:-1] if url.endswith('/') else url 
             self.save()
             return self.url
+        self.url = self.source
         self.url = self.url[:-1] if self.url.endswith('/') else self.url 
         self.save()
         return self.url
 
-    def get_source(self):
-        #set post source (URL to source)
-        if not self.source:
-            self.get_absolute_url()
-            return self.url
-        return self.source
-        
-    def get_origin(self):
-        #set post origin (URL to origin)
-        if not self.origin:
-            self.get_absolute_url()
-            return self.url     
-        return self.origin
     
     @staticmethod
     def get_api_type():
@@ -128,23 +130,23 @@ class Comment(models.Model):
     # get public id of comment
     def get_public_id(self):
         self.get_absolute_url()
-        return (self.url[:-1]) or str(self.id)
+        return (self.url) or str(self.id)
     
     def get_object(self):
-        return self.post if self.post.endswith('/') else self.post + '/' 
+        return self.post[-1] if self.post.endswith('/') else self.post 
     
     def get_absolute_url(self):
-        print(self.id)
-        print(self.post)
-        self.post = self.post[:-1] if self.post.endswith('/') else self.post
-        print(self.post)
-        post = Post.objects.get(id=str(self.post.split("/")[-1]))
-        url = reverse('authors:comment_detail', args=[post.id, str(self.post.split("/")[-1]), str(self.id)])
-        print("Comment recieved")
-        url = settings.APP_NAME + url
-        self.url = url if url.endswith('/') else url + '/'
-        self.save()
-        return self.url
+        if not self.id:
+            self.post = self.post[:-1] if self.post.endswith('/') else self.post
+            print(self.post)
+            post = Post.objects.get(id=str(self.post.split("/")[-1]))
+            url = reverse('authors:comment_detail', args=[post.id, str(self.post.split("/")[-1]), str(self.id)])
+            print("Comment recieved")
+            self.url = settings.APP_NAME + url
+            self.save()
+            return self.url
+        else: 
+            self.url = self.post + '/comments/' + self.id
     
     @staticmethod
     def get_api_type():
