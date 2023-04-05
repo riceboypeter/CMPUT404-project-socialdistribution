@@ -20,7 +20,7 @@ function LIKESMODAL({ postobj }) {
 			const url = `authors/${author_id}/posts/${post_id}/likes`;
 			const reqInstance = createReqInstance(postobj.author.host);
 			reqInstance({ method: "get", url: url }).then((res) => {
-				setLikes(res.data);
+				setLikes(res.data.items);
 			});
 		}
 	}, []);
