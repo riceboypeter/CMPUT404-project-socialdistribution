@@ -521,7 +521,6 @@ class PostListView(APIView, PageNumberPagination):
         New post for an Author
         Request: include mandatory fields of a post, not including author, id, origin, source, type, count, comments, commentsSrc, published
         """
-        pk = str(uuid.uuid4())
         try:
             author = Author.objects.get(pk=pk_a)
         except Author.DoesNotExist:
@@ -532,10 +531,10 @@ class PostListView(APIView, PageNumberPagination):
             # format is similar to post: a JSON object with: { title, contentType, content, image }
             # image is passed in as a base64 string. it should look like data:image/png;base64,LOTSOFLETTERS
             # the image serializer saves the base64 image into the database as an actual image file
-            serializer = ImageSerializer(data=request.data, context={'author_id': pk_a, 'id':pk})
+            serializer = ImageSerializer(data=request.data, context={'author_id': pk_a})
         # otherwise, handle as normal post
         else:
-            serializer = PostSerializer(data=request.data, context={'author_id': pk_a, 'id':pk})
+            serializer = PostSerializer(data=request.data, context={'author_id': pk_a})
 
         # save post if valid
         if serializer.is_valid():

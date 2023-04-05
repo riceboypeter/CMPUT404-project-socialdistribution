@@ -59,15 +59,18 @@ class Post(models.Model):
     def get_source(self):
         #set post source (URL to source)
         if not self.source:
-            self.get_absolute_url()
-            return self.url
+            url = reverse('authors:post_detail', args=[str(self.author.id), str(self.id)])
+            source = settings.APP_NAME + url
+            self.source = source[:-1] if source.endswith('/') else source 
+            self.save()
+            return self.source
         return self.source
         
     def get_origin(self):
         #set post origin (URL to origin)
         if not self.origin:
-            self.get_absolute_url()
-            return self.url     
+            self.origin = self.get_source()
+            self.save()
         return self.origin
     
     # get visbility status
@@ -80,8 +83,8 @@ class Post(models.Model):
 
     # get public id of post
     def get_public_id(self):
-        self.get_absolute_url()
-        return (self.url) or str(self.id)
+        self.get_source()
+        return (self.source) or str(self.id)
     
     # get comments url
     def get_comments_source(self):
@@ -107,7 +110,6 @@ class Post(models.Model):
         self.url = self.url[:-1] if self.url.endswith('/') else self.url 
         self.save()
         return self.url
-
     
     @staticmethod
     def get_api_type():
@@ -147,6 +149,8 @@ class Comment(models.Model):
             return self.url
         else: 
             self.url = self.post + '/comments/' + self.id
+            self.save()
+            return self.url
     
     @staticmethod
     def get_api_type():
