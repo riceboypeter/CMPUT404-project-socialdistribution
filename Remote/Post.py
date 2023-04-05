@@ -159,10 +159,10 @@ def sendPostYoshi(data, auth_id):
         data["commentsSrc"] = [""]
     if data["description"] == '':
         data["description"] = data["title"]
-    if data["unlisted"] is False:
-        data["description"] = "False"
-    if data["unlisted"] is True:
-        data["description"] = "True"
+    if not data["unlisted"]:
+        data["unlisted"] = "False"
+    if data["unlisted"]:
+        data["unlisted"] = "True"
     #update the data to be sent in proper format maybe
     response = requests.post(url=url, headers=yoshi_headers(), data=data)
     status_code = response.status_code
