@@ -27,21 +27,29 @@ def getAllPosts_app2():
         return(json_response)
     else: return ([])
 
+# def getAllPosts_Yoshi():
+#     url = 'https://yoshi-connect.herokuapp.com/posts/public'
+#     headers = yoshi_headers()
+#     try:
+#         response = requests.get(url, headers=headers, params=params, timeout=5)
+#     except requests.exceptions.Timeout:
+#         return []
+#     status_code = response.status_code
+#     if status_code == 200:
+#         json_response = response.json()
+#         json_response = json_response['items']
+#         json_response = json_response[:5]
+#         return(json_response)
+#     else: 
+#         return []
+    
 def getAllPosts_Yoshi():
     url = 'https://yoshi-connect.herokuapp.com/posts/public'
     headers = yoshi_headers()
-    try:
-        response = requests.get(url, headers=headers, params=params, timeout=5)
-    except requests.exceptions.Timeout:
-        return []
-    status_code = response.status_code
-    if status_code == 200:
+    response = requests.get(url, headers=headers, params=params)
+    if response.status_code == 200:
         json_response = response.json()
-        json_response = json_response['items']
-        json_response = json_response[:5]
-        return(json_response)
-    else: 
-        return []
+        return(json_response["items"])
 
 def getAllPosts_big():
     url = 'https://bigger-yoshi.herokuapp.com/api/authors/posts'
