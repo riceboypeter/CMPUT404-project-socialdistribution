@@ -18,7 +18,10 @@ class AuthorSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         print(validated_data)
         print("in update",type(validated_data))
-        super().update(instance,validated_data)
+        instance.url = validated_data.get('url', instance.url)
+        instance.displayName = validated_data.get('displayName', instance.displayName)
+        instance.github = validated_data.get('github', instance.github)
+        instance.profileImage = validated_data.get('profileImage', instance.profileImage)
         return instance
 
     @staticmethod
@@ -28,7 +31,7 @@ class AuthorSerializer(serializers.ModelSerializer):
         if (validated_data.get("authorId")):
             validated_data.pop("authorId")
         author = Author.objects.get(id=validated_data["id"])
-        author_data = AuthorSerializer(author).update(instance=author,validated_data=validated_data)
+        author_data = AuthorSerializer(author).update(instance=author,validated_data=validated_data, partial=True)
         return author_data
     
     @staticmethod
