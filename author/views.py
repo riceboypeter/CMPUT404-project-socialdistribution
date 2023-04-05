@@ -529,8 +529,15 @@ class InboxSerializerObjects:
                     #         new_data = {}
                     # except:
                     new_data = data
+                    try: 
+                        print('trying to get commentsSrc')
+                        if new_data["commentsSrc"]:
+                            print("commentsSrc in new data")
+                            del new_data["commentsSrc"]
+                    except: 
+                        pass
                     
-                    print("new data", new_data)
+                    # print("new data", new_data)
                     # new_data["authors"] = data["sentTo"]
                     try: 
                         print('trying to get authors')
@@ -539,6 +546,8 @@ class InboxSerializerObjects:
                             del new_data["authors"]
                     except: 
                         pass
+                    print("new data", new_data)
+                    # new_data["authors"] = data["sentTo"]
                     return serializer(data=new_data, context=context, partial=True)
 
                 except:
@@ -612,9 +621,7 @@ class Inbox_list(APIView, InboxSerializerObjects, PageNumberPagination):
         except Author.DoesNotExist:
             print("couldnt find author in foreign or local")
             return Response("Author not Found", status=status.HTTP_404_NOT_FOUND)
-            # if request.data['type'] == "Follow":
-            #     response = client.postFollow(request.data, pk_a)
-            #     return response
+        
         #issue here
         print("deserialize")
         serializer = self.deserialize_objects(self.request.data, pk_a)
@@ -622,9 +629,6 @@ class Inbox_list(APIView, InboxSerializerObjects, PageNumberPagination):
         try:
             if serializer.is_valid():
                 item = serializer.save()
-                # if self.request.data['type'] == "Follow":
-                #     objectid = self.request.data['object']['id']
-                #     author = get_object_or_404(Author,pk=objectid)
                 print("IS VALID")
                 if item=="already liked":
                     return Response("Post Already Liked!", status=status.HTTP_400_BAD_REQUEST)
@@ -636,7 +640,8 @@ class Inbox_list(APIView, InboxSerializerObjects, PageNumberPagination):
                     return Response("You already follow them!", status=status.HTTP_400_BAD_REQUEST)
                 if hasattr(item, 'update_fields_with_request'):
                     item.update_fields_with_request(request)
-            else: 
+            else:
+                print("serilizer is not valid")
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except AttributeError as e:
             item = serializer   
