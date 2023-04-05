@@ -16,4 +16,14 @@ urlpatterns = [
   path('<str:pk_a>/liked/', pview.LikedView.as_view(), name='get_liked'),
   path('displayName/<str:displayName>/', views.getAuthor),
   path('registerNode', views.registerNode.as_view(), name='register_node'),
+  # For posts:
+  path('<str:pk_a>/posts/', pview.PostListView.as_view(), name = "posts"),
+  path('<str:pk_a>/posts/<str:pk>/', pview.post_detail.as_view(), name='detail'),
+  path('<str:pk_a>/posts/<str:pk>/comments/', pview.CommentView.as_view(), name='comments'),
+  path('<str:pk_a>/posts/<str:pk>/comments/<str:pk_m>/', pview.CommentDetailView.as_view(), name='comment_detail'),
+  path('<str:pk_a>/posts/<str:pk>/likes/', pview.PostLikesView.as_view(), name='get_likes'),
+  path('<str:pk_a>/posts/<str:pk>/comments/<str:pk_m>/likes/', pview.CommentLikesView.as_view(), name='get_comment_likes'),
+  path('<str:pk_a>/liked/', pview.LikedView.as_view(), name='get_liked'),
+  path('<str:pk_a>/posts/<str:pk>/image/', pview.ImageView.as_view()),
+  path('<str:origin_author>/posts/<str:post_id>/share/<str:author>/', pview.ShareView.as_view(), name='share'),
 ]
