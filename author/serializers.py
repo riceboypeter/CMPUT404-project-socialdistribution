@@ -17,6 +17,7 @@ class AuthorSerializer(serializers.ModelSerializer):
     
     def update(self, instance, validated_data):
         print(validated_data)
+        print(instance)
         print("in update",type(validated_data))
         instance.url = validated_data.get('url', instance.url)
         instance.displayName = validated_data.get('displayName', instance.displayName)
@@ -25,8 +26,7 @@ class AuthorSerializer(serializers.ModelSerializer):
         return instance
 
     @staticmethod
-    def _update(validated_data):
-        
+    def _update(validated_data): 
         author = Author.objects.get(id=validated_data["id"])
         author_data = AuthorSerializer(author).update(instance=author,validated_data=validated_data)
         return author_data
@@ -48,10 +48,9 @@ class AuthorSerializer(serializers.ModelSerializer):
         updated_author = None
         if validated_data: 
             validated_data = clean_author(validated_data)
-            validated_data["id"] = validated_data["id"][:-1] if validated_data["id"].endswith('/') else validated_data["id"]
-            validated_data["id"] = validated_data["id"].split("/")[-1]
         try:
             updated_author = AuthorSerializer._update(validated_data)
+            print("author is updated!")
         except Author.DoesNotExist:
             updated_author = AuthorSerializer._upcreate(validated_data)
             print("updated author saved")
@@ -59,6 +58,7 @@ class AuthorSerializer(serializers.ModelSerializer):
             print("no author", updated_author)
             return Response("Author does not exist here!", status=status.HTTP_404_NOT_FOUND)
         else:
+            print("saved!")
             updated_author.save() 
             return updated_author     
     

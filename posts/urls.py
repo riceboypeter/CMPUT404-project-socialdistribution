@@ -3,9 +3,9 @@ from . import views
 from .views import *
 
 
-app_name = 'posts'
+app_name = ''
 urlpatterns = [
-  path('public/', views.PublicPostsView.as_view(), name = "explore"),
+  path('posts/public/', views.PublicPostsView.as_view(), name = "explore"),
   path('authors/<str:pk_a>/posts/', views.PostListView.as_view(), name = "posts"),
   path('authors/<str:pk_a>/posts/<str:pk>/', views.post_detail.as_view(), name='detail'),
   path('authors/<str:pk_a>/posts/<str:pk>/comments/', views.CommentView.as_view(), name='comments'),
