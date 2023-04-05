@@ -26,11 +26,13 @@ function COMMENTS({ postobj }) {
 				password: password,
 			},
 		});
+		console.log(url);
 		return reqInstance({
 			method: "get",
 			url: url,
 		})
 			.then((res) => {
+				console.log(res);
 				if (res.data.comments) {
 					setCommentObj(res.data.comments);
 				} else if (res.data.results) {
@@ -42,7 +44,7 @@ function COMMENTS({ postobj }) {
 
 	useEffect(() => {
 		if (postobj.type === "post") {
-			getComments(postObj.comments);
+			getComments(postObj.origin + "/comments");
 		}
 	}, []);
 
@@ -54,22 +56,19 @@ function COMMENTS({ postobj }) {
 			type: "comment",
 			comment: new_comment,
 			author: user,
-			object: postObj.id,
+			object: postObj.origin,
 			contentType: "text/markdown",
 		};
 		const url = `authors/${FAID}/inbox/`;
 		const reqInstance = createReqInstance(postObj.author.host);
-		console.log(postObj);
 		return reqInstance({
 			method: "post",
 			url: url,
 			data: params,
 		})
 			.then(async (res) => {
-				if (res.status === 200) {
-					getComments(postObj.id);
-					set_new_comment("");
-				}
+				getComments(postObj.origin + "/comments");
+				set_new_comment("");
 			})
 			.catch((err) => console.log(err));
 	};
