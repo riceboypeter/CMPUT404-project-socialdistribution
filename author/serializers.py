@@ -31,7 +31,7 @@ class AuthorSerializer(serializers.ModelSerializer):
         if (validated_data.get("authorId")):
             validated_data.pop("authorId")
         author = Author.objects.get(id=validated_data["id"])
-        author_data = AuthorSerializer(author).update(instance=author,validated_data=validated_data, partial=True)
+        author_data = AuthorSerializer(author).update(instance=author,validated_data=validated_data)
         return author_data
     
     @staticmethod
