@@ -83,7 +83,7 @@ class Post(models.Model):
         self.save()
 
     def get_absolute_url(self):
-        if settings.HOST_NAME in self.origin:
+        if settings.HOST_NAME in self.source:
             url = reverse('authors:post_detail', args=[str(self.author.id), str(self.id)])
             url = settings.APP_NAME + url
             self.url = url[:-1] if url.endswith('/') else url 
