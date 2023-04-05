@@ -24,7 +24,7 @@ function EDITPOST({ obj, handleClose }) {
 	const toaster = useToaster();
 
 	useEffect(() => {
-		let x = (obj.categories).toString();
+		let x = obj.categories.toString();
 		setText(obj.content);
 		setDescription(obj.description);
 		setTitle(obj.title);
@@ -125,7 +125,7 @@ function EDITPOST({ obj, handleClose }) {
 	const handlePostClick = () => {
 		const author_id = getAuthorId(null);
 		const post_id = getAuthorId(obj.id);
-		const url = `posts/authors/${author_id}/posts/${post_id}/`;
+		const url = `authors/${author_id}/posts/${post_id}/`;
 		var params = {
 			title: title,
 			description: description,

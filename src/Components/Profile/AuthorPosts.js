@@ -18,7 +18,7 @@ function AUTHORPOSTS() {
 			navigate("/signin");
 		} else {
 			const author_id = getAuthorId(null);
-			const url = `posts/authors/${author_id}/posts/`;
+			const url = `authors/${author_id}/posts/`;
 			reqInstance({ method: "get", url: url })
 				.then((res) => {
 					setPosts(res.data.items);
@@ -49,7 +49,12 @@ function AUTHORPOSTS() {
 				bordered
 				collapsible
 			>
-				<POST postobj={obj} edit={true} explore={true} github={false}></POST>
+				<POST
+					postobj={obj}
+					edit={true}
+					explore={true}
+					github={false}
+				></POST>
 			</Panel>
 		);
 	};
