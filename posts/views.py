@@ -922,7 +922,7 @@ class ShareView(APIView):
             error_msg = "Author id not found"
             return Response(error_msg, status=status.HTTP_404_NOT_FOUND)
         print(request.data)
-        # post = request.data
+        post = request.data["post"]
         
         # try to get the post, return 404 if ID doesn't exist
         # try:
@@ -935,19 +935,19 @@ class ShareView(APIView):
         # create new post object with different author but same origin
         # new URL 
         source = reverse('authors:share', args=[str(origin_author), str(post_id), str(author_id)]).split('share')[0]
-        origin = request.data["origin"]
+        origin = post["origin"]
         
         new_post = Post(
-        title=request.data["title"],
-        description=request.data["description"],
-        content=request.data["content"],
-        contentType=request.data["contentType"],
+        title=post["title"],
+        description=post["description"],
+        content=post["content"],
+        contentType=post["contentType"],
         author=sharing_author,
-        categories=request.data["categories"],
-        published=request.data["published"],
-        visibility=request.data["visibility"],
-        unlisted=request.data["unlisted"],
-        source=source,
+        categories=post["categories"],
+        published=post["published"],
+        visibility=post["visibility"],
+        unlisted=post["unlisted"],
+        source=post,
         origin=origin
         )
 
