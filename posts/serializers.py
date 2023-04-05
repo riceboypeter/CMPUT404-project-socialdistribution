@@ -21,6 +21,8 @@ class PostSerializer(WritableNestedModelSerializer):
         print("validated post data",validated_data)
         try:
             print("POST TRY BLOCK")
+            validated_data["id"] = validated_data["id"][:-1] if validated_data["id"].endswith('/') else validated_data["id"]
+            validated_data["id"] = validated_data["id"].split("/")[-1]
             post = Post.objects.create(**validated_data)
         except:
             print("POST SERIALIZER ELSE")
