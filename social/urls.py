@@ -28,6 +28,7 @@ from . import views
 from django.urls import re_path
 from django.views.static import serve
 from django.shortcuts import render
+from posts import views as pviews
 
 def render_react(request):
     return render(request, "index.html")
@@ -47,7 +48,7 @@ schema_view = get_schema_view(
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("accounts/", include("django.contrib.auth.urls")),
-    path('posts/', include('posts.urls')),
+    # path('posts/', include('posts.urls')),
     path('authors/', include('author.urls')),
 
     path('docs/',schema_view.with_ui('swagger',cache_timeout=0),name = 'schema-swagger-ui'),
@@ -56,6 +57,7 @@ urlpatterns = [
     path("register/", views.register.as_view(), name="register"),
     path("login/", views.dlogin.as_view(), name="login"),
     path("dlogout/", views.logoutView.as_view(), name="logout"),
+    path('posts/public/', pviews.PublicPostsView.as_view(), name = "explore"),
     path('csrf/', views.csrf),
     re_path(r"^$", render_react),
     re_path(r"^(?:.*)/?$", render_react),
