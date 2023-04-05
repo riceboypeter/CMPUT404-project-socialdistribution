@@ -27,7 +27,8 @@ class PostSerializer(WritableNestedModelSerializer):
             validated_data.pop("type")
             print("valid",validated_data )
             post = Post(**validated_data)
-        except:
+        except Exception as e:
+            print(e)
             print("POST SERIALIZER ELSE")
             author = AuthorSerializer.extract_and_upcreate_author(None, author_id=self.context["author_id"])
             id = validated_data.pop('id') if validated_data.get('id') else None
