@@ -784,7 +784,20 @@ class PostLikesView(APIView):
         # filter for all the likes on that post
         likes = Like.objects.filter(object=post.url)
         serializer = LikeSerializer(likes, many=True)
-        return Response(serializer.data)
+        data = self.get_items(serializer.data)
+        # return all liked objects
+        return Response(data)
+    
+    def get_items(self,data):
+        # helper function 
+        
+        dict = {"type":"likes" }
+        items = []
+        for item in data:
+            items.append(item)
+
+        dict["items"] = items
+        return(dict) 
 
 # specifically for displaying image from the path authors/<str:pk_a>/posts/<str:pk>/image/
 @authentication_classes([])
