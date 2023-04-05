@@ -509,13 +509,13 @@ class InboxSerializerObjects:
             except Post.DoesNotExist:
                 try:
                     # handle image posts
-                    if "image/png" in data["contentType"]:
-                        print("Image in data['contentType']")
-                        print(data["contentType"])
+                    if "image/" in data["contentType"]:
+                        print(data["content"])
                         # make a mutable version of the querydict so that we can use
                         # our special image field
                         data = data.copy()
                         data = handle_image(data)
+                        print(data['image'])
                         serializer = ImageSerializer
                     # normal post
                     else:
