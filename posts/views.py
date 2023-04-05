@@ -913,11 +913,11 @@ class CommentView(APIView, PageNumberPagination):
 class ShareView(APIView):
     authentication_classes = [BasicAuthentication]
     permission_classes = [IsAuthenticated]
-    def post(self, request, origin_author, post_id, author):       
+    def post(self, request, origin_author, post_id, author_id):       
         
         # try to get the author, return 404 if ID doesn't exist
         try:
-            sharing_author = Author.objects.get(pk=author)
+            sharing_author = Author.objects.get(pk=author_id)
         except Author.DoesNotExist:
             error_msg = "Author id not found"
             return Response(error_msg, status=status.HTTP_404_NOT_FOUND)
@@ -934,8 +934,7 @@ class ShareView(APIView):
 
         # create new post object with different author but same origin
         # new URL 
-        current_url = post.get_absolute_url()
-        source = current_url.split('share')[0]
+        source = reverse('authors:share', args=[str(origin_author), str(post_id), str(author_id)]).split('share')[0]
         origin = post["origin"]
         
         new_post = Post(
@@ -948,11 +947,9 @@ class ShareView(APIView):
         published=post["published"],
         visibility=post["visibility"],
         unlisted=post["unlisted"],
+        source=source,
+        origin=origin
         )
-
-        # update the source and origin fields
-        new_post.source = source
-        new_post.origin = origin
 
         # save the new post
         new_post.save()
