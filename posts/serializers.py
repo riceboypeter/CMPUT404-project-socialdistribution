@@ -37,8 +37,8 @@ class PostSerializer(WritableNestedModelSerializer):
         print(data)
         try: 
             data["author"] = AuthorSerializer.extract_and_upcreate_author(data['author'], None)
-            
-            data["categories"] = ','.join(data["categories"])
+            if type(data["categories"]) is list:
+                data["categories"] = ','.join(data["categories"])                
             print(data["categories"])
         except:
             pass
@@ -50,12 +50,14 @@ class PostSerializer(WritableNestedModelSerializer):
         id = instance.get_public_id()
         comments_list = Comment.objects.filter(post=instance).order_by('-published')[0:5]
         categories_list = instance.categories.split(",")
+        if categories_list == ['']:
+            categories_list = []
         commentsSrc = [CommentSerializer(comment,many=False).data for comment in comments_list]
         return {
             **super().to_representation(instance),
             'id': id,
             'commentsSrc': commentsSrc,
-            'categories':[category for category in categories_list],
+            'categories': categories_list,
             'count': len(commentsSrc)
         }
             
