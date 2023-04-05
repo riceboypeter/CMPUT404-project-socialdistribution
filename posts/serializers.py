@@ -215,10 +215,8 @@ class ImageSerializer(serializers.ModelSerializer):
     id = serializers.URLField(source="get_public_id",read_only=True)
     author = AuthorSerializer(required=False)
     image = Base64ImageField()
-    print("IMAGE INIT")
     
     def create(self, validated_data):
-        print("IMAGE")
         try:
             author = AuthorSerializer.extract_and_upcreate_author(validated_data['author'], None)
             post = Post.objects.create(**validated_data)
