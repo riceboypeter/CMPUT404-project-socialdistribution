@@ -71,10 +71,7 @@ class Post(models.Model):
     
     # get comments url
     def get_comments_source(self):
-        if self.url.endswith("/"):
-            return self.url + 'comments/'
-        else:
-            return self.url + '/comments/'
+        return self.url + '/comments/'
         
     def get_likes_count(self):
         return self.likes.count()
@@ -86,22 +83,29 @@ class Post(models.Model):
         self.save()
 
     def get_absolute_url(self):
-        url = reverse('authors:post_detail', args=[str(self.author.id), str(self.id)])
-        url = settings.APP_NAME + url
-        self.url = url[:-1] if url.endswith('/') else url 
+        if settings.HOST_NAME in self.host:
+            url = reverse('authors:post_detail', args=[str(self.author.id), str(self.id)])
+            url = settings.APP_NAME + url
+            self.url = url[:-1] if url.endswith('/') else url 
+            self.save()
+            return self.url
+        self.url = self.url[:-1] if self.url.endswith('/') else self.url 
         self.save()
         return self.url
 
     def get_source(self):
         #set post source (URL to source)
-        self.get_absolute_url()
-        return self.url
+        if not self.source:
+            self.get_absolute_url()
+            return self.url
+        return self.source
         
     def get_origin(self):
         #set post origin (URL to origin)
         if not self.origin:
             self.get_absolute_url()
-            return self.url
+            return self.url     
+        return self.origin
     
     @staticmethod
     def get_api_type():
