@@ -88,7 +88,6 @@ class CommentSerializer(serializers.ModelSerializer):
     id = serializers.URLField(source="get_public_id",read_only=True)
     author = AuthorSerializer()
   
-
     def create(self, validated_data):
         author = validated_data["author"]
         #id = validated_data.pop('id') if validated_data.get('id') else None
@@ -147,6 +146,7 @@ class CommentSerializer(serializers.ModelSerializer):
             'published',
            
         ]
+    
 class LikeSerializer(serializers.ModelSerializer):
     type = serializers.CharField(default="like",source="get_api_type",read_only=True)
     author = AuthorSerializer(required=True)
