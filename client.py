@@ -24,8 +24,8 @@ def handle_image(dirty):
         dirty['image'] = dirty['content']
     elif dirty.get('description') is not None:
         dirty['image'] = dirty['description']
-        # base64imagefield HATES base64 images that don't have
-        # proper padding, so this is to make sure that it works
+    # base64imagefield HATES base64 images that don't have
+    # proper padding, so this is to make sure that it works
     if dirty['image'][-1] != '=':
         dirty['image'] += '='
     return dirty
