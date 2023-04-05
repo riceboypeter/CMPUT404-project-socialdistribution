@@ -40,7 +40,13 @@ class PostSerializer(WritableNestedModelSerializer):
 
     def to_internal_value(self, data):
         print("to_internal_value")
+        if not "id" in data:
+            print("skip internal")
+            return data
         print(data)
+        if not data["origin"]:
+            print("origin is null")
+            data["origin"] = data["source"]
         try: 
             data["author"] = AuthorSerializer.extract_and_upcreate_author(data['author'], None)
             if type(data["categories"]) is list:
