@@ -155,8 +155,8 @@ def sendPostBiggerYoshi(data, auth_id):
 
 def sendPostYoshi(data, auth_id):
     url = 'https://yoshi-connect.herokuapp.com/authors/' + auth_id + '/inbox'
-    if data["commentSrc"] == []:
-        data["commentSrc"] = [""]
+    if data["commentsSrc"] == []:
+        data["commentsSrc"] = [""]
     if data["description"] == '':
         data["description"] = data["title"]
     #update the data to be sent in proper format maybe

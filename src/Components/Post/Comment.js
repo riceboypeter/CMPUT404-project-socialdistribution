@@ -60,7 +60,7 @@ function COMMENTS({ postobj }) {
 		const url = `authors/${FAID}/inbox/`;
 		const reqInstance = createReqInstance(postObj.author.host);
 		return reqInstance({
-			method: "post",
+			method: "comment",
 			url: url,
 			data: params,
 		})
