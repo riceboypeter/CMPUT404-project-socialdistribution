@@ -55,6 +55,7 @@ function COMMENTS({ postobj }) {
 			comment: new_comment,
 			author: user,
 			object: postObj.id,
+			contentType: "text/markdown",
 		};
 		const url = `authors/${FAID}/inbox/`;
 		const reqInstance = createReqInstance(postObj.author.host);
@@ -62,7 +63,6 @@ function COMMENTS({ postobj }) {
 			method: "post",
 			url: url,
 			data: params,
-			headers: { "Access-Control-Allow-Origin": "*" },
 		})
 			.then(async (res) => {
 				if (res.status === 200) {
