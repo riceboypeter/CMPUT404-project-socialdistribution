@@ -35,6 +35,8 @@ class PostSerializer(WritableNestedModelSerializer):
             id = validated_data.pop('id') if validated_data.get('id') else None
             if not id:
                 id = self.context["id"]
+            #maybe pop the authors in this?
+            validated_data.pop('authors')
             post = Post.objects.create(**validated_data, author = author, id = id)
         return post
 
