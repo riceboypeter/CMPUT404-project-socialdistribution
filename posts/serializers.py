@@ -25,6 +25,7 @@ class PostSerializer(WritableNestedModelSerializer):
             validated_data["id"] = validated_data["id"].split("/")[-1]
 
             validated_data.pop("type")
+            validated_data.pop("comments")
             print("valid",validated_data )
             post = Post(**validated_data)
         except Exception as e:
