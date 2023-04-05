@@ -58,7 +58,12 @@ function COMMENTS({ postobj }) {
 		};
 		const url = `authors/${FAID}/inbox/`;
 		const reqInstance = createReqInstance(postObj.author.host);
-		return reqInstance({ method: "post", url: url, data: params })
+		return reqInstance({
+			method: "post",
+			url: url,
+			data: params,
+			headers: { "Access-Control-Allow-Origin": "*" },
+		})
 			.then(async (res) => {
 				if (res.status === 200) {
 					getComments(postObj.url);
