@@ -86,7 +86,7 @@ class Post(models.Model):
         self.save()
 
     def get_absolute_url(self):
-        url = reverse('posts:detail', args=[str(self.author.id), str(self.id)])
+        url = reverse('authors:post_detail', args=[str(self.author.id), str(self.id)])
         url = settings.APP_NAME + url
         self.url = url[:-1] if url.endswith('/') else url 
         self.save()
@@ -135,7 +135,7 @@ class Comment(models.Model):
         self.post = self.post[:-1] if self.post.endswith('/') else self.post
         print(self.post)
         post = Post.objects.get(id=str(self.post.split("/")[-1]))
-        url = reverse('posts:comment_detail', args=[post.id, str(self.post.split("/")[-1]), str(self.id)])
+        url = reverse('authors:comment_detail', args=[post.id, str(self.post.split("/")[-1]), str(self.id)])
         print("Comment recieved")
         url = settings.APP_NAME + url
         self.url = url if url.endswith('/') else url + '/'
