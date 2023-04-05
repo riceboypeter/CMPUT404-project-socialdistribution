@@ -46,6 +46,7 @@ function FOLLOWREQ({ obj }) {
 		const url = `${curr_author_id}/sendreq/`;
 		if (accepted == true){
 			setAccepted(true);
+			await acceptFriend();
 		}
 		return reqInstance({ method: "delete", url: url, data: params })
 			.then((res) => { 
