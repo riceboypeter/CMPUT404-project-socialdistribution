@@ -707,7 +707,7 @@ class post_detail(APIView, PageNumberPagination):
         # if the serializer is good, save the serializer and send the post to all inboxes
         if serializer.is_valid():
             post = serializer.save()
-            share_object(post,author,[])
+            share_object(post,author,[], serializer.data)
             return Response(serializer.data)
         # 400 if the serializer has errors
         else:
@@ -955,12 +955,13 @@ class ShareView(APIView):
         # save the new post
         new_post.save()
         # this shared_user here is blank
-        share_object(new_post,sharing_author,[])
         # serialize post
         if "image/" in new_post.contentType:
             serializer = ImageSerializer(new_post)
         else:
             serializer = PostSerializer(new_post)
+
+        share_object(new_post,sharing_author,[], serializer.data)
         return Response(serializer.data)
     
 class PublicPostsView(APIView):
