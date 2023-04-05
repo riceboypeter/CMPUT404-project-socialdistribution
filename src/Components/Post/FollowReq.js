@@ -44,8 +44,9 @@ function FOLLOWREQ({ obj }) {
 
 		const params = { actor_id: FAID };
 		const url = `${curr_author_id}/sendreq/`;
-		if (accepted == true){
+		if (accepted){
 			setAccepted(true);
+			await acceptFriend();
 		}
 		return reqInstance({ method: "delete", url: url, data: params })
 			.then((res) => { 
