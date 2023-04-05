@@ -60,8 +60,8 @@ class Post(models.Model):
         #set post source (URL to source)
         if not self.source:
             url = reverse('authors:post_detail', args=[str(self.author.id), str(self.id)])
-            self.source = settings.APP_NAME + url
-            self.source = url[:-1] if url.endswith('/') else url 
+            source = settings.APP_NAME + url
+            self.source = source[:-1] if source.endswith('/') else source 
             self.save()
             return self.source
         return self.source
