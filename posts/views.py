@@ -19,6 +19,7 @@ import base64
 from client import *
 from .image_renderer import JPEGRenderer, PNGRenderer
 from Remote.Post import *
+from author.pagination import ViewPaginatorMixin
 
 
 custom_parameter = openapi.Parameter(
@@ -966,7 +967,7 @@ class ShareView(APIView):
 class PublicPostsView(APIView):
     authentication_classes = [BasicAuthentication]
     permission_classes = [IsAuthenticated]
-
+    
     @swagger_auto_schema(responses =Publicpostget, operation_summary="List all Public posts on all servers")
     def get(self, request):
         print("inside pblicposts")
@@ -983,7 +984,7 @@ class PublicPostsView(APIView):
             data_list = data_list + remotePosts
             print("datalist", data_list)
             data_list.sort(key=lambda x: x['published'])
-        return Response(data_list)  
+        return Response(ViewPaginatorMixin.paginate(self,object_list=data_list, type="public posts",page=int(self.request.GET.get('page', 1)), size=int(self.request.GET.get('size', 50))))
     
         
 # share a post to an inbox

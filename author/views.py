@@ -212,7 +212,7 @@ class AuthorsListView(APIView, PageNumberPagination):
         #    data_list.append(social_distro_author)
 
         # paginate + send
-        return Response(ViewPaginatorMixin.paginate(self,object_list=data_list, page=int(self.request.GET.get('page', 1)), size=int(self.request.GET.get('size', 50))))
+        return Response(ViewPaginatorMixin.paginate(self,object_list=data_list, type="authors", page=int(self.request.GET.get('page', 1)), size=int(self.request.GET.get('size', 50))))
 
 # made the foreign author getter a helper function instead to work with inbox
 def get_foreign_authors(pk_a):

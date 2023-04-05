@@ -3,7 +3,7 @@
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 class ViewPaginatorMixin(object):
 
-    def paginate(self, object_list, page=1, size=10, **kwargs):
+    def paginate(self, object_list, type, page=1, size=10, **kwargs):
       min_size = 1
       max_size = 100
       try:
@@ -30,7 +30,7 @@ class ViewPaginatorMixin(object):
       except EmptyPage:
           objects = paginator.page(paginator.num_pages)
       data = {
-          'type': "authors",
+          'type': type,
           'items': list(objects)
       }
       return data
