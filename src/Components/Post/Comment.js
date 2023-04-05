@@ -59,6 +59,7 @@ function COMMENTS({ postobj }) {
 		};
 		const url = `authors/${FAID}/inbox/`;
 		const reqInstance = createReqInstance(postObj.author.host);
+		console.log(postObj);
 		return reqInstance({
 			method: "post",
 			url: url,
@@ -66,7 +67,7 @@ function COMMENTS({ postobj }) {
 		})
 			.then(async (res) => {
 				if (res.status === 200) {
-					getComments(postObj.url);
+					getComments(postObj.id);
 					set_new_comment("");
 				}
 			})
