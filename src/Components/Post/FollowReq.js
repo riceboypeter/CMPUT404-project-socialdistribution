@@ -37,9 +37,23 @@ function FOLLOWREQ({ obj }) {
 			});
 	}
 
-	async function fredreq() {
-		setAccepted(true);
-		await acceptFriend();
+	async function deleteFollow() {
+		const curr_author_id = getAuthorId(null);
+		var FAID = getAuthorId(obj.actor.id);
+		const url2 = obj;
+
+		const params = { actor_id: FAID };
+		const url = `${curr_author_id}/sendreq/`;
+
+		return reqInstance({ method: "delete", url: url, data: params })
+			.then((res) => { 
+			})
+			.catch((err) => {
+				toaster.push(<Message type="error">{err}</Message>, {
+					placement: "topEnd",
+					duration: 5000,
+				});
+			});
 	}
 
 	const getUrl = () => {
@@ -76,11 +90,10 @@ function FOLLOWREQ({ obj }) {
 			</div>
 
 			<div style={{ marginTop: "10px" }}>
-				<Button block onClick={fredreq} appearance="primary">
+				<Button block onClick={deleteFollow} appearance="primary">
 					Accept
 				</Button>
-				<Button block>
-					{/* onClick={fredreq}> */}
+				<Button block onClick={deleteFollow}>
 					Deny
 				</Button>
 			</div>

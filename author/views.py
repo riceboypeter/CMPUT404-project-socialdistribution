@@ -320,7 +320,7 @@ class FollowersView(APIView):
             return Response(error_msg, status=status.HTTP_404_NOT_FOUND)
         # If url is /authors/authors/author_id/followers/
         # add local followers to the list of followers
-        if pk ==None:
+        if pk == None:
             followers = author.friends.all()
             followers_list = []
             for follower in followers:
@@ -454,6 +454,22 @@ class FriendRequestView(APIView):
         except Author.DoesNotExist:
             error_msg = "Author id not found"
             return Response(error_msg, status=status.HTTP_404_NOT_FOUND)
+                
+    def delete(self, request, pk_a):
+        try:
+            author = Author.objects.get(id=pk_a)
+            # author = Author.objects.get(id=request.data["author_id"])
+        except Author.DoesNotExist:
+            error_msg = "Author not found"
+            return Response(error_msg, status=status.HTTP_404_NOT_FOUND)
+        try:
+            actor_author = Author.objects.get(id=request["actor_id"])
+            # author = Author.objects.get(id=request.data["author_id"])
+        except Author.DoesNotExist:
+            error_msg = "Actor author sent not found"
+            return Response(error_msg, status=status.HTTP_404_NOT_FOUND)
+        FollowRequest.objects.get(object=author,actor=actor_author).delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
     
 class ViewRequests(APIView):
     authentication_classes = [BasicAuthentication]
