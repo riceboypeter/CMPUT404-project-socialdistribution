@@ -922,30 +922,32 @@ class ShareView(APIView):
             error_msg = "Author id not found"
             return Response(error_msg, status=status.HTTP_404_NOT_FOUND)
         
+        post = request.data
+        
         # try to get the post, return 404 if ID doesn't exist
-        try:
-            post = Post.objects.get(pk=post_id)
-        except Post.DoesNotExist:
-            error_msg = "Post id not found"
-            return Response(error_msg, status=status.HTTP_404_NOT_FOUND)
+        # try:
+        #     post = Post.objects.get(pk=post_id)
+        # except Post.DoesNotExist:
+            # error_msg = "Post id not found"
+            # return Response(error_msg, status=status.HTTP_404_NOT_FOUND)
         
 
         # create new post object with different author but same origin
         # new URL 
         current_url = post.get_absolute_url()
         source = current_url.split('share')[0]
-        origin = post.origin
+        origin = post["origin"]
         
         new_post = Post(
-        title=post.title,
-        description=post.description,
-        content=post.content,
-        contentType=post.contentType,
+        title=post["title"],
+        description=post["description"],
+        content=post["content"],
+        contentType=post["contentType"],
         author=sharing_author,
-        categories=post.categories,
-        published=post.published,
-        visibility=post.visibility,
-        unlisted=post.unlisted,
+        categories=post["categories"],
+        published=post["published"],
+        visibility=post["visibility"],
+        unlisted=post["unlisted"],
         )
 
         # update the source and origin fields
