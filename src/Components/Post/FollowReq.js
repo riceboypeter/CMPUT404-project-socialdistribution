@@ -19,6 +19,7 @@ function FOLLOWREQ({ obj }) {
 
 		return reqInstance({ method: "put", url: url, data: params })
 			.then((res) => {
+				deleteFollow();
 				toaster.push(
 					<Message type="success">
 						{res.data.displayName} now follows you
@@ -37,17 +38,13 @@ function FOLLOWREQ({ obj }) {
 			});
 	}
 
-	async function deleteFollow(accepted) {
+	async function deleteFollow() {
 		const curr_author_id = getAuthorId(null);
 		var FAID = getAuthorId(obj.actor.id);
 		const url2 = obj;
 
 		const params = { actor_id: FAID };
 		const url = `${curr_author_id}/sendreq/`;
-		if (accepted){
-			setAccepted(true);
-			await acceptFriend();
-		}
 		return reqInstance({ method: "delete", url: url, data: params })
 			.then((res) => { 
 			})
@@ -93,10 +90,10 @@ function FOLLOWREQ({ obj }) {
 			</div>
 
 			<div style={{ marginTop: "10px" }}>
-				<Button block onClick={deleteFollow(true)} appearance="primary">
+				<Button block onClick={acceptFriend} appearance="primary">
 					Accept
 				</Button>
-				<Button block onClick={deleteFollow(false)}>
+				<Button block onClick={deleteFollow}>
 					Deny
 				</Button>
 			</div>
