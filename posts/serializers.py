@@ -15,7 +15,7 @@ class PostSerializer(WritableNestedModelSerializer):
     author = AuthorSerializer(required=False)
     source = serializers.URLField(source="get_source", read_only=True, max_length=500)  # source of post
     origin = serializers.URLField(source="get_origin", read_only=True, max_length=500)  # origin of post
-    categories = serializers.CharField(max_length=300, default=["None"])
+    categories = serializers.CharField(max_length=300, default="")
     
     def create(self, validated_data):
         print("validated post data",validated_data)

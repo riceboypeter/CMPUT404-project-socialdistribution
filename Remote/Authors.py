@@ -210,7 +210,7 @@ def clean_author(author):
             author["github"] = ''
         if author["profileImage"] is None or author["profileImage"] == 'null':
             author["github"] = ''
-        if author["_id"]:
+        if "_id" in author:
             author["id"] = author["_id"]
             del author["_id"]
         author["id"] = author["id"][:-1] if author["id"].endswith('/') else author["id"]
