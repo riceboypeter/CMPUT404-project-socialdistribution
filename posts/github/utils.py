@@ -44,7 +44,7 @@ def get_github_activities(github_url, author):
     # https://docs.github.com/en/rest/reference/activity#list-public-events-for-a-user
     response = requests.get(
         url = f"https://api.github.com/users/{username}/events",
-        params = {"per_page": 20}
+        params={'per_page': "40"},
     )
 
     if response.status_code != 200:
