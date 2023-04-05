@@ -157,10 +157,12 @@ def sendPostYoshi(data, auth_id):
     url = 'https://yoshi-connect.herokuapp.com/authors/' + auth_id + '/inbox'
     if data["commentSrc"] == []:
         data["commentSrc"] = [""]
+    if data["description"] == '':
+        data["description"] = data["title"]
     #update the data to be sent in proper format maybe
     response = requests.post(url=url, headers=yoshi_headers(), data=data)
     status_code = response.status_code
-    json_response = response.content
+    json_response = response.json()
     print("YOSHI content", json_response)
     return json_response, status_code
 
