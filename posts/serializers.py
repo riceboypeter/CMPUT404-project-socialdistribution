@@ -40,7 +40,7 @@ class PostSerializer(WritableNestedModelSerializer):
 
     def to_internal_value(self, data):
         print("to_internal_value")
-        if not "id" in data:
+        if data.get("id") is not None:
             print("skip internal")
             return data
         print(data)
