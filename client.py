@@ -20,8 +20,11 @@ def clean_dict(dirty):
 def handle_image(dirty):
     # our image posts use the image field to store images
     # foreign formats use "content" to store them
-    if dirty.get('image') is None:
-        dirty['image'] = dirty['content']
+    if dirty.get('source') != settings.HOST_NAME:
+        if dirty.get('content') is not None:
+            dirty['image'] = dirty['content']
+        elif dirty.get('description') is not None:
+            dirty['image'] = dirty['description']
         # base64imagefield HATES base64 images that don't have
         # proper padding, so this is to make sure that it works
         if dirty['image'][-1] != '=':
