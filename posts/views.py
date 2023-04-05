@@ -952,7 +952,7 @@ class ShareView(APIView):
         )
 
         # save the new post
-        new_post.save()
+        # new_post.save()
         # this shared_user here is blank
         # serialize post
         if "image/" in new_post.contentType:
