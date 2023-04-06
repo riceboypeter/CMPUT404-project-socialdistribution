@@ -220,7 +220,3 @@ def clean_author(author):
         author["id"] = author["id"].split("/")[-1]
         
         return author
-
-
-
-
