@@ -173,6 +173,7 @@ function PROFILE() {
 					<Input
 						placeholder="Profile Image Url"
 						value={imageurl}
+						default={author.profileImage}
 						onChange={(e) => setImage(e)}
 					/>
 					<InputGroup.Button onClick={handleImageClick}>
@@ -184,6 +185,7 @@ function PROFILE() {
 					<Input
 						placeholder="Github Url"
 						value={giturl}
+						default={author.github}
 						onChange={(e) => setGiturl(e)}
 					/>
 					<InputGroup.Button onClick={handleGitClick}>
