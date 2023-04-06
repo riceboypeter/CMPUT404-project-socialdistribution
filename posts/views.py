@@ -919,10 +919,10 @@ class ShareView(APIView):
         try:
             sharing_author = Author.objects.get(pk=author_id)
         except Author.DoesNotExist:
-            error_msg = "Author id not found"
+            error_msg = "Author not found"
             return Response(error_msg, status=status.HTTP_404_NOT_FOUND)
-        print(request.data)
-        post = request.data["post"]
+        print("DATA OF POST",request.data)
+        post = request.data
         
         # try to get the post, return 404 if ID doesn't exist
         # try:
@@ -934,8 +934,8 @@ class ShareView(APIView):
 
         # create new post object with different author but same origin
         # new URL 
-        source = reverse('authors:share', args=[str(origin_author), str(post_id), str(author_id)]).split('share')[0]
-        origin = post["origin"]
+        if type(post["categories"]) is list:
+            post["categories"] = ','.join(post["categories"])                
         
         new_post = Post(
         title=post["title"],
@@ -947,8 +947,8 @@ class ShareView(APIView):
         published=post["published"],
         visibility=post["visibility"],
         unlisted=post["unlisted"],
-        source=post,
-        origin=origin
+        origin=post["origin"],
+        is_github=False
         )
 
         # save the new post
