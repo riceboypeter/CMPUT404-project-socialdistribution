@@ -733,6 +733,6 @@ class registerNode(APIView):
             node = Node(user=user, id = id_, name= 'Node', url=application_url)
             node.save()
             return Response("created", status=status.HTTP_201_CREATED)
-        except IntegrityError as e: 
+        except Exception as e: 
             print(e)
             return Response("display name already in use", status=status.HTTP_400_BAD_REQUEST)

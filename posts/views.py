@@ -922,7 +922,7 @@ class ShareView(APIView):
             error_msg = "Author not found"
             return Response(error_msg, status=status.HTTP_404_NOT_FOUND)
         print("DATA OF POST",request.data)
-        post = request.data
+        post = request.data["post"]
         
         # try to get the post, return 404 if ID doesn't exist
         # try:
