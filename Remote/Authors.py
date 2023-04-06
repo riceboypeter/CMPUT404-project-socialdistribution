@@ -135,11 +135,11 @@ def getNodeAllAuthors_P2():
 
 def getNodeAllAuthors_big():
     url = "https://bigger-yoshi.herokuapp.com/api/authors"
-    response = requests.get(url, params={"size": 100}, headers=yoshi_headers())
+    response = requests.get(url)
     text = response.json()
     items = text["items"]
-    
     status_code = response.status_code
+    print(items)
     return items
 
 
