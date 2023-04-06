@@ -219,6 +219,7 @@ class ImageSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         try:
             author = AuthorSerializer.extract_and_upcreate_author(validated_data['author'], None)
+            image = validated_data.pop('image')
             post = Post.objects.create(**validated_data)
         except:
             author = AuthorSerializer.extract_and_upcreate_author(None, author_id=self.context["author_id"])
