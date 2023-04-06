@@ -922,7 +922,7 @@ class ShareView(APIView):
             error_msg = "Author not found"
             return Response(error_msg, status=status.HTTP_404_NOT_FOUND)
         print(request.data)
-        post = request.data["post"]
+        post = request.data
         
         # try to get the post, return 404 if ID doesn't exist
         # try:
@@ -936,7 +936,6 @@ class ShareView(APIView):
         # new URL 
         if type(post["categories"]) is list:
             post["categories"] = ','.join(post["categories"])                
-
         
         new_post = Post(
         title=post["title"],

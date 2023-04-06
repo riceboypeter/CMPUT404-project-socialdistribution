@@ -89,7 +89,7 @@ function POST({ postobj, edit, explore, github }) {
 		const origin_author_id = getAuthorId(postobj.author.id);
 		const post_id = getAuthorId(postobj.id);
 		const url = `authors/${origin_author_id}/posts/${post_id}/share/${author_id}/`;
-		reqInstance({ method: "post", url: url, params: { post: postobj } })
+		reqInstance({ method: "post", url: url, params: { post: post } })
 			.then((res) => {
 				if (res.status === 200) {
 					notifySuccessPost();
