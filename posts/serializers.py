@@ -212,33 +212,93 @@ class LikeSerializer(serializers.ModelSerializer):
 
 class ImageSerializer(serializers.ModelSerializer):
     type = serializers.CharField(default="post",source="get_api_type",read_only=True)
-    id = serializers.URLField(source="get_public_id",read_only=True)
+    id = serializers.CharField(source="get_public_id", read_only=True)
+    count = serializers.IntegerField(read_only=True, default=0)
+    comments = serializers.URLField(source="get_comments_source", read_only=True)
+    commentsSrc = serializers.JSONField(read_only=True)
     author = AuthorSerializer(required=False)
+    source = serializers.URLField(source="get_source", read_only=True, max_length=500)  # source of post
+    origin = serializers.URLField(source="get_origin", read_only=True, max_length=500)  # origin of post
+    categories = serializers.CharField(max_length=300, default="")
     image = Base64ImageField()
     
     def create(self, validated_data):
+        print("validating image data ", validated_data)
         try:
-            author = AuthorSerializer.extract_and_upcreate_author(validated_data['author'], None)
-            image = validated_data.pop('image')
-            post = Post.objects.create(**validated_data)
-        except:
+            print("in the try block")
+            validated_data = clean_post(validated_data)
+            print("valid",validated_data)
+            post = Post(**validated_data)
+        except Exception as e:
+            print(e)
+            print("image post serializer else")
             author = AuthorSerializer.extract_and_upcreate_author(None, author_id=self.context["author_id"])
-            id = validated_data.pop('id') if validated_data.get('id') else None
-            if not id:
-                id = self.context["id"]
+            validated_data.pop('authors')
             post = Post.objects.create(**validated_data, author = author, id = id)
-
         return post
+    
+    def to_internal_value(self, data):
+        print("to_internal_value")
+        if not ("id" in data): return data
+        data["author"] = AuthorSerializer.extract_and_upcreate_author(data['author'])
+        if type(data["categories"]) is list:
+            data["categories"] = ','.join(data["categories"]) 
+
+        return {
+            'id': data["id"],
+            'type': data["type"],
+            'categories': data["categories"],
+            'author': data["author"],
+            'contentType': data["contentType"],
+            'image': data["image"],
+            'visibility': data["visibility"],
+            'comments': data["comments"],
+            'description': data["description"],
+            'origin': data["origin"],
+            'published': data["published"],
+            "source": data["source"],
+            "title": data["title"],
+            "unlisted": data["unlisted"], 
+            'count': 0,
+            'is_github': False,
+            'commentsSrc': {}
+            
+        }
+    def to_representation(self, instance):
+        print("to_representation")
+        print(instance)
+        id = instance.get_public_id()
+        comments_list = Comment.objects.filter(post=instance).order_by('-published')[0:5]
+        categories_list = instance.categories.split(",")
+        if categories_list == ['']:
+            categories_list = []
+        commentsSrc = [CommentSerializer(comment,many=False).data for comment in comments_list]
+        return {
+            **super().to_representation(instance),
+            'id': id,
+            'commentsSrc': commentsSrc,
+            'categories': categories_list,
+            'count': len(commentsSrc)
+        }
 
     class Meta:
         model = Post
         fields = [
-            "contentType",
-            "type",
-            "id",
-            "author",
-            "title",
-            "image",
-            "visibility",
-            "unlisted",
+            'type', 
+            'title', 
+            'id', 
+            'source', 
+            'origin', 
+            'description',
+            'contentType',
+            'image',
+            'author',
+            'categories',
+            'count',
+            'comments',
+            'commentsSrc',
+            'published',
+            'visibility',
+            'unlisted',
+            #'is_github'
         ]
