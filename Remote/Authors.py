@@ -45,7 +45,7 @@ def getNodeAuthor_Yoshi(author_id):
     else: return ([])
 
 def getNodeAuthor_App2(author_id):
-    url = 'https://killme.herokuapp.com/authors/'
+    url = 'https://sociallydistributed.herokuapp.com/authors/'
 
     url = url + author_id
 
@@ -90,7 +90,7 @@ def getNodeAllAuthors_Yoshi():
     else: return ([])
 
 def getNodeAllAuthors_App2():
-    url = 'https://killme.herokuapp.com/authors/'
+    url = 'https://sociallydistributed.herokuapp.com/authors/'
 
     headers = app2_headers()
     response = requests.get(url, headers=headers)
@@ -220,7 +220,3 @@ def clean_author(author):
         author["id"] = author["id"].split("/")[-1]
         
         return author
-
-
-
-

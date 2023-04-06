@@ -9,7 +9,7 @@ function LIKE({ postObj }) {
 	// const [like, set_like] = useState(likeobj);
 	const [new_like, set_new_like] = useState("");
 	const toaster = useToaster();
-	const postObjUrl = postObj.origin;
+	const postObjUrl = postObj.source;
 	// const [users, setusers] = useState([]);
 	//Confirm the name of the button
 	const handleSubmitClick = () => {

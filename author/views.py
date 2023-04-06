@@ -558,12 +558,14 @@ class FriendRequestView(APIView):
             error_msg = "Author not found"
             return Response(error_msg, status=status.HTTP_404_NOT_FOUND)
         try:
-            actor_author = Author.objects.get(id=request["actor_id"])
+            actor_id = request.data["actor_id"]
+            print("actor id is", actor_id)
+            actor_author = Author.objects.get(id=actor_id)
             # author = Author.objects.get(id=request.data["author_id"])
         except Author.DoesNotExist:
             error_msg = "Actor author sent not found"
             return Response(error_msg, status=status.HTTP_404_NOT_FOUND)
-        FollowRequest.objects.get(object=author,actor=actor_author).delete()
+        FollowRequest.objects.filter(object=author,actor=actor_author).delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     
 class ViewRequests(APIView):
@@ -589,6 +591,7 @@ class ViewRequests(APIView):
         except Author.DoesNotExist:
             error_msg = "Author id not found"
             return Response(error_msg, status=status.HTTP_404_NOT_FOUND)
+    
 
 class InboxSerializerObjects:
     authentication_classes = [BasicAuthentication]
@@ -832,6 +835,6 @@ class registerNode(APIView):
             node = Node(user=user, id = id_, name= 'Node', url=application_url)
             node.save()
             return Response("created", status=status.HTTP_201_CREATED)
-        except IntegrityError as e: 
+        except Exception as e: 
             print(e)
             return Response("display name already in use", status=status.HTTP_400_BAD_REQUEST)
