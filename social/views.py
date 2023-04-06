@@ -37,9 +37,15 @@ from django.views import View
 from django.http import HttpResponse, HttpResponseNotFound
 import os
 
+registerExample = {
+    201: openapi.Response(
+        description='Successfully registered django user')
+}
+
 @authentication_classes([])
 @permission_classes([])
 class register(APIView):
+    @swagger_auto_schema(example=registerExample,operation_summary="Register a django database user as an author of the app")
     def post(self, request):
         """Register a django user to make them an author"""
         id_ = str(uuid.uuid4())
@@ -58,10 +64,14 @@ class register(APIView):
             if 'unique constraint' in e.args:
                return(HttpResponse("display name already in use", status=status.HTTP_400_BAD_REQUEST))
         
-
+loginExample = {
+    202: openapi.Response(
+        description='Successfully logged in')
+}
 @authentication_classes([])
 @permission_classes([])
 class dlogin(APIView):
+    @swagger_auto_schema(example= loginExample,operation_summary="Log the user into the app using their credentials")
     def post(self, request):
         """deals with user auth"""
         username = request.data['username']
@@ -83,11 +93,17 @@ class dlogin(APIView):
 
 def csrf(request):
     return JsonResponse({'csrfToken': get_token(request)})
-    
+
+logoutExample = {
+    204: openapi.Response(
+        description='Successfully logged out')
+}
+
 # class logout(APIView):
 @authentication_classes([])
 @permission_classes([])
 class logoutView(APIView):
+    @swagger_auto_schema(example=logoutExample,operation_summary="Logs the current author out of the app")
     def post(self,request):
         logout(request)
         return Response( status=status.HTTP_202_ACCEPTED)
