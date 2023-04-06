@@ -30,7 +30,8 @@ function EXPLORE() {
 				url: url,
 				params: { local: "true" },
 			}).then((res) => {
-				setInbox(res.data.slice(-10));
+				console.log(res.data)
+				setInbox(res.data.items.slice(-10));
 			});
 		}
 	}, []);
