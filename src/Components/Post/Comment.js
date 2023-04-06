@@ -67,7 +67,7 @@ function COMMENTS({ postobj }) {
 			data: params,
 		})
 			.then(async (res) => {
-				getComments(postObj.origin + "/comments");
+				getComments(postObj.source + "/comments");
 				set_new_comment("");
 			})
 			.catch((err) => console.log(err));
