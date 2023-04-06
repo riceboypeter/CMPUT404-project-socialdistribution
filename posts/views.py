@@ -944,7 +944,6 @@ class ShareView(APIView):
         contentType=post["contentType"],
         author=sharing_author,
         categories=post["categories"],
-        published=post["published"],
         visibility=post["visibility"],
         unlisted=post["unlisted"],
         origin=post["origin"],
