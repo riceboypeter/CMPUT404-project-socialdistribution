@@ -24,5 +24,5 @@ urlpatterns = [
   path('<str:pk_a>/posts/<str:pk>/likes/', pview.PostLikesView.as_view(), name='get_likes'),
   path('<str:pk_a>/posts/<str:pk>/comments/<str:pk_m>/likes/', pview.CommentLikesView.as_view(), name='get_comment_likes'),
   path('<str:pk_a>/posts/<str:pk>/image/', pview.ImageView.as_view()),
-  path('<str:origin_author>/posts/<str:post_id>/share/<str:author>/', pview.ShareView.as_view(), name='share'),
+  path('<str:origin_author>/posts/<str:post_id>/share/<str:author_id>/', pview.ShareView.as_view(), name='share'),
 ]
