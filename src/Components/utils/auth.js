@@ -66,10 +66,19 @@ export function getAuthorId(a_id) {
 
 	if (a_id === null) {
 		const author = JSON.parse(localStorage.getItem("user"));
-		var arr = author.id.split("/");
+
+		let arr = author.id
+		
+		if (arr.endsWith('/')){
+			arr = arr.slice(0, -1);
+		}
+		arr = arr.split("/");
 		author_id = arr[arr.length - 1];
 	} else {
-		var arr = a_id.split("/");
+		if (a_id.endsWith('/')){
+			a_id = a_id.slice(0, -1);
+		} 
+		let arr = a_id.split("/");
 		author_id = arr[arr.length - 1];
 	}
 	return author_id;

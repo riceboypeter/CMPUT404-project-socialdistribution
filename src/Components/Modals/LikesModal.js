@@ -42,7 +42,7 @@ function LIKESMODAL({ postobj }) {
 				<Modal.Header>
 					<Modal.Title>Likes on this post</Modal.Title>
 				</Modal.Header>
-				<Modal.Body>{likes.map((obj) => item(obj))}</Modal.Body>
+				<Modal.Body>{likes && likes.map((obj) => item(obj))}</Modal.Body>
 				<Modal.Footer>
 					<Button onClick={handleClose} appearance="primary">
 						Ok

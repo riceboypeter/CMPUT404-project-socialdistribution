@@ -44,7 +44,7 @@ function COMMENTS({ postobj }) {
 
 	useEffect(() => {
 		if (postobj.type === "post") {
-			getComments(postObj.origin + "/comments");
+			getComments(postObj.source + "/comments");
 		}
 	}, []);
 
@@ -56,7 +56,7 @@ function COMMENTS({ postobj }) {
 			type: "comment",
 			comment: new_comment,
 			author: user,
-			object: postObj.origin,
+			object: postObj.source,
 			contentType: "text/markdown",
 		};
 		const url = `authors/${FAID}/inbox/`;
@@ -67,7 +67,7 @@ function COMMENTS({ postobj }) {
 			data: params,
 		})
 			.then(async (res) => {
-				getComments(postObj.origin + "/comments");
+				getComments(postObj.source + "/comments");
 				set_new_comment("");
 			})
 			.catch((err) => console.log(err));

@@ -782,7 +782,7 @@ class PostLikesView(APIView):
             error_msg = "Post not found"
             return Response(error_msg,status=status.HTTP_404_NOT_FOUND)
         # filter for all the likes on that post
-        likes = Like.objects.filter(object=post.url)
+        likes = Like.objects.filter(object=post.source)
         serializer = LikeSerializer(likes, many=True)
         data = self.get_items(serializer.data)
         # return all liked objects
@@ -922,7 +922,7 @@ class ShareView(APIView):
             error_msg = "Author not found"
             return Response(error_msg, status=status.HTTP_404_NOT_FOUND)
         print("DATA OF POST",request.data)
-        post = request.data
+        post = request.data["post"]
         
         # try to get the post, return 404 if ID doesn't exist
         # try:
@@ -944,7 +944,6 @@ class ShareView(APIView):
         contentType=post["contentType"],
         author=sharing_author,
         categories=post["categories"],
-        published=post["published"],
         visibility=post["visibility"],
         unlisted=post["unlisted"],
         origin=post["origin"],
