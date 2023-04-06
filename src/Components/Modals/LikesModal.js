@@ -4,10 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { getAuthorId } from "../utils/auth";
 import { createReqInstance } from "../utils/axios";
 
-function LIKESMODAL({ postobj }) {
-	const [open, setOpen] = React.useState(false);
-	const handleOpen = () => setOpen(true);
-	const handleClose = () => setOpen(false);
+function LIKESMODAL({ postobj, open, handleClose }) {
 	const [likes, setLikes] = useState([]);
 	var navigate = useNavigate();
 
@@ -30,26 +27,17 @@ function LIKESMODAL({ postobj }) {
 	};
 
 	return (
-		<>
-			<ButtonToolbar>
-				<Button onClick={handleOpen} appearence="subtle">
-					{" "}
-					Likes
+		<Modal open={open} onClose={handleClose}>
+			<Modal.Header>
+				<Modal.Title>Likes on this post</Modal.Title>
+			</Modal.Header>
+			<Modal.Body>{likes && likes.map((obj) => item(obj))}</Modal.Body>
+			<Modal.Footer>
+				<Button onClick={handleClose} appearance="primary">
+					Ok
 				</Button>
-			</ButtonToolbar>
-
-			<Modal open={open} onClose={handleClose}>
-				<Modal.Header>
-					<Modal.Title>Likes on this post</Modal.Title>
-				</Modal.Header>
-				<Modal.Body>{likes && likes.map((obj) => item(obj))}</Modal.Body>
-				<Modal.Footer>
-					<Button onClick={handleClose} appearance="primary">
-						Ok
-					</Button>
-				</Modal.Footer>
-			</Modal>
-		</>
+			</Modal.Footer>
+		</Modal>
 	);
 }
 

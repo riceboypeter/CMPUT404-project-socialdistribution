@@ -29,7 +29,7 @@ def getAllPosts_app2():
     else: return ([])
 
 def getAllPosts_Yoshi():
-    url = 'https://yoshi-connect.herokuapp.com/posts/public'
+    url = 'https://yoshi-connect.herokuapp.com/posts/public/local'
     headers = yoshi_headers()
     try:
         response = requests.get(url, headers=headers, params=params, timeout=5)
