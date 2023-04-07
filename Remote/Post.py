@@ -8,6 +8,8 @@ from Remote.Authors import *
 from datetime import datetime, date
 import json
 
+from flask import Flask, request, jsonify
+
 import time
 
 params= {
@@ -250,4 +252,3 @@ def staticPost() :
     print("YOSHI content", json_response)
     return json_response, status_code
 
-staticPost()
