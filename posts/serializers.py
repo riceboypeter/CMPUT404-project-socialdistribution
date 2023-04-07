@@ -235,37 +235,10 @@ class ImageSerializer(serializers.ModelSerializer):
             print(e)
             print("image post serializer else")
             author = AuthorSerializer.extract_and_upcreate_author(None, author_id=self.context["author_id"])
-            validated_data.pop('authors')
+            # validated_data.pop('authors')
             post = Post.objects.create(**validated_data, author = author, id = id)
         return post
     
-    def to_internal_value(self, data):
-        print("to_internal_value")
-        if not ("id" in data): return data
-        data["author"] = AuthorSerializer.extract_and_upcreate_author(data['author'])
-        if type(data["categories"]) is list:
-            data["categories"] = ','.join(data["categories"]) 
-
-        return {
-            'id': data["id"],
-            'type': data["type"],
-            'categories': data["categories"],
-            'author': data["author"],
-            'contentType': data["contentType"],
-            'image': data["image"],
-            'visibility': data["visibility"],
-            'comments': data["comments"],
-            'description': data["description"],
-            'origin': data["origin"],
-            'published': data["published"],
-            "source": data["source"],
-            "title": data["title"],
-            "unlisted": data["unlisted"], 
-            'count': 0,
-            'is_github': False,
-            'commentsSrc': {}
-            
-        }
     def to_representation(self, instance):
         print("to_representation")
         print(instance)

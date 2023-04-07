@@ -583,10 +583,7 @@ class post_detail(APIView, PageNumberPagination):
             error_msg = "Post not found"
             return Response(error_msg, status=status.HTTP_404_NOT_FOUND)
 
-        if "image/" in post.contentType:
-            serializer = ImageSerializer(post)
-        else:
-            serializer = PostSerializer(post)
+        serializer = PostSerializer(post)
 
         return Response(serializer.data)
     
@@ -619,12 +616,7 @@ class post_detail(APIView, PageNumberPagination):
             if post.author != _:
                 return Response("Cannot edit a post you didnt create", status=status.HTTP_405_METHOD_NOT_ALLOWED)
             
-            # handle editing for image post
-            if 'image' in request.data['contentType']:
-                serializer = ImageSerializer(data=request.data, context={'author_id': pk_a}) 
-            # otherwise handle for normal post
-            else:
-                serializer = PostSerializer(post, data=request.data, partial=True)
+            serializer = PostSerializer(post, data=request.data, partial=True)
 
             # looking good?    
             if serializer.is_valid():
@@ -955,10 +947,8 @@ class ShareView(APIView):
         # new_post.save()
         # this shared_user here is blank
         # serialize post
-        if "image/" in new_post.contentType:
-            serializer = ImageSerializer(new_post)
-        else:
-            serializer = PostSerializer(new_post)
+
+        serializer = PostSerializer(new_post)
 
         share_object(new_post,sharing_author,[], serializer.data)
         return Response(serializer.data)
