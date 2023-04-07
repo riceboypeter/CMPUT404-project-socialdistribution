@@ -636,7 +636,6 @@ class post_detail(APIView, PageNumberPagination):
         else:
             return Response("Cannot edit a shared post", status=status.HTTP_400_BAD_REQUEST)
     
-    @csrf_protect
     @swagger_auto_schema(operation_summary="Delete a particular post of an author") 
     def delete(self, request, pk_a, pk):
         """
