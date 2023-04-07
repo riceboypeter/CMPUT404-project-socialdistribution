@@ -204,7 +204,7 @@ def clean_post(data):
         data.pop("type")
     if "comments" in data:
         data.pop("comments")
-    if data["id"]:
+    if data.get("id") is not None:
         data["id"] = data["id"][:-1] if data["id"].endswith('/') else data["id"]
         data["id"] = data["id"].split("/")[-1]
 
