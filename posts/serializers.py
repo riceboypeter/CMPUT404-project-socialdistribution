@@ -39,7 +39,9 @@ class PostSerializer(WritableNestedModelSerializer):
         data["author"] = AuthorSerializer.extract_and_upcreate_author(data['author'])
         if type(data["categories"]) is list:
             data["categories"] = ','.join(data["categories"])                
-
+        if 'commentsSrc' in data:
+            commentsSrc = data["commentsSrc"]
+        else: commentsSrc = {}
         return {
             'id': data["id"],
             'type': data["type"],
@@ -55,9 +57,9 @@ class PostSerializer(WritableNestedModelSerializer):
             "source": data["source"],
             "title": data["title"],
             "unlisted": data["unlisted"], 
-            'count': 0,
+            'count': data["count"] or 0,
             'is_github': False,
-            'commentsSrc': {}
+            'commentsSrc': commentsSrc
             
         }
     def to_representation(self, instance):
