@@ -244,7 +244,7 @@ class ImageSerializer(WritableNestedModelSerializer):
         data["author"] = AuthorSerializer.extract_and_upcreate_author(data['author'])
         if type(data["categories"]) is list:
             data["categories"] = ','.join(data["categories"]) 
-
+        print(self.image)
         return {
             'id': data["id"],
             'type': data["type"],
