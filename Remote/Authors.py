@@ -9,69 +9,6 @@ params = {
     "size" : 100
 }
 
-# def getNodeAuthor_social_distro(author_id):
-#     url = 'https://social-distro.herokuapp.com/api/authors/'
-#     username = 'team24'
-#     password = 'team24'
-#     url = url + author_id + '/'
-
-#     credentials = f'{username}:{password}'
-#     encoded_credentials = base64.b64encode(credentials.encode("utf-8")).decode("utf-8")
-#     authorization_header = f'Basic {encoded_credentials}'
-#     headers = {'Authorization': authorization_header}
-
-#     response = requests.get(url, headers=headers)
-
-#     status_code = response.status_code
-   
-
-#     if status_code == 200:
-#         json_response = response.json()
-#         return(json_response)
-#     else: return ([])
-
-
-# def getNodeAuthor_P2(author_id):
-#     headers = p2_headers()
-#     url = "https://p2psd.herokuapp.com/authors/" + author_id
-#     response = requests.get(url, headers=headers)
-
-#     status_code = response.status_code
-#     if status_code == 200:
-#         json_response = response.json()
-#         return(json_response)
-#     else: return ([])
-
-# def getNodeAllAuthors_distro():
-#     url = 'https://social-distro.herokuapp.com/api/authors/'
-
-#     username = 'team24'
-#     password = 'team24'
-#     #remote1:r3mot31
-#     credentials = f'{username}:{password}'
-#     encoded_credentials = base64.b64encode(credentials.encode("utf-8")).decode("utf-8")
-#     authorization_header = f'Basic {encoded_credentials}'
-#     headers = {'Authorization': authorization_header}
-
-#     response = requests.get(url, headers=headers, params=params)
-   
-#     status_code = response.status_code
-#     json_response = response.json()
-#     authors = json_response['results']
-#     return authors
-
-
-# def getNodeAllAuthors_P2():
-#     headers = p2_headers()
-#     url = "https://p2psd.herokuapp.com/authors"
-#     response = requests.get(url, headers=headers)
-   
-#     status_code = response.status_code
-#     json_response = response.json()
-#     authors = json_response['items']
-#     return authors
-
-
 def getNodeAuthor_Yoshi(author_id):
     url = 'https://yoshi-connect.herokuapp.com/authors/'
 
@@ -87,9 +24,7 @@ def getNodeAuthor_Yoshi(author_id):
 
 def getNodeAuthor_App2(author_id):
     url = 'https://ineedsleep.herokuapp.com/authors/'
-
     url = url + author_id
-
     response = requests.get(url)
     status_code = response.status_code
     
