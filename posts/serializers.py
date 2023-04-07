@@ -227,6 +227,8 @@ class ImageSerializer(WritableNestedModelSerializer):
         try:
             print("in the try block")
             validated_data = clean_post(validated_data)
+            # get rid of authors (it's giving me nightmares)
+            validated_data.pop('authors')
             print("valid",validated_data)
             post = Post(**validated_data)
         except Exception as e:
@@ -237,7 +239,6 @@ class ImageSerializer(WritableNestedModelSerializer):
             validated_data.pop('authors')
             print("validated data ",validated_data)
             post = Post.objects.create(**validated_data, author = author)
-            print("end of except")
         print("created")
         return post
     
