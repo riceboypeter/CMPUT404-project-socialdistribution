@@ -102,7 +102,7 @@ def getNodeAuthor_App2(author_id):
 
 def getNodeAuthor_big(author_id):
     url = "https://bigger-yoshi.herokuapp.com/api/authors/" + author_id
-    response= requests.get(url, headers=big_headers())
+    response= requests.get(url, headers=big_headers(), params=params)
     status_code = response.status_code
 
     if status_code == 200:
@@ -125,7 +125,7 @@ def getNodeAllAuthors_App2():
     url = 'https://killme.herokuapp.com/authors/'
 
     headers = app2_headers()
-    response = requests.get(url, headers=headers)
+    response = requests.get(url, headers=headers, params=params)
     status_code = response.status_code
     if status_code == 200:
         json_response = response.json()
@@ -135,7 +135,7 @@ def getNodeAllAuthors_App2():
 
 def getNodeAllAuthors_big():
     url = "https://bigger-yoshi.herokuapp.com/api/authors"
-    response = requests.get(url, headers=big_headers())
+    response = requests.get(url, headers=big_headers(), params=params)
     text = response.json()
     items = text["items"]
     
