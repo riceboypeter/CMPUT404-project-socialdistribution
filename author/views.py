@@ -526,7 +526,19 @@ class InboxSerializerObjects:
                 obj = Post.objects.get(id=(data["id"].split("/")[-1]))
             except Post.DoesNotExist:
                 try:
-                    serializer = PostSerializer
+                    # handle image posts
+                    if "image/" in data["contentType"]:
+                        print(data["content"])
+                        # make a mutable version of the querydict so that we can use
+                        # our special image field
+                        data = data.copy()
+                        data = handle_image(data)
+                        print(data['image'])
+                        serializer = ImageSerializer
+                    # normal post
+                    else:
+                        print("post serrializer")
+                        serializer = PostSerializer
                     print("got to send part")
                     context={}
                     # try:
