@@ -9,14 +9,14 @@ import ADD_FRIEND_MODAL from "../Modals/AddFriendModal";
 import POST from "../Post/Post";
 import COMMENTINBOX from "../Post/CommentInbox";
 import { getAuthorId, getCurrentUser, unsetCurrentUser } from "../utils/auth";
-
+// This component handles github activity of a user
 function GITHUB() {
 	const [inbox, setInbox] = useState([]);
 	const [curPage, setCurPage] = useState("inbox");
 	const [open, setOpen] = useState(false);
 	let navigate = useNavigate();
 
-	// Get the inbox
+	// Get the github tab for the authors
 	useEffect(() => {
 		if (!localStorage.getItem("loggedIn")) {
 			navigate("/signin");
