@@ -21,6 +21,8 @@ function ADD_FRIEND_MODAL({ open, handleClose }) {
 	const toaster = useToaster();
 
 	async function sendreq(obj) {
+		// Once a user is found on a server this function handles
+		// sening a request to them
 		const AUTHOR_ID = getAuthorId(null);
 		const url2 = obj.id + "/inbox";
 		const user = JSON.parse(localStorage.getItem("user"));
