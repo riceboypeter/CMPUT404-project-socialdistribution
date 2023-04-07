@@ -181,8 +181,7 @@ InboxGet = {
 }}
     )
 }
-
-
+# View to get all the authors hosted on our app
 class AuthorsListView(APIView, PageNumberPagination):
     authentication_classes = [BasicAuthentication]
     permission_classes = [IsAuthenticated]
@@ -207,6 +206,7 @@ class AuthorsListView(APIView, PageNumberPagination):
         # paginate + send
         return Response(ViewPaginatorMixin.paginate(self,object_list=data_list, type="authors", page=int(self.request.GET.get('page', 1)), size=int(self.request.GET.get('size', 50))))
     
+# View for specific authors
 class AuthorView(APIView):
     authentication_classes = [BasicAuthentication]
     permission_classes = [IsAuthenticated]

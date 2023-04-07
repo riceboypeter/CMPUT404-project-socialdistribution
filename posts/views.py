@@ -611,7 +611,7 @@ class post_detail(APIView, PageNumberPagination):
         
         # TODO: FIX AFTER SLASH
         # if post is from this service:
-        if post.url == post.origin:
+        if post.id == post.origin:
             # if the author is not our guy
             if post.author != _:
                 return Response("Cannot edit a post you didnt create", status=status.HTTP_405_METHOD_NOT_ALLOWED)
