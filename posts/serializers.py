@@ -226,7 +226,7 @@ class ImageSerializer(serializers.ModelSerializer):
         print("validating image data ", validated_data)
         try:
             print("in the try block")
-            validated_data = clean_post(validated_data)
+            # validated_data = clean_post(validated_data)
             print("valid",validated_data)
             post = Post(**validated_data)
         except Exception as e:
