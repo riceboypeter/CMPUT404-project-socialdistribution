@@ -225,9 +225,12 @@ class ImageSerializer(WritableNestedModelSerializer):
     def create(self, validated_data):
         print("validating image data ", validated_data)
         try:
-            author = AuthorSerializer.extract_and_upcreate_author(validated_data['author'], None)
+            print("IN THE TRY")
+            validated_data = clean_post(validated_data)
             post = Post.objects.create(**validated_data)
-        except:
+        except Exception as e:
+            print(e)
+            print("IN THE ELSE")
             author = AuthorSerializer.extract_and_upcreate_author(None, author_id=self.context["author_id"])
             validated_data.pop('authors')
             print(author)
