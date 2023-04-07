@@ -89,7 +89,7 @@ export let createReqInstance = (baseUrl) => {
 			return axios.create({
 				headers: {
 					"X-CSRFToken": token,
-					// Authorization: "Basic cDJwYWRtaW46cDJwYWRtaW4=",
+					Authorization: "Basic cDJwYWRtaW46cDJwYWRtaW4=",
 				},
 				baseURL: baseUrl,
 				auth: {

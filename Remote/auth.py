@@ -28,8 +28,8 @@ def yoshi_headers():
     return headers
 
 def big_headers():
-    username = 'man4'
-    password = '123'
+    username = 'biggerYoshi'
+    password = 'biggerYoshi'
     credentials = f'{username}:{password}'
     encoded_credentials = base64.b64encode(credentials.encode("utf-8")).decode("utf-8")
     authorization_header = f'Basic {encoded_credentials}'
