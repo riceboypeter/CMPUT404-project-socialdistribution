@@ -22,7 +22,6 @@ from django.core.paginator import Paginator
 from social.pagination import CustomPagination
 from posts.github.utils import get_github_activities
 from Remote.Authors import *
-from django.http import QueryDict
 
 custom_parameter = openapi.Parameter(
     name='custom_param',
@@ -182,7 +181,8 @@ InboxGet = {
 }}
     )
 }
-# View to get all the authors hosted on our app
+
+
 class AuthorsListView(APIView, PageNumberPagination):
     authentication_classes = [BasicAuthentication]
     permission_classes = [IsAuthenticated]
@@ -207,7 +207,6 @@ class AuthorsListView(APIView, PageNumberPagination):
         # paginate + send
         return Response(ViewPaginatorMixin.paginate(self,object_list=data_list, type="authors", page=int(self.request.GET.get('page', 1)), size=int(self.request.GET.get('size', 50))))
     
-# View for specific authors
 class AuthorView(APIView):
     authentication_classes = [BasicAuthentication]
     permission_classes = [IsAuthenticated]
@@ -501,11 +500,7 @@ class InboxSerializerObjects:
                     #     if author["host"]== 'https://bigger-yoshi.herokuapp.com/api/':
                     #         new_data = {}
                     # except:
-                    if type(data) == QueryDict:
-                        new_data = data.dict()
-                    else:
-                        new_data = data
-                        
+                    new_data = data
                     try: 
                         print('trying to get commentsSrc')
                         if new_data["commentsSrc"]:
