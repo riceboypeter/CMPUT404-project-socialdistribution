@@ -583,10 +583,7 @@ class post_detail(APIView, PageNumberPagination):
             error_msg = "Post not found"
             return Response(error_msg, status=status.HTTP_404_NOT_FOUND)
 
-        if "image/" in post.contentType:
-            serializer = ImageSerializer(post)
-        else:
-            serializer = PostSerializer(post)
+        serializer = PostSerializer(post)
 
         return Response(serializer.data)
     
@@ -954,10 +951,8 @@ class ShareView(APIView):
         # new_post.save()
         # this shared_user here is blank
         # serialize post
-        if "image/" in new_post.contentType:
-            serializer = ImageSerializer(new_post)
-        else:
-            serializer = PostSerializer(new_post)
+
+        serializer = PostSerializer(new_post)
 
         share_object(new_post,sharing_author,[], serializer.data)
         return Response(serializer.data)
