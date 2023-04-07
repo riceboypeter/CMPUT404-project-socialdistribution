@@ -120,7 +120,7 @@ def sendPost(host, data, auth_id):
     print(host)
     print(auth_id)
     
-    response = "r"
+    response = Response("r")
 
     if 'yoshi-connect' in host:
         response, status_code = sendPostYoshi(data, auth_id)
