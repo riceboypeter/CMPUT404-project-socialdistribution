@@ -13,8 +13,9 @@ class AuthorSerializer(serializers.ModelSerializer):
     type = serializers.CharField(default="author",source="get_api_type",read_only=True)
     id = serializers.URLField(source="get_public_id",read_only=True)
     url = serializers.URLField(source="get_absolute_url",read_only=True)
-    displayName = serializers.CharField(default = 'x')
+    displayName = serializers.CharField(default = '')
     
+    # update author with provided instance
     def update(self, instance, validated_data):
         print(validated_data)
         print(instance)
@@ -37,6 +38,9 @@ class AuthorSerializer(serializers.ModelSerializer):
         print(validated_data)
         return Author(**validated_data)
     
+    # 1. Return the author if it is hosted by our server
+    # 2. Update author if author is hosted by another server and exists locally
+    # 3. Create author if author is hosted by another server and does not exist locally
     @staticmethod
     def extract_and_upcreate_author(validated_data, author_id = None):
         print("in extract and upcreate", validated_data)
@@ -85,10 +89,9 @@ class FollowRequestSerializer(serializers.ModelSerializer):
     #to_user = serializers.CharField(default = 'x')
     type = serializers.CharField(default="Follow",source="get_api_type",read_only=True)
     summary = serializers.CharField(source="get_summary", read_only=True)
-
     actor = AuthorSerializer(required=False)
     object = AuthorSerializer(required=False)
-
+    
     def create(self,validated_data):
         print("in follow req create")
         actor = validated_data["actor"]

@@ -203,13 +203,6 @@ class AuthorsListView(APIView, PageNumberPagination):
         authors = Author.objects.filter(host=(settings.HOST_NAME))
         serializer = AuthorSerializer(authors, many=True)
         data_list = serializer.data
-        # get remote authors and add to list
-        # yoshi = getNodeAuthors_Yoshi()
-        # for yoshi_author in yoshi:
-        #     data_list.append(yoshi_author)
-        #social_distro = getNodeAuthors_social_distro()
-        #for social_distro_author in social_distro:
-        #    data_list.append(social_distro_author)
 
         # paginate + send
         return Response(ViewPaginatorMixin.paginate(self,object_list=data_list, type="authors", page=int(self.request.GET.get('page', 1)), size=int(self.request.GET.get('size', 50))))

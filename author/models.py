@@ -7,12 +7,11 @@ from django.db.models import Q
 from django.urls import reverse
 from django.conf import settings
 
-
 defaultfrd = {
     "type": "followers",      
     "items":[]
 }
-# Create your models here.
+
 class Author(models.Model):
     id = models.CharField(primary_key=True, editable=False, default= uuid.uuid4, max_length=255)
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)  #1-1 with django user
@@ -31,7 +30,8 @@ class Author(models.Model):
     @staticmethod
     def get_api_type():
         return 'author'
-    
+        
+    # get url of post 
     def get_absolute_url(self):
         if settings.HOST_NAME == self.host:
             url = reverse('authors:detail', args=[str(self.id)])
@@ -66,9 +66,9 @@ class Author(models.Model):
 class Inbox(models.Model):
     id = models.CharField(primary_key=True, editable=False, default= uuid.uuid4, max_length=255)
     author = models.ForeignKey(Author, related_name="inbox", on_delete=models.CASCADE)
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id = models.CharField(blank=True, null=True,max_length=255)
-    content_object = GenericForeignKey('content_type', 'object_id')
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)  # post, comment, like or follow req
+    object_id = models.CharField(blank=True, null=True,max_length=255)  # id of object in inbox
+    content_object = GenericForeignKey('content_type', 'object_id')  # actual object in inbox
     published = models.DateTimeField(auto_now_add=True, editable=False)  # date pubslished
 
     def __str__(self):
@@ -86,11 +86,9 @@ class Inbox(models.Model):
 
 class FollowRequest(models.Model):
     id = models.CharField(primary_key=True, editable=False, default= uuid.uuid4, max_length=255)
-    #type =models.CharField(max_length=255, blank=True)
-    actor = models.ForeignKey(Author, related_name='actor', on_delete=models.CASCADE)
-    object = models.ForeignKey(Author, related_name='object', on_delete=models.CASCADE)
-    summary = models.CharField(max_length=255, default = '')
-    accepted = models.BooleanField(default=False)
+    actor = models.ForeignKey(Author, related_name='actor', on_delete=models.CASCADE)  # author to follow
+    object = models.ForeignKey(Author, related_name='object', on_delete=models.CASCADE)  # author to be followed
+    summary = models.CharField(max_length=255, default = '')  
 
     class Meta:
         unique_together = ('actor','object')
