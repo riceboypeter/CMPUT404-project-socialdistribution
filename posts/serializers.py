@@ -57,7 +57,7 @@ class PostSerializer(WritableNestedModelSerializer):
             "source": data["source"],
             "title": data["title"],
             "unlisted": data["unlisted"], 
-            'count': data["count"] or 0,
+            'count': 0,
             'is_github': False,
             'commentsSrc': commentsSrc
             
