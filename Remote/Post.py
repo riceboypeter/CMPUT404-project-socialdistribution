@@ -168,6 +168,8 @@ def sendPostYoshi(data, auth_id):
         data["unlisted"] = "false"
     if data["unlisted"]:
         data["unlisted"] = "true"
+    if not ('categories' in data):
+        data["categories"] = ""
     
     data = json.dumps(data)
 
