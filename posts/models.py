@@ -91,7 +91,7 @@ class Post(models.Model):
         return self.source + '/comments/'
         
     def get_likes_count(self):
-        return self.likes.count()
+        return 0
     
     def update_fields_with_request(self, request=None):
         if not request:

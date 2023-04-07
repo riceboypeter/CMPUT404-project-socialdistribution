@@ -18,7 +18,7 @@ function INBOX() {
 	const [state, setState] = useState({ count: 0 });
 	let navigate = useNavigate();
 
-	// Get the inbox
+	// Get the inbox items from the users inbox
 	useEffect(() => {
 		if (!localStorage.getItem("loggedIn")) {
 			navigate("/signin");

@@ -9,6 +9,7 @@ import TrashIcon from "@rsuite/icons/Trash";
 import { getAuthorId } from "../utils/auth";
 import { useNavigate } from "react-router-dom";
 
+// this shows all the posts in the profile screen
 function AUTHORPOSTS() {
 	const [posts, setPosts] = useState([]);
 	let navigate = useNavigate();

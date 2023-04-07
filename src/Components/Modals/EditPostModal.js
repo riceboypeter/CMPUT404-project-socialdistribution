@@ -14,6 +14,7 @@ import { getAuthorId } from "../utils/auth";
 import CREATEPOST from "../Post/CreatePost";
 import EDITPOST from "../Post/EditPost";
 
+// This component helps edit a post
 function EDITPOSTMODAL({ open, obj, handleClose }) {
 	const [displayName, setName] = useState("");
 	const [foreign_author, setForeign] = useState({});

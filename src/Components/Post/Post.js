@@ -15,12 +15,14 @@ import { useNavigate } from "react-router-dom";
 import { reqInstance } from "../utils/axios";
 import PROFILEIMAGE from "../Profile/ProfileImage";
 import CopyIcon from "@rsuite/icons/Copy";
-// Component Imports
+import NumbersIcon from "@rsuite/icons/Numbers";
 
+// This is the component that handels showing a post in inbox, explore and profile of an author
 function POST({ postobj, edit, explore, github }) {
 	const [post, set_post] = useState(postobj);
 	const [likes, setLikes] = useState({ items: [] });
 	const [open, setOpen] = useState(false);
+	const [likesModal, setLikesModal] = useState(false);
 	const toaster = useToaster();
 	let navigate = useNavigate();
 
@@ -64,6 +66,14 @@ function POST({ postobj, edit, explore, github }) {
 		setOpen(false);
 	};
 
+	const likesHandleOpen = () => {
+		setLikesModal(true);
+	};
+
+	const likesHandleModalClose = () => {
+		setLikesModal(false);
+	};
+
 	const notifyShareSuccessPost = () => {
 		toaster.push(
 			<Message type="success">Successful shared this post</Message>,
@@ -73,7 +83,6 @@ function POST({ postobj, edit, explore, github }) {
 			}
 		);
 	};
-
 
 	const notifySuccessPost = () => {
 		toaster.push(
@@ -95,12 +104,13 @@ function POST({ postobj, edit, explore, github }) {
 		);
 	};
 
+	// This handles sharing a post from a different server
 	async function sharePost() {
 		const author_id = getAuthorId(null);
 		const origin_author_id = getAuthorId(postobj.author.id);
 		const post_id = getAuthorId(postobj.id);
-		
-		console.log(postobj)
+
+		console.log(postobj);
 		const url = `authors/${origin_author_id}/posts/${post_id}/share/${author_id}/`;
 		reqInstance({ method: "post", url: url, data: { post: postobj } })
 			.then((res) => {
@@ -129,6 +139,7 @@ function POST({ postobj, edit, explore, github }) {
 		navigator.clipboard.writeText(url);
 	};
 
+	// This handles deleting of a post
 	async function handleDeletePost() {
 		const author_id = getAuthorId(null);
 		const post_id = getAuthorId(postobj.id);
@@ -208,11 +219,15 @@ function POST({ postobj, edit, explore, github }) {
 				<div />
 			)}
 			{!github ? <LIKE postObj={postobj} /> : <div />}
+			<IconButton
+				style={{ float: "right" }}
+				onClick={likesHandleOpen}
+				appearance="subtle"
+				icon={<NumbersIcon />}
+			/>
 			{edit ? delEditBtn : <div />}
 		</div>
 	);
-
-	const likesmodal = <LIKESMODAL postobj={postobj} />;
 
 	return (
 		<div>
@@ -264,7 +279,11 @@ function POST({ postobj, edit, explore, github }) {
 			) : (
 				<div />
 			)}
-			{explore ? likesmodal : <div />}
+			<LIKESMODAL
+				open={likesModal}
+				handleClose={likesHandleModalClose}
+				postobj={postobj}
+			></LIKESMODAL>
 		</div>
 	);
 }

@@ -2,22 +2,20 @@ import React, { useState } from "react";
 import { Button, Avatar, Panel, useToaster, Message } from "rsuite";
 import { reqInstance } from "../utils/axios";
 import { getAuthorId } from "../utils/auth";
-import PROFILEIMAGE from "../Profile/ProfileImage";
 
+// This is the inbox follow req object lets us accept friend requests
 function FOLLOWREQ({ obj }) {
 	const [follow, setFollow] = useState(obj);
 	const toaster = useToaster();
-	const [accepted, setAccepted] = useState(false);
 
 	async function acceptFriend() {
 		const curr_author_id = getAuthorId(null);
 		var FAID = getAuthorId(obj.actor.id);
 		const url2 = obj;
 
-		const params = { accepted: accepted };
 		const url = `authors/${curr_author_id}/followers/${FAID}/`;
 
-		return reqInstance({ method: "put", url: url, data: params })
+		return reqInstance({ method: "put", url: url })
 			.then((res) => {
 				deleteFollow();
 				toaster.push(

@@ -12,6 +12,7 @@ import { ToastContainer, toast } from "react-toastify";
 import SearchIcon from "@rsuite/icons/Search";
 import { reqInstance, createReqInstance } from "../utils/axios";
 import { getAuthorId, getCurrentUser } from "../utils/auth";
+import axios from "axios";
 
 function ADD_FRIEND_MODAL({ open, handleClose }) {
 	const [displayName, setName] = useState("");
@@ -20,6 +21,8 @@ function ADD_FRIEND_MODAL({ open, handleClose }) {
 	const toaster = useToaster();
 
 	async function sendreq(obj) {
+		// Once a user is found on a server this function handles
+		// sening a request to them
 		const AUTHOR_ID = getAuthorId(null);
 		const url2 = obj.id + "/inbox";
 		const user = JSON.parse(localStorage.getItem("user"));
@@ -63,6 +66,7 @@ function ADD_FRIEND_MODAL({ open, handleClose }) {
 		const url = `authors/displayName/${displayName}`;
 		await reqInstance({ method: "get", url: url }).then(async (res) => {
 			setusers(res.data);
+			console.log(res.data);
 			if (res.data.length === 0) {
 				toaster.push(
 					<Message type="error">

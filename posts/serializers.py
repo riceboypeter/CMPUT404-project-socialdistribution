@@ -9,7 +9,7 @@ from Remote.Post import clean_post
 class PostSerializer(WritableNestedModelSerializer):
     type = serializers.CharField(default="post",source="get_api_type",read_only=True)
     id = serializers.CharField(source="get_public_id", read_only=True)
-    count = serializers.IntegerField(read_only=True, default=0)
+    count = serializers.IntegerField(read_only=True, source="get_likes_count", default=0)
     comments = serializers.URLField(source="get_comments_source", read_only=True)
     commentsSrc = serializers.JSONField(read_only=True)
     author = AuthorSerializer(required=False)
@@ -39,7 +39,9 @@ class PostSerializer(WritableNestedModelSerializer):
         data["author"] = AuthorSerializer.extract_and_upcreate_author(data['author'])
         if type(data["categories"]) is list:
             data["categories"] = ','.join(data["categories"])                
-
+        if 'commentsSrc' in data:
+            commentsSrc = data["commentsSrc"]
+        else: commentsSrc = {}
         return {
             'id': data["id"],
             'type': data["type"],
@@ -57,7 +59,7 @@ class PostSerializer(WritableNestedModelSerializer):
             "unlisted": data["unlisted"], 
             'count': 0,
             'is_github': False,
-            'commentsSrc': {}
+            'commentsSrc': commentsSrc
             
         }
     def to_representation(self, instance):
@@ -74,7 +76,6 @@ class PostSerializer(WritableNestedModelSerializer):
             'id': id,
             'commentsSrc': commentsSrc,
             'categories': categories_list,
-            'count': len(commentsSrc)
         }
             
     class Meta:
@@ -160,7 +161,6 @@ class CommentSerializer(serializers.ModelSerializer):
             'comment',
             'contentType',
             'published',
-           
         ]
     
 class LikeSerializer(serializers.ModelSerializer):
@@ -212,33 +212,72 @@ class LikeSerializer(serializers.ModelSerializer):
 
 class ImageSerializer(serializers.ModelSerializer):
     type = serializers.CharField(default="post",source="get_api_type",read_only=True)
-    id = serializers.URLField(source="get_public_id",read_only=True)
+    id = serializers.CharField(source="get_public_id", read_only=True)
+    count = serializers.IntegerField(read_only=True, source='get_likes_count', default=0)
+    comments = serializers.URLField(source="get_comments_source", read_only=True)
+    commentsSrc = serializers.JSONField(read_only=True)
     author = AuthorSerializer(required=False)
+    source = serializers.URLField(source="get_source", read_only=True, max_length=500)  # source of post
+    origin = serializers.URLField(source="get_origin", read_only=True, max_length=500)  # origin of post
+    categories = serializers.CharField(max_length=300, default="")
     image = Base64ImageField()
     
     def create(self, validated_data):
+        print("validating image data ", validated_data)
         try:
-            author = AuthorSerializer.extract_and_upcreate_author(validated_data['author'], None)
-            image = validated_data.pop('image')
-            post = Post.objects.create(**validated_data)
-        except:
+            print("in the try block")
+            validated_data = clean_post(validated_data)
+            print("valid",validated_data)
             author = AuthorSerializer.extract_and_upcreate_author(None, author_id=self.context["author_id"])
-            id = validated_data.pop('id') if validated_data.get('id') else None
-            if not id:
-                id = self.context["id"]
-            post = Post.objects.create(**validated_data, author = author, id = id)
-
+            # validated_data.pop('authors')
+            post = Post.objects.create(**validated_data, author = author)
+        except Exception as e:
+            print("image post serializer except")
+            print(e)
+            if not author:
+                raise serializers.ValidationError({
+                    'author': 'This field is required.'
+                })
+            if not post:
+                raise serializers.ValidationError({
+                    'post': 'This field is required.'
+                })
         return post
+    
+    def to_representation(self, instance):
+        print("to_representation")
+        print(instance)
+        id = instance.get_public_id()
+        comments_list = Comment.objects.filter(post=instance).order_by('-published')[0:5]
+        categories_list = instance.categories.split(",")
+        if categories_list == ['']:
+            categories_list = []
+        commentsSrc = [CommentSerializer(comment,many=False).data for comment in comments_list]
+        return {
+            **super().to_representation(instance),
+            'id': id,
+            'commentsSrc': commentsSrc,
+            'categories': categories_list,
+        }
 
     class Meta:
         model = Post
         fields = [
-            "contentType",
-            "type",
-            "id",
-            "author",
-            "title",
-            "image",
-            "visibility",
-            "unlisted",
+            'type', 
+            'title', 
+            'id', 
+            'source', 
+            'origin', 
+            'description',
+            'contentType',
+            'image',
+            'author',
+            'categories',
+            'count',
+            'comments',
+            'commentsSrc',
+            'published',
+            'visibility',
+            'unlisted',
+            #'is_github'
         ]

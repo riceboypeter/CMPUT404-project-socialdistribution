@@ -24,6 +24,7 @@ import {
 } from "../utils/auth";
 import PROFILEIMAGE from "./ProfileImage";
 
+// this is the profile screen that lets us edit a post
 function PROFILE() {
 	const [posts, setPosts] = React.useState(true);
 	const [appearance, setAppearance] = React.useState({

@@ -11,6 +11,7 @@ import COMMENTINBOX from "../Post/CommentInbox";
 import { unsetCurrentUser } from "../utils/auth";
 import axios from "axios";
 
+// This component displays all the public posts
 function EXPLORE() {
 	const [inbox, setInbox] = useState([]);
 	const [curPage, setCurPage] = useState("inbox");
@@ -19,7 +20,7 @@ function EXPLORE() {
 	const [yoshi, setYoshi] = useState([]);
 	let navigate = useNavigate();
 
-	// Get the inbox
+	// Gets all the public posts from the server
 	useEffect(() => {
 		if (!localStorage.getItem("loggedIn")) {
 			navigate("/signin");
@@ -73,7 +74,7 @@ function EXPLORE() {
 		reqInstance.post("dlogout/").then((res) => {
 			if (res.status === 202) {
 				unsetCurrentUser();
-				navigate("/signinn");
+				navigate("/signin");
 			}
 		});
 	}

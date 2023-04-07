@@ -296,48 +296,14 @@ class AuthorsListView(APIView, PageNumberPagination):
         authors = Author.objects.filter(host=(settings.HOST_NAME))
         serializer = AuthorSerializer(authors, many=True)
         data_list = serializer.data
-        # get remote authors and add to list
-        # yoshi = getNodeAuthors_Yoshi()
-        # for yoshi_author in yoshi:
-        #     data_list.append(yoshi_author)
-        #social_distro = getNodeAuthors_social_distro()
-        #for social_distro_author in social_distro:
-        #    data_list.append(social_distro_author)
 
         # paginate + send
         return Response(ViewPaginatorMixin.paginate(self,object_list=data_list, type="authors", page=int(self.request.GET.get('page', 1)), size=int(self.request.GET.get('size', 50))))
-
-# made the foreign author getter a helper function instead to work with inbox
-def get_foreign_authors(pk_a):
-    print("getting foreign")
-    try:
-        # get yoshi's author at node
-        author_json, status_code = getNodeAuthor_Yoshi(pk_a)
-        if status_code == 200:
-            # author_dict = json.loads(author_json)
-            # author = Author(id = author_json['authorId'], displayName= author_json['displayname'], url=author_json['url'], profileImage=author_json['profileImage'], github=author_json['github'], host=author_json['host'])
-            return Response(author_json)
-        # get social distro's authors and format their data to our style
-        else:
-            author_json, status_code = getNodeAuthor_social_distro(pk_a)
-            if status_code == 200:
-                """# formatting (theirs is nonetype while ours is empty string)
-                if author_json['profileImage'] == None:
-                    profileImage = ''
-                if author_json['github'] == None:
-                    github = ''
-                author = Author(id = pk_a, displayName= author_json['displayName'], url=author_json['url'], profileImage=profileImage, github=github, host=author_json['host'])"""
-                return Response(author_json)
-                
-    except:
-        error_msg = "Author id not found"
-        return Response(error_msg, status=status.HTTP_404_NOT_FOUND)
     
 class AuthorView(APIView):
     authentication_classes = [BasicAuthentication]
     permission_classes = [IsAuthenticated]
 
-    # properly configure the author's displayname in data
     def validate(self, data):
         try:
             if 'displayName' not in data:
@@ -623,19 +589,7 @@ class InboxSerializerObjects:
                 obj = Post.objects.get(id=(data["id"].split("/")[-1]))
             except Post.DoesNotExist:
                 try:
-                    # handle image posts
-                    if "image/" in data["contentType"]:
-                        print(data["content"])
-                        # make a mutable version of the querydict so that we can use
-                        # our special image field
-                        data = data.copy()
-                        data = handle_image(data)
-                        print(data['image'])
-                        serializer = ImageSerializer
-                    # normal post
-                    else:
-                        print("post serrializer")
-                        serializer = PostSerializer
+                    serializer = PostSerializer
                     print("got to send part")
                     context={}
                     # try:
