@@ -16,8 +16,8 @@ import { reqInstance } from "../utils/axios";
 import PROFILEIMAGE from "../Profile/ProfileImage";
 import CopyIcon from "@rsuite/icons/Copy";
 import NumbersIcon from "@rsuite/icons/Numbers";
-// Component Imports
 
+// This is the component that handels showing a post in inbox, explore and profile of an author
 function POST({ postobj, edit, explore, github }) {
 	const [post, set_post] = useState(postobj);
 	const [likes, setLikes] = useState({ items: [] });
@@ -104,6 +104,7 @@ function POST({ postobj, edit, explore, github }) {
 		);
 	};
 
+	// This handles sharing a post from a different server
 	async function sharePost() {
 		const author_id = getAuthorId(null);
 		const origin_author_id = getAuthorId(postobj.author.id);
@@ -138,6 +139,7 @@ function POST({ postobj, edit, explore, github }) {
 		navigator.clipboard.writeText(url);
 	};
 
+	// This handles deleting of a post
 	async function handleDeletePost() {
 		const author_id = getAuthorId(null);
 		const post_id = getAuthorId(postobj.id);

@@ -46,23 +46,6 @@ function LIKE({ postObj }) {
 					duration: 5000,
 				});
 			});
-		//Confirm what to add into the params and send inbox
-		// reqInstance({ method: "post", url: url, data: params })
-		// 	.then((res) => {
-		// 		toaster.push(
-		// 			<Message type="success">Successful Like</Message>,
-		// 			{
-		// 				placement: "topEnd",
-		// 				duration: 5000,
-		// 			}
-		// 		);
-		// 	})
-		// 	.catch((err) => {
-		// 		toaster.push(<Message type="error">{err}</Message>, {
-		// 			placement: "topEnd",
-		// 			duration: 5000,
-		// 		});
-		// 	});
 	};
 
 	return (

@@ -5,6 +5,7 @@ import { reqInstance } from "../utils/axios";
 import { getAuthorId } from "../utils/auth";
 import { useNavigate } from "react-router-dom";
 
+// This displays all the users friends
 function FRIENDS() {
 	const [friends, setFriends] = useState({ items: [] });
 	let navigate = useNavigate();

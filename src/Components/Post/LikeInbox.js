@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Avatar, Panel } from "rsuite";
 import PROFILEIMAGE from "../Profile/ProfileImage";
-// Component Imports
 
+// Inbox object for when someone likes a post
 function LIKEINBOX({ likeobj }) {
 	const [like, set_like] = useState(likeobj);
 

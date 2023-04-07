@@ -26,8 +26,8 @@ import { unsetCurrentUser } from "../utils/auth";
 import ADD_FRIEND_MODAL from "../Modals/AddFriendModal";
 import "./Post.css";
 import { createReqInstance } from "../utils/axios";
-// Component Imports
 
+// This is to diplay unlisted posts that were only shared with a link
 function SINGLEPOST({ explore }) {
 	const [post, set_post] = useState({ author: { profileImage: "" }, id: "" });
 	const [likes, setLikes] = useState({ items: [] });
