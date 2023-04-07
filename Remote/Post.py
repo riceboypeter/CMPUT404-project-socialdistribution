@@ -152,12 +152,9 @@ def sendPostYoshi(data, auth_id):
         data["commentsSrc"] = {"comments":[], "id": data["comments"], "post":data["id"], "type": "comments"}
     if data["description"] == '':
         data["description"] = data["title"]
-    if not data["unlisted"]:
-        data["unlisted"] = "false"
-    if data["unlisted"]:
-        data["unlisted"] = "true"
     if not ('categories' in data):
         data["categories"] = []
+    data['unlisted'] = "false"
     
     data = json.dumps(data)
 
