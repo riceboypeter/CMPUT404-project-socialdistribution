@@ -986,6 +986,7 @@ def share_object(item, author, shared_user, data):
         if author:
             inbox_item = Inbox(content_object=item, author=author)
             inbox_item.save()
+            return 
 
     # friend post (send to friend inbox)
     elif (item.visibility == 'FRIENDS' or item.visibility == 'PUBLIC'):
