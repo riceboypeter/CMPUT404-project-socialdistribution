@@ -48,13 +48,9 @@ def getAllPosts_big():
     url = 'https://bigger-yoshi.herokuapp.com/api/authors/posts'
 
     response = requests.get(url, headers=big_headers())
-    print(response)
     if response.status_code == 200:
-        print("yoshi, inside the if ")
         json_response = response.json()
         json_response = json_response["items"]
-        json_response = json_response[:5]
-        print("yoshi ", json_response)
         return(json_response)
     else: 
         return []
@@ -116,10 +112,6 @@ def getAllPublicPosts():
 #     return posts
 
 def sendPost(host, data, auth_id):
-    print(data)
-    print(host)
-    print(auth_id)
-    
     response = Response("r")
 
     if 'yoshi-connect' in host:
@@ -129,11 +121,9 @@ def sendPost(host, data, auth_id):
     elif 'bigger-yoshi' in host:
         if "image/" in data['contentType']:
             data['content'] = data['source']
-        print("sending to bigger yoshi")
         response, status_code = sendPostBiggerYoshi(data, auth_id)
     elif 'killme' in host:
         response, status_code = sendPostApp2(data, auth_id)
-    print("returning their response")
     return response
 
 def sendPostBiggerYoshi(data, auth_id):
@@ -141,11 +131,9 @@ def sendPostBiggerYoshi(data, auth_id):
 
 
     #update the data to be sent in proper format maybe
-    print("sending a request")
     response = requests.post(url=url, json=data, headers=big_headers())
     status_code = response.status_code
     json_response = response.json()
-    print("got a response")
     return json_response, status_code
 
 def sendPostYoshi(data, auth_id):
@@ -164,7 +152,6 @@ def sendPostYoshi(data, auth_id):
     response = requests.post(url=url, headers=yoshi_headers(), data=data)
     status_code = response.status_code
     json_response = response.json()
-    print("YOSHI content", json_response)
     return json_response, status_code
 
 def sendPostDistro(data, auth_id):
@@ -238,6 +225,5 @@ def staticPost() :
     response = requests.post(url=url, headers=yoshi_headers(), data=data)
     status_code = response.status_code
     json_response = response.json()
-    print("YOSHI content", json_response)
     return json_response, status_code
 

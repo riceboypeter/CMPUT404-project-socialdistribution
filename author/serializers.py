@@ -17,9 +17,6 @@ class AuthorSerializer(serializers.ModelSerializer):
     
     # update author with provided instance
     def update(self, instance, validated_data):
-        print(validated_data)
-        print(instance)
-        print("in update",type(validated_data))
         instance.url = validated_data.get('url', instance.url)
         instance.displayName = validated_data.get('displayName', instance.displayName)
         instance.github = validated_data.get('github', instance.github)
@@ -34,8 +31,6 @@ class AuthorSerializer(serializers.ModelSerializer):
     
     @staticmethod
     def _upcreate(validated_data):
-        print("in the other upcreate function")
-        print(validated_data)
         return Author(**validated_data)
     
     # 1. Return the author if it is hosted by our server
@@ -43,7 +38,6 @@ class AuthorSerializer(serializers.ModelSerializer):
     # 3. Create author if author is hosted by another server and does not exist locally
     @staticmethod
     def extract_and_upcreate_author(validated_data, author_id = None):
-        print("in extract and upcreate", validated_data)
         if author_id is not None:
             try:
                 return Author.objects.get(id=author_id)
@@ -54,15 +48,11 @@ class AuthorSerializer(serializers.ModelSerializer):
             validated_data = clean_author(validated_data)
         try:
             updated_author = AuthorSerializer._update(validated_data)
-            print("author is updated!")
         except Author.DoesNotExist:
             updated_author = AuthorSerializer._upcreate(validated_data)
-            print("updated author saved")
         if not updated_author:
-            print("no author", updated_author)
             return Response("Author does not exist here!", status=status.HTTP_404_NOT_FOUND)
         else:
-            print("saved!")
             updated_author.save() 
             return updated_author     
     
@@ -94,14 +84,11 @@ class FollowRequestSerializer(serializers.ModelSerializer):
     
     # create a follow request if the object is not already a follower and a request doesn't already exist
     def create(self,validated_data):
-        print("in follow req create")
         actor = validated_data["actor"]
         object = validated_data["object"]
         if actor in object.friends.all():
-            print("already friends")
             return "already friends"
         if FollowRequest.objects.filter(actor=actor,object=object).exists():
-            print("already sent")
             return "already sent"
         if actor==object:
             return "same"
@@ -111,7 +98,6 @@ class FollowRequestSerializer(serializers.ModelSerializer):
     # https://www.django-rest-framework.org/api-guide/serializers/
     # changes the data passed in to make it valid
     def to_internal_value(self, data):
-        print("to_internal_value")
         actor = AuthorSerializer.extract_and_upcreate_author(self.context["actor_"])
         object = Author.objects.get(id=self.context["object_id"])
 

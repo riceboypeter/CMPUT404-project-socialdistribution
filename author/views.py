@@ -429,7 +429,6 @@ class FriendRequestView(APIView):
             return Response(error_msg, status=status.HTTP_404_NOT_FOUND)
         try:
             actor_id = request.data["actor_id"]
-            print("actor id is", actor_id)
             actor_author = Author.objects.get(id=actor_id)
             # author = Author.objects.get(id=request.data["author_id"])
         except Author.DoesNotExist:
@@ -480,9 +479,7 @@ class InboxSerializerObjects:
     
     def deserialize_objects(self, data, pk_a):
         # return serializer of objects to be added to inbox (so we get the object)
-        # print(data)
         type1 = data["type"]
-        print(type1)
         obj = None
 
         if type1 is None:
@@ -493,42 +490,28 @@ class InboxSerializerObjects:
             except Post.DoesNotExist:
                 try:
                     serializer = PostSerializer
-                    print("got to send part")
                     context={}
-                    # try:
-                    #     author = data["author"]
-                    #     if author["host"]== 'https://bigger-yoshi.herokuapp.com/api/':
-                    #         new_data = {}
-                    # except:
                     new_data = data
                     try: 
-                        print('trying to get commentsSrc')
                         if new_data["commentsSrc"]:
-                            print("commentsSrc in new data")
                             del new_data["commentsSrc"]
                     except: 
                         pass
-                    
-                    # print("new data", new_data)
+                
                     # new_data["authors"] = data["sentTo"]
                     try: 
-                        print('trying to get authors')
                         if new_data["authors"]:
-                            print("authors in new data")
                             del new_data["authors"]
                     except: 
                         pass
-                    print("new data", new_data)
                     # new_data["authors"] = data["sentTo"]
                     return serializer(data=new_data, context=context, partial=True)
 
                 except:
-                    print("image exception")
                     error_msg = "Post not found"
                     return Response(error_msg, status=status.HTTP_404_NOT_FOUND)
         elif type1 == Like.get_api_type():
             # TODO: Add a check to see if the author liked that object before, then just return obj
-            print("its a like")
             serializer = LikeSerializer
             author = data.get("author")
             obj = data.get("object")
@@ -543,12 +526,10 @@ class InboxSerializerObjects:
            # context={'author': author,'id':data["id"].split("/")[-1]}
             context={'author': author, 'object':object,'comment':comment}
         elif type1 == FollowRequest.get_api_type() or type1 == "follow":
-            print("deser follow")
             serializer = FollowRequestSerializer
             actor = data.get("actor")
             context={'object_id': pk_a, 'actor_':actor}
             return serializer(data={}, context=context, partial=True)
-        print("finish")
         if obj is not None:
             return obj
         else:
@@ -587,21 +568,16 @@ class Inbox_list(APIView, InboxSerializerObjects, PageNumberPagination):
             2. If object in database: TYPE, id.
         """
         try:
-            # print("in Post")
             author = Author.objects.get(pk=pk_a, host=settings.HOST_NAME)
-            print("found author locally")
         except Author.DoesNotExist:
-            print("couldnt find author in foreign or local")
             return Response("Author not Found", status=status.HTTP_404_NOT_FOUND)
         
         #issue here
-        print("deserialize")
         serializer = self.deserialize_objects(self.request.data, pk_a)
         # Case 1: friend author is outside the server, we create all these objects in our database (not sure)
         try:
             if serializer.is_valid():
                 item = serializer.save()
-                print("IS VALID")
                 if item=="already liked":
                     return Response("Post Already Liked!", status=status.HTTP_400_BAD_REQUEST)
                 if item == "already sent":

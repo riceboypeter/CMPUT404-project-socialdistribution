@@ -913,7 +913,6 @@ class ShareView(APIView):
         except Author.DoesNotExist:
             error_msg = "Author not found"
             return Response(error_msg, status=status.HTTP_404_NOT_FOUND)
-        print("DATA OF POST",request.data)
         post = request.data["post"]
         
         # try to get the post, return 404 if ID doesn't exist
@@ -958,19 +957,12 @@ class PublicPostsView(APIView):
     
     @swagger_auto_schema(responses =Publicpostget, operation_summary="List all Public posts on all servers")
     def get(self, request):
-        print("inside pblicposts")
         posts = Post.objects.filter(visibility='PUBLIC', is_github= False)
         serializer = PostSerializer(posts, many=True)
         data_list = serializer.data
-        print("datalist", data_list)
         if (request.GET.get("local") == "true"):
-            print("inside the local")
             remotePosts = getAllPublicPosts()
-            print("remotepost", remotePosts)
-            # yoshi_posts = getAllPosts_Yoshi()
-            # print("yoshipost", yoshi_posts)
             data_list = data_list + remotePosts
-            print("datalist", data_list)
             data_list.sort(key=lambda x: x['published'])
         return Response(ViewPaginatorMixin.paginate(self,object_list=data_list, type="public posts",page=int(self.request.GET.get('page', 1)), size=int(self.request.GET.get('size', 50))))
     
@@ -990,15 +982,12 @@ def share_object(item, author, shared_user, data):
 
     # friend post (send to friend inbox)
     elif (item.visibility == 'FRIENDS' or item.visibility == 'PUBLIC'):
-        print("Friend or public Post")
         for friend in author.friends.all():
             #check the host to see if the friend is a foreign and send post to them.
             friend_id = friend.id
             host = friend.host
             if host != settings.HOST_NAME:
-                print("sending post to foreign authors")
                 sendPost(host, data, friend_id)
-                print("post sent")
             else:
                 inbox_item = Inbox(content_object=item, author=friend)
                 inbox_item.save()

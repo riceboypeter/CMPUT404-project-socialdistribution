@@ -69,7 +69,6 @@ params = {
 #     status_code = response.status_code
 #     json_response = response.json()
 #     authors = json_response['items']
-#     print(authors)
 #     return authors
 
 
@@ -122,7 +121,7 @@ def getNodeAllAuthors_Yoshi():
     else: return ([])
 
 def getNodeAllAuthors_App2():
-    url = 'https://killme.herokuapp.com/authors/'
+    url = 'https://ineedsleep.herokuapp.com/authors/'
 
     headers = app2_headers()
     response = requests.get(url, headers=headers, params=params)
@@ -156,9 +155,7 @@ def getRemoteAuthorsDisplayName(displayName):
     # author3 = checkDisplayName(getNodeAllAuthors_distro(), displayName) 
     # author4 = checkDisplayName(getNodeAllAuthors_P2(), displayName)
     author5 = checkDisplayName(getNodeAllAuthors_big(), displayName)
-    print(author1, author2, author5)
     authorList = author1 + author2  + author5
-    print(authorList)
     return authorList
 
 def getAuthorId(url):

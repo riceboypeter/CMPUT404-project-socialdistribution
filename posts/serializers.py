@@ -18,15 +18,10 @@ class PostSerializer(WritableNestedModelSerializer):
     categories = serializers.CharField(max_length=300, default="")
     
     def create(self, validated_data):
-        print("validated post data",validated_data)
         try:
-            print("POST TRY BLOCK")
             validated_data = clean_post(validated_data)
-            print("valid",validated_data )
             post = Post(**validated_data)
         except Exception as e:
-            print(e)
-            print("POST SERIALIZER ELSE")
             author = AuthorSerializer.extract_and_upcreate_author(None, author_id=self.context["author_id"])
             #maybe pop the authors in this?***
             validated_data.pop('authors')
@@ -34,7 +29,6 @@ class PostSerializer(WritableNestedModelSerializer):
         return post
 
     def to_internal_value(self, data):
-        print("to_internal_value")
         if not ("id" in data): return data
         data["author"] = AuthorSerializer.extract_and_upcreate_author(data['author'])
         if type(data["categories"]) is list:
@@ -63,8 +57,6 @@ class PostSerializer(WritableNestedModelSerializer):
             
         }
     def to_representation(self, instance):
-        print("to_representation")
-        print(instance)
         id = instance.get_public_id()
         comments_list = Comment.objects.filter(post=instance).order_by('-published')[0:5]
         categories_list = instance.categories.split(",")
@@ -118,15 +110,8 @@ class CommentSerializer(serializers.ModelSerializer):
         return comment
     
     def to_internal_value(self, data):
-        print("to_internal_value")
         author = AuthorSerializer.extract_and_upcreate_author(self.context["author"])
-        print("OBJECT",self.context["object"])
         post = self.context["object"]
-        print("reached internal value")
-        print("AUTHOR HERE",author)
-
-        print("POST",post)
-  
         # object = Author.objects.get(id=self.context["object"])
        
         comment = self.context["comment"]
@@ -170,18 +155,15 @@ class LikeSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         # author = AuthorSerializer.extract_and_upcreate_author(validated_data, author_id=self.context["author_id"])
-        print("create a like")
         author = validated_data["author"]
         if Like.objects.filter(author=author, object=validated_data.get("object")).exists():
             return "already liked"
         else:
             like = Like.objects.create(**validated_data)
             like.save()
-            print("successful")
             return like
     
     def to_internal_value(self, data):
-        print("to_internal_value")
         author = AuthorSerializer.extract_and_upcreate_author(self.context["author"])
         # object = Author.objects.get(id=self.context["object"])
         object = self.context["object"]
@@ -223,17 +205,12 @@ class ImageSerializer(serializers.ModelSerializer):
     image = Base64ImageField()
     
     def create(self, validated_data):
-        print("validating image data ", validated_data)
         try:
-            print("in the try block")
             validated_data = clean_post(validated_data)
-            print("valid",validated_data)
             author = AuthorSerializer.extract_and_upcreate_author(None, author_id=self.context["author_id"])
             # validated_data.pop('authors')
             post = Post.objects.create(**validated_data, author = author)
         except Exception as e:
-            print("image post serializer except")
-            print(e)
             if not author:
                 raise serializers.ValidationError({
                     'author': 'This field is required.'
@@ -245,8 +222,6 @@ class ImageSerializer(serializers.ModelSerializer):
         return post
     
     def to_representation(self, instance):
-        print("to_representation")
-        print(instance)
         id = instance.get_public_id()
         comments_list = Comment.objects.filter(post=instance).order_by('-published')[0:5]
         categories_list = instance.categories.split(",")

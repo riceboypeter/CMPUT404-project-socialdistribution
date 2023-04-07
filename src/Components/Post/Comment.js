@@ -27,13 +27,11 @@ function COMMENTS({ postobj }) {
 				password: password,
 			},
 		});
-		console.log(url);
 		return reqInstance({
 			method: "get",
 			url: url,
 		})
 			.then((res) => {
-				console.log(res);
 				if (res.data.comments) {
 					setCommentObj(res.data.comments);
 				} else if (res.data.results) {
