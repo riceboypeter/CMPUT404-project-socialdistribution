@@ -41,6 +41,7 @@ class TestPosts(APITestCase):
 
     # tests the http post and get functionality for posts
     def test_posts_post_and_get(self):
+        '''tests the http post and get functionality for posts'''
         # create the author of the posts + extract the URL
         create_author = Author.objects.create(displayName='sugon')
         test_name = str(create_author).split('(')
@@ -216,7 +217,7 @@ class TestPosts(APITestCase):
         
 
 
-        #clearing inbox
+        #clearing inbox, testing delete request
         response = self.client.delete(url)
         self.assertEqual(response.status_code,status.HTTP_204_NO_CONTENT)
         response = self.client.get(url)
