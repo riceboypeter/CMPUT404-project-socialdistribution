@@ -237,6 +237,8 @@ class ImageSerializer(WritableNestedModelSerializer):
             validated_data.pop('authors')
             print("validated data ",validated_data)
             post = Post.objects.create(**validated_data, author = author)
+            print("end of except")
+        print("created")
         return post
     
     def to_internal_value(self, data):
