@@ -171,8 +171,11 @@ def sendPostYoshi(data, auth_id):
     print(type(data))
     print(type(data["author"]))
     print(data)
+    author = json.dumps(data)
+    author = json.loads(author)
     data = json.dumps(data)
     data = json.loads(data)
+    data['author'] =  author
     # data['author'] = json.loads(data["author"])
     #update the data to be sent in proper format maybe
     response = requests.post(url=url, headers=yoshi_headers(), data=data)
