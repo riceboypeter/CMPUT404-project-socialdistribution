@@ -47,7 +47,7 @@ def getAllPosts_Yoshi():
 def getAllPosts_big():
     url = 'https://bigger-yoshi.herokuapp.com/api/authors/posts'
 
-    response = requests.get(url)
+    response = requests.get(url, headers=big_headers())
     print(response)
     if response.status_code == 200:
         print("yoshi, inside the if ")
@@ -124,13 +124,13 @@ def sendPost(host, data, auth_id):
 
     if 'yoshi-connect' in host:
         response, status_code = sendPostYoshi(data, auth_id)
-    elif 'killme' in host:
-        response, status_code = sendPostApp2(data, auth_id)
     elif 'bigger-yoshi' in host:
         if "image/" in data['contentType']:
             data['content'] = data['source']
         print("sending to bigger yoshi")
         response, status_code = sendPostBiggerYoshi(data, auth_id)
+    elif 'killme' in host:
+        response, status_code = sendPostApp2(data, auth_id)
     print("returning their response")
     return response
 
@@ -140,7 +140,7 @@ def sendPostBiggerYoshi(data, auth_id):
 
     #update the data to be sent in proper format maybe
     print("sending a request")
-    response = requests.post(url=url, json=data)
+    response = requests.post(url=url, json=data, headers=big_headers())
     status_code = response.status_code
     json_response = response.json()
     print("got a response")
