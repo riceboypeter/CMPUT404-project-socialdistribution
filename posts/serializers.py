@@ -226,7 +226,7 @@ class ImageSerializer(serializers.ModelSerializer):
         print("validating image data ", validated_data)
         try:
             print("in the try block")
-            # validated_data = clean_post(validated_data)
+            validated_data = clean_post(validated_data)
             print("valid",validated_data)
             post = Post(**validated_data)
         except Exception as e:
@@ -234,6 +234,7 @@ class ImageSerializer(serializers.ModelSerializer):
             print("image post serializer else")
             author = AuthorSerializer.extract_and_upcreate_author(None, author_id=self.context["author_id"])
             validated_data.pop('authors')
+            print(validated_data)
             post = Post.objects.create(**validated_data, author = author, id = id)
         return post
     
