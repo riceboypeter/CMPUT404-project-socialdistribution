@@ -12,6 +12,7 @@ import { ToastContainer, toast } from "react-toastify";
 import SearchIcon from "@rsuite/icons/Search";
 import { reqInstance, createReqInstance } from "../utils/axios";
 import { getAuthorId, getCurrentUser } from "../utils/auth";
+import axios from "axios";
 
 function ADD_FRIEND_MODAL({ open, handleClose }) {
 	const [displayName, setName] = useState("");
