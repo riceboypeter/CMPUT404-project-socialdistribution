@@ -167,6 +167,8 @@ def sendPostYoshi(data, auth_id):
         data["unlisted"] = "false"
     if data["unlisted"]:
         data["unlisted"] = "true"
+    print(url)
+    print(data)
     #update the data to be sent in proper format maybe
     response = requests.post(url=url, headers=yoshi_headers(), data=data)
     status_code = response.status_code
