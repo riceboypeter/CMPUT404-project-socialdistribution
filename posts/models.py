@@ -50,7 +50,7 @@ class Post(models.Model):
     is_github = models.BooleanField(default=False)
     unlisted = models.BooleanField(default=False)
     
-    image = models.ImageField(null=True,blank=True, default="",max_length=255)  # reference to an image in the DB
+    image = models.ImageField(null=True,blank=True, default="")  # reference to an image in the DB
 
     # make it pretty
     def __str__(self):
