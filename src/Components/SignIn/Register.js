@@ -30,7 +30,7 @@ function REGISTER() {
 			duration: 5000,
 		});
 	};
-
+	// This function makes 
 	const handleSubmitClick = () => {
 		var params = {
 			username: username,

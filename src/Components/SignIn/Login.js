@@ -45,6 +45,7 @@ function LOGIN() {
 
 	delay(1000).then(() => {});
 
+	// This function handle's the login of the user sends the collected username and password to the server
 	async function handleLoginClick() {
 		var params = {
 			username: username,
