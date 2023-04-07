@@ -253,6 +253,7 @@ class ImageSerializer(WritableNestedModelSerializer):
             'contentType': data["contentType"],
             'visibility': data["visibility"],
             'comments': data["comments"],
+            'image':self.image,
             'description': data["description"],
             'origin': data["origin"],
             'published': data["published"],
@@ -261,9 +262,9 @@ class ImageSerializer(WritableNestedModelSerializer):
             "unlisted": data["unlisted"], 
             'count': 0,
             'is_github': False,
-            'commentsSrc': {}
-            
+            'commentsSrc': {}    
         }
+    
     def to_representation(self, instance):
         print("to_representation")
         print(instance)
