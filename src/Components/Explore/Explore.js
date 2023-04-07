@@ -19,7 +19,7 @@ function EXPLORE() {
 	const [yoshi, setYoshi] = useState([]);
 	let navigate = useNavigate();
 
-	// Get the inbox
+	// Gets all the 
 	useEffect(() => {
 		if (!localStorage.getItem("loggedIn")) {
 			navigate("/signin");
