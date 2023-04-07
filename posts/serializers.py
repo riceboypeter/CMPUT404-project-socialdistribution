@@ -210,7 +210,7 @@ class LikeSerializer(serializers.ModelSerializer):
             "object",
         ]
 
-class ImageSerializer(serializers.ModelSerializer):
+class ImageSerializer(WritableNestedModelSerializer):
     type = serializers.CharField(default="post",source="get_api_type",read_only=True)
     id = serializers.CharField(source="get_public_id", read_only=True)
     count = serializers.IntegerField(read_only=True, default=0)
@@ -234,7 +234,7 @@ class ImageSerializer(serializers.ModelSerializer):
             print("image post serializer else")
             author = AuthorSerializer.extract_and_upcreate_author(None, author_id=self.context["author_id"])
             validated_data.pop('authors')
-            print(validated_data)
+            print("validated data ",validated_data)
             post = Post.objects.create(**validated_data, author = author, id = id)
         return post
     
