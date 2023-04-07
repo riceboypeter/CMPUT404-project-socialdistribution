@@ -210,7 +210,7 @@ class LikeSerializer(serializers.ModelSerializer):
             "object",
         ]
 
-class ImageSerializer(WritableNestedModelSerializer):
+class ImageSerializer(serializers.ModelSerializer):
     type = serializers.CharField(default="post",source="get_api_type",read_only=True)
     id = serializers.CharField(source="get_public_id", read_only=True)
     count = serializers.IntegerField(read_only=True, default=0)
@@ -225,17 +225,16 @@ class ImageSerializer(WritableNestedModelSerializer):
     def create(self, validated_data):
         print("validating image data ", validated_data)
         try:
-            print("IN THE TRY")
+            print("in the try block")
             validated_data = clean_post(validated_data)
-            post = Post.objects.create(**validated_data)
+            print("valid",validated_data)
+            post = Post(**validated_data)
         except Exception as e:
             print(e)
-            print("IN THE ELSE")
+            print("image post serializer else")
             author = AuthorSerializer.extract_and_upcreate_author(None, author_id=self.context["author_id"])
             # validated_data.pop('authors')
-            print(author)
-            post = Post.objects.create(**validated_data, author = author)
-        print("created")
+            post = Post.objects.create(**validated_data, author = author, id = id)
         return post
     
     def to_representation(self, instance):
