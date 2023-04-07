@@ -1,12 +1,10 @@
-from author.basic_auth import BasicAuthenticator
 from rest_framework.permissions import IsAuthenticated
 from django.conf import settings
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication
-from django.shortcuts import get_object_or_404
+from rest_framework.authentication import BasicAuthentication
 from .models import Post
 from .models import *
 from .pagination import CustomCommentPagination
-from rest_framework.decorators import api_view, permission_classes, authentication_classes
+from rest_framework.decorators import permission_classes, authentication_classes
 from rest_framework.response import Response
 from .serializers import *
 from rest_framework.views import APIView
@@ -15,11 +13,11 @@ from social.pagination import CustomPagination
 from rest_framework import status
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
-import base64
 from client import *
 from .image_renderer import JPEGRenderer, PNGRenderer
 from Remote.Post import *
 from author.pagination import ViewPaginatorMixin
+from django.views.decorators.csrf import csrf_protect
 
 
 custom_parameter = openapi.Parameter(
@@ -567,6 +565,8 @@ class CommentDetailView(APIView):
             return Response(error_msg, status=status.HTTP_404_NOT_FOUND)
         
 class post_detail(APIView, PageNumberPagination):
+    authentication_classes = [BasicAuthentication]
+    permission_classes = [IsAuthenticated]
 
     @swagger_auto_schema(responses = IndividualPOSTGet, operation_summary="Get a particular post of an author")
     def get(self, request, pk_a, pk):
@@ -643,9 +643,8 @@ class post_detail(APIView, PageNumberPagination):
         # 400 if the post is not from us
         else:
             return Response("Cannot edit a shared post", status=status.HTTP_400_BAD_REQUEST)
-
-    authentication_classes = [BasicAuthentication]
-    permission_classes = [IsAuthenticated]
+    
+    @csrf_protect
     @swagger_auto_schema(operation_summary="Delete a particular post of an author") 
     def delete(self, request, pk_a, pk):
         """
