@@ -180,19 +180,11 @@ def getRemoteAuthorsById(id):
     if found == False:
         author2, found = checkId(getNodeAllAuthors_App2(), id)
         if found == False:
-            author3, found = checkId(getNodeAllAuthors_distro(), id)
+            author5, found = checkId(getNodeAllAuthors_big(),id)
             if found == False:
-                author4, found = checkId(getNodeAllAuthors_P2(), id)
-                if found == False:
-                    author5, found = checkId(getNodeAllAuthors_big(),id)
-                    if found == False:
-                        return "author not found", False
-                    else: 
-                        return author5
-                else: 
-                   return author4, True
-            else:
-                return author3, True
+                return "author not found", False
+            else: 
+                return author5
         else:
             return author2, True
     else:
