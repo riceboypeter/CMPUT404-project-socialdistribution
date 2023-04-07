@@ -31,6 +31,99 @@ custom_parameter = openapi.Parameter(
     required=True,
 )
 
+GetAuthorByDisplayName = {
+    200: openapi.Response(
+        description='Successfully retrieved author',
+        examples={
+            'application/json': {
+  "type": "author",
+  "id": "http://127.0.0.1:8000/authors/971fa387-b101-4276-891f-d970f2cf0cad",
+  "url": "http://127.0.0.1:8000/authors/971fa387-b101-4276-891f-d970f2cf0cad",
+  "host": "",
+  "displayName": "SpongebobSquarepants",
+  "github": "github.com/spongebob",
+  "profileImage": "spongebob.png"
+}
+        }
+    )
+}
+
+ViewRequestsExample = {
+    200: openapi.Response(
+        description='Successfully retrieved follow requests',
+        examples={
+            'application/json': {
+            "actor_id": "8d3209abbcea4a1097de17dcb94b75a4"
+        }})
+}
+
+sendreqExample = {
+    200: openapi.Response(
+        description='Follow request sent successfully',
+        examples={
+            'application/json': {
+            "actor_id": "8d3209abbcea4a1097de17dcb94b75a4"
+        }})
+}
+
+registerNodeExample = {
+
+    200: openapi.Response(
+        description='Successfully registered user',
+        examples={
+            'application/json': {
+                "username":"spongebob", 
+                "email":"spongebob@bikinibottom.com", 
+                "password":"$p0ng3b0b$Qu@r3p@nt$",
+                "url":"bikinibottom.com"}
+        }
+    )
+
+}
+
+
+GetGithubExample={
+    200: openapi.Response(
+        description='Success response',
+        examples={
+            'application/json': {
+    "count": 1,
+    "next": 'null',
+    "previous": 'null',
+    "results": [
+    {
+    "type": "post",
+    "title": "GitHub activity of type PushEvent",
+    "id": "https://github.com/spongebob",
+    "source": "https://github.com/spongebob",
+    "origin": "https://github.com/spongebob",
+    "description": "",
+    "contentType": "text/markdown",
+    "content": "[spongebob](https://github.com/spongebob) made 1 commit(s) to repo [mrkrabs/KRUSTY-KRAB](https://github.com/mrkrabs/KRUSTY-KRAB): \n[18eab4e487912d7daad6ce705cc0e4834baf6788](https://www.github.com/mrkrabs/KRUSTY-KRAB/commits/18eab4e487912d7daad6ce705cc0e4834baf6788): misc  \r\n",
+    "author": {
+      "type": "author",
+      "id": "http://127.0.0.1:8000/authors/e4bd3d3e-de9d-4543-8c1b-0976b80f716e",
+      "url": "http://127.0.0.1:8000/authors/e4bd3d3e-de9d-4543-8c1b-0976b80f716e",
+      "host": "http://127.0.0.1:8000/",
+      "displayName": "spongebob",
+      "github": "https://github.com/spongebob",
+      "profileImage": ""
+    },
+    "categories": [],
+    "count": 0,
+    "comments": "https://github.com/spongebob/comments/",
+    "commentsSrc": [],
+    "published": 'null',
+    "visibility": "PUBLIC",
+    "unlisted": 'false'
+  }
+  ]
+}
+        }
+    )
+
+}
+
 GetAuthorsExample={
     200: openapi.Response(
         description='Success response',
@@ -379,10 +472,11 @@ class FollowersView(APIView):
         # return the new list of followers
         return Response(status=status.HTTP_204_NO_CONTENT)
     
-class GitHubView(APIView):
+class GitHubView(APIView):    
     authentication_classes = [BasicAuthentication]
     permission_classes = [IsAuthenticated]
-
+    
+    @swagger_auto_schema(responses= GetGithubExample,operation_summary="Retrieve the user's github history")
     def get(self, request, pk_a):
         author = get_object_or_404(Author,pk=pk_a)
 
@@ -397,7 +491,7 @@ class FriendRequestView(APIView):
     authentication_classes = [BasicAuthentication]
     permission_classes = [IsAuthenticated]
     serializer_class = FollowRequestSerializer
-    
+    @swagger_auto_schema(example=sendreqExample ,operation_summary="Send a friend request to an author") 
     def post(self,request,pk_a):
         try:
             actor = Author.objects.get(id=pk_a)
@@ -420,6 +514,8 @@ class FriendRequestView(APIView):
         except Author.DoesNotExist:
             error_msg = "Author id not found"
             return Response(error_msg, status=status.HTTP_404_NOT_FOUND)
+    
+    @swagger_auto_schema(operation_summary="Decline a friend request from an author") 
     def delete(self, request, pk_a):
         try:
             author = Author.objects.get(id=pk_a)
@@ -444,6 +540,7 @@ class ViewRequests(APIView):
     permission_classes = [IsAuthenticated]
     serializer_class = FollowRequestSerializer
     # @permission_classes([IsAuthenticated])
+    @swagger_auto_schema(responses = ViewRequestsExample, operation_summary="Get the follow requests for the current user")
     def get(self,request,pk_a):
         """
         Get the list of Follow requests for the current Author
@@ -623,9 +720,10 @@ class Inbox_list(APIView, InboxSerializerObjects, PageNumberPagination):
 @api_view(['GET'])
 @authentication_classes([BasicAuthentication])
 @permission_classes([IsAuthenticated])
+@swagger_auto_schema(responses = GetAuthorByDisplayName, operation_summary="Gets the details of a particular author, using their displayname") 
 def getAuthor(request, displayName):
     """
-    Details of particular author
+    Get the details of a particular author searched by their displayname
     """
     authorList = getRemoteAuthorsDisplayName(displayName)
     try:
@@ -637,14 +735,18 @@ def getAuthor(request, displayName):
     return Response(authorList)
 
 class registerNode(APIView):
+    @swagger_auto_schema(responses = registerNodeExample, operation_summary="Register a user as a node")
     def post(self, request):
-        """Register a django user to make them a Node"""
-        '''In the data provide "username":"the username they chose", 
-        "email":"Their email they provided", 
-        "password":"Their Password",
-        "url":"url to their site"
+        """
+        Register a django user to make them a Node
+        """
+        '''In the data provide:
+        username:the username they chose, 
+        email:Their email they provided, 
+        password:Their Password,
+        url:url to their site
+        '''
         
-          '''
         #   {"username":"jacob_node1", 
         # "email":"jacob@node1", 
         # "password":"jacobs_node1",

@@ -86,7 +86,7 @@ def getNodeAuthor_Yoshi(author_id):
     else: return ([])
 
 def getNodeAuthor_App2(author_id):
-    url = 'https://killme.herokuapp.com/authors/'
+    url = 'https://ineedsleep.herokuapp.com/authors/'
 
     url = url + author_id
 

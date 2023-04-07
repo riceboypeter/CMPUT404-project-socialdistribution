@@ -16,7 +16,7 @@ params= {
 }
 
 def getAllPosts_app2():
-    url = 'https://killme.herokuapp.com/posts/public'
+    url = 'https://ineedsleep.herokuapp.com/posts/public'
 
     headers = app2_headers()
     response = requests.get(url, headers=headers)
@@ -122,7 +122,7 @@ def sendPost(host, data, auth_id):
         if "image/" in data['contentType']:
             data['content'] = data['source']
         response, status_code = sendPostBiggerYoshi(data, auth_id)
-    elif 'killme' in host:
+    elif 'ineedsleep' in host:
         response, status_code = sendPostApp2(data, auth_id)
     return response
 
@@ -164,7 +164,7 @@ def sendPostDistro(data, auth_id):
 
 
 def sendPostApp2(data, auth_id):
-    url = 'https://killme.herokuapp.com/authors/' + auth_id + '/inbox'
+    url = 'https://ineedsleep.herokuapp.com/authors/' + auth_id + '/inbox'
     #setup data
     response = requests.post(url=url, headers=app2_headers(), data=data)
     status_code = response.status_code

@@ -28,6 +28,13 @@ custom_parameter = openapi.Parameter(
     required=True,
 )
 
+imageExample = {
+    "200": openapi.Response(
+        description="Successful Operation",
+        content='image/png'
+    )
+}
+
 response_schema_dictposts = {
     "200": openapi.Response(
         description="Successful Operation",
@@ -474,6 +481,29 @@ Publicpostget = {
 
     )}
 
+ShareExample = {
+    "200": openapi.Response(
+        description="Successfully shared the post",
+        examples={
+            "application/json":{
+    "id": "https://sociallydistributed.herokuapp.com/authors/team24/posts/helloworld",
+    "title": "Hello World!",
+    "source": 'https://social-distro.herokuapp.com/authors/team24/posts/helloworld',
+    "origin": 'https://social-distro.herokuapp.com/authors/team24/posts/helloworld',
+    "description": "Our first post",
+    "contentType": "text/plain",
+    "content": "Hello from team 24!",
+    "categories": [],
+    "published": "2023-03-24T17:53:09.628104Z",
+    "visibility": "PUBLIC",
+    "unlisted": 'false',
+    "author_id": "https://social-distro.herokuapp.com/authors/team24"
+  }
+
+        }
+
+    )}
+
 class PostListView(APIView, PageNumberPagination):
     authentication_classes = [BasicAuthentication]
     permission_classes = [IsAuthenticated]
@@ -797,7 +827,7 @@ class PostLikesView(APIView):
 class ImageView(APIView):
     # a renderer for displaying the image
     renderer_classes = [JPEGRenderer, PNGRenderer]
-
+    @swagger_auto_schema(responses = imageExample, operation_summary="Retrieves the image associated to an image post")
     def get(self, request, pk_a, pk):
         
         try:
@@ -905,6 +935,7 @@ class CommentView(APIView, PageNumberPagination):
 class ShareView(APIView):
     authentication_classes = [BasicAuthentication]
     permission_classes = [IsAuthenticated]
+    @swagger_auto_schema(responses = ShareExample, operation_summary="Share a post from an origin author to a different author")
     def post(self, request, origin_author, post_id, author_id):       
         
         # try to get the author, return 404 if ID doesn't exist
