@@ -127,6 +127,8 @@ def sendPost(host, data, auth_id):
     elif 'killme' in host:
         response, status_code = sendPostApp2(data, auth_id)
     elif 'bigger-yoshi' in host:
+        if "image/" in data['contentType']:
+            data['content'] = data['source']
         print("sending to bigger yoshi")
         response, status_code = sendPostBiggerYoshi(data, auth_id)
     print("returning their response")
