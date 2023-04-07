@@ -44,8 +44,7 @@ function FOLLOWREQ({ obj }) {
 		const params = { actor_id: FAID };
 		const url = `authors/${curr_author_id}/sendreq/`;
 		return reqInstance({ method: "delete", url: url, data: params })
-			.then((res) => { 
-			})
+			.then((res) => {})
 			.catch((err) => {
 				toaster.push(<Message type="error">{err}</Message>, {
 					placement: "topEnd",
@@ -91,7 +90,7 @@ function FOLLOWREQ({ obj }) {
 				<Button block onClick={acceptFriend} appearance="primary">
 					Accept
 				</Button>
-				<Button block onClick={deleteFollow}> 
+				<Button block onClick={deleteFollow}>
 					Deny
 				</Button>
 			</div>

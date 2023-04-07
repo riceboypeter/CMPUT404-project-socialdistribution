@@ -9,26 +9,68 @@ params = {
     "size" : 100
 }
 
-def getNodeAuthor_social_distro(author_id):
-    url = 'https://social-distro.herokuapp.com/api/authors/'
-    username = 'team24'
-    password = 'team24'
-    url = url + author_id + '/'
+# def getNodeAuthor_social_distro(author_id):
+#     url = 'https://social-distro.herokuapp.com/api/authors/'
+#     username = 'team24'
+#     password = 'team24'
+#     url = url + author_id + '/'
 
-    credentials = f'{username}:{password}'
-    encoded_credentials = base64.b64encode(credentials.encode("utf-8")).decode("utf-8")
-    authorization_header = f'Basic {encoded_credentials}'
-    headers = {'Authorization': authorization_header}
+#     credentials = f'{username}:{password}'
+#     encoded_credentials = base64.b64encode(credentials.encode("utf-8")).decode("utf-8")
+#     authorization_header = f'Basic {encoded_credentials}'
+#     headers = {'Authorization': authorization_header}
 
-    response = requests.get(url, headers=headers)
+#     response = requests.get(url, headers=headers)
 
-    status_code = response.status_code
+#     status_code = response.status_code
    
 
-    if status_code == 200:
-        json_response = response.json()
-        return(json_response)
-    else: return ([])
+#     if status_code == 200:
+#         json_response = response.json()
+#         return(json_response)
+#     else: return ([])
+
+
+# def getNodeAuthor_P2(author_id):
+#     headers = p2_headers()
+#     url = "https://p2psd.herokuapp.com/authors/" + author_id
+#     response = requests.get(url, headers=headers)
+
+#     status_code = response.status_code
+#     if status_code == 200:
+#         json_response = response.json()
+#         return(json_response)
+#     else: return ([])
+
+# def getNodeAllAuthors_distro():
+#     url = 'https://social-distro.herokuapp.com/api/authors/'
+
+#     username = 'team24'
+#     password = 'team24'
+#     #remote1:r3mot31
+#     credentials = f'{username}:{password}'
+#     encoded_credentials = base64.b64encode(credentials.encode("utf-8")).decode("utf-8")
+#     authorization_header = f'Basic {encoded_credentials}'
+#     headers = {'Authorization': authorization_header}
+
+#     response = requests.get(url, headers=headers, params=params)
+   
+#     status_code = response.status_code
+#     json_response = response.json()
+#     authors = json_response['results']
+#     return authors
+
+
+# def getNodeAllAuthors_P2():
+#     headers = p2_headers()
+#     url = "https://p2psd.herokuapp.com/authors"
+#     response = requests.get(url, headers=headers)
+   
+#     status_code = response.status_code
+#     json_response = response.json()
+#     authors = json_response['items']
+#     print(authors)
+#     return authors
 
 
 def getNodeAuthor_Yoshi(author_id):
@@ -57,16 +99,6 @@ def getNodeAuthor_App2(author_id):
         return(json_response)
     else: return ([])
 
-def getNodeAuthor_P2(author_id):
-    headers = p2_headers()
-    url = "https://p2psd.herokuapp.com/authors/" + author_id
-    response = requests.get(url, headers=headers)
-
-    status_code = response.status_code
-    if status_code == 200:
-        json_response = response.json()
-        return(json_response)
-    else: return ([])
 
 def getNodeAuthor_big(author_id):
     url = "https://bigger-yoshi.herokuapp.com/api/authors/" + author_id
@@ -80,7 +112,7 @@ def getNodeAuthor_big(author_id):
 
 def getNodeAllAuthors_Yoshi():
     url = 'https://yoshi-connect.herokuapp.com/authors'
-    response = requests.get(url, params={"size": 100})
+    response = requests.get(url, params={"size": 100}, timeout=10, headers=yoshi_headers())
     status_code = response.status_code
 
     if status_code == 200:
@@ -101,36 +133,6 @@ def getNodeAllAuthors_App2():
         return(authors)
     else: return ([])
 
-
-def getNodeAllAuthors_distro():
-    url = 'https://social-distro.herokuapp.com/api/authors/'
-
-    username = 'team24'
-    password = 'team24'
-    #remote1:r3mot31
-    credentials = f'{username}:{password}'
-    encoded_credentials = base64.b64encode(credentials.encode("utf-8")).decode("utf-8")
-    authorization_header = f'Basic {encoded_credentials}'
-    headers = {'Authorization': authorization_header}
-
-    response = requests.get(url, headers=headers, params=params)
-   
-    status_code = response.status_code
-    json_response = response.json()
-    authors = json_response['results']
-    return authors
-
-def getNodeAllAuthors_P2():
-    headers = p2_headers()
-    url = "https://p2psd.herokuapp.com/authors"
-    response = requests.get(url, headers=headers)
-   
-    status_code = response.status_code
-    json_response = response.json()
-    authors = json_response['items']
-    print(authors)
-    return authors
-
 def getNodeAllAuthors_big():
     url = "https://bigger-yoshi.herokuapp.com/api/authors"
     response = requests.get(url, params={"size": 100})
@@ -150,12 +152,13 @@ def checkDisplayName(list, displayName):
     
 def getRemoteAuthorsDisplayName(displayName):
     author1 = checkDisplayName(getNodeAllAuthors_Yoshi(), displayName)
-
     author2 = checkDisplayName(getNodeAllAuthors_App2(), displayName)
     # author3 = checkDisplayName(getNodeAllAuthors_distro(), displayName) 
     # author4 = checkDisplayName(getNodeAllAuthors_P2(), displayName)
     author5 = checkDisplayName(getNodeAllAuthors_big(), displayName)
+    print(author1, author2, author5)
     authorList = author1 + author2  + author5
+    print(authorList)
     return authorList
 
 def getAuthorId(url):
@@ -177,19 +180,11 @@ def getRemoteAuthorsById(id):
     if found == False:
         author2, found = checkId(getNodeAllAuthors_App2(), id)
         if found == False:
-            author3, found = checkId(getNodeAllAuthors_distro(), id)
+            author5, found = checkId(getNodeAllAuthors_big(),id)
             if found == False:
-                author4, found = checkId(getNodeAllAuthors_P2(), id)
-                if found == False:
-                    author5, found = checkId(getNodeAllAuthors_big(),id)
-                    if found == False:
-                        return "author not found", False
-                    else: 
-                        return author5
-                else: 
-                   return author4, True
-            else:
-                return author3, True
+                return "author not found", False
+            else: 
+                return author5
         else:
             return author2, True
     else:
@@ -220,7 +215,3 @@ def clean_author(author):
         author["id"] = author["id"].split("/")[-1]
         
         return author
-
-
-
-

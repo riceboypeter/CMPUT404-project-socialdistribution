@@ -23,13 +23,13 @@ def getAllPosts_app2():
     status_code = response.status_code
     if status_code == 200:
         json_response = response.json()
-        json_response = json_response['items']
+        json_response = json_response["items"]
         json_response = json_response[:5]
         return(json_response)
     else: return ([])
 
 def getAllPosts_Yoshi():
-    url = 'https://yoshi-connect.herokuapp.com/posts/public'
+    url = 'https://yoshi-connect.herokuapp.com/posts/public/local'
     headers = yoshi_headers()
     try:
         response = requests.get(url, headers=headers, params=params, timeout=5)
@@ -130,13 +130,13 @@ def sendPost(host, data, auth_id):
             if data['content'][-1] != '=':
                 data['content'] += '='
     print(data)
-    
+
     if 'yoshi-connect' in host:
         response, status_code = sendPostYoshi(data, auth_id)
     # elif 'social-distro' in host:
     #     response, status_code = sendPostDistro(data, auth_id)
-    elif 'killme' in host:
-        response, status_code = sendPostApp2(data, auth_id)
+    # elif 'killme' in host:
+    #     response, status_code = sendPostApp2(data, auth_id)
     # elif 'p2psd' in host:
     #     response, status_code = sendPostP2(data, auth_id)
     elif 'bigger-yoshi' in host:
@@ -167,6 +167,16 @@ def sendPostYoshi(data, auth_id):
         data["unlisted"] = "false"
     if data["unlisted"]:
         data["unlisted"] = "true"
+    print(url)
+    print(type(data))
+    print(type(data["author"]))
+    print(data)
+    author = json.dumps(data)
+    author = json.loads(author)
+    data = json.dumps(data)
+    data = json.loads(data)
+    data['author'] =  author
+    # data['author'] = json.loads(data["author"])
     #update the data to be sent in proper format maybe
     response = requests.post(url=url, headers=yoshi_headers(), data=data)
     status_code = response.status_code
@@ -177,7 +187,7 @@ def sendPostYoshi(data, auth_id):
 def sendPostDistro(data, auth_id):
     url = 'https://social-distro.herokuapp.com/api/authors/' + auth_id + '/inbox'
     #setup data
-    response = requests.post(url=url, headers=distro_headers(), data=data)
+    response = requests.post(url=url, headers=distro_headers(), data=data, timeout=10)
     status_code = response.status_code
     json_response = response.json()
     return json_response, status_code

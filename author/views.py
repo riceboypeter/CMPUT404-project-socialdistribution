@@ -286,7 +286,7 @@ class FollowersView(APIView):
             return Response(error_msg, status=status.HTTP_404_NOT_FOUND)
         # If url is /authors/authors/author_id/followers/
         # add local followers to the list of followers
-        if pk ==None:
+        if pk == None:
             followers = author.friends.all()
             followers_list = []
             for follower in followers:
