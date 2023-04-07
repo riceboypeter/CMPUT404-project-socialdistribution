@@ -22,6 +22,7 @@ from django.core.paginator import Paginator
 from social.pagination import CustomPagination
 from posts.github.utils import get_github_activities
 from Remote.Authors import *
+from django.http import QueryDict
 
 custom_parameter = openapi.Parameter(
     name='custom_param',
@@ -500,7 +501,11 @@ class InboxSerializerObjects:
                     #     if author["host"]== 'https://bigger-yoshi.herokuapp.com/api/':
                     #         new_data = {}
                     # except:
-                    new_data = data
+                    if type(data) == QueryDict:
+                        new_data = data.dict()
+                    else:
+                        new_data = data
+                        
                     try: 
                         print('trying to get commentsSrc')
                         if new_data["commentsSrc"]:
