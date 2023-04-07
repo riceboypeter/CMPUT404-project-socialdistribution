@@ -60,9 +60,10 @@ function ADD_FRIEND_MODAL({ open, handleClose }) {
 	async function handleAddFriendClick() {
 		// url = authors/authors/${AUTHOR_ID}/followers/${foreign_author_id}/;
 		// reqInstance({ method: "put", url: url });
-		const url = `authors/displayName/${displayName}`;
-		await reqInstance({ method: "get", url: url }).then(async (res) => {
+		const url = `https://sociallydistributed.herokuapp.com/authors/displayName/${displayName}`;
+		await axios({ method: "get", url: url }).then(async (res) => {
 			setusers(res.data);
+			console.log(res.data);
 			if (res.data.length === 0) {
 				toaster.push(
 					<Message type="error">
