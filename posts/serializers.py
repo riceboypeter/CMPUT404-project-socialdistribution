@@ -251,7 +251,6 @@ class ImageSerializer(WritableNestedModelSerializer):
             'categories': data["categories"],
             'author': data["author"],
             'contentType': data["contentType"],
-            'image': data["image"],
             'visibility': data["visibility"],
             'comments': data["comments"],
             'description': data["description"],
