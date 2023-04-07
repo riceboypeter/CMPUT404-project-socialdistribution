@@ -115,21 +115,17 @@ def getAllPublicPosts():
 #                     posts.append(item)
 #     return posts
 
-
-
 def sendPost(host, data, auth_id):
     print(data)
     print(host)
     print(auth_id)
     
+    response = "r"
+
     if 'yoshi-connect' in host:
         response, status_code = sendPostYoshi(data, auth_id)
-    # elif 'social-distro' in host:
-    #     response, status_code = sendPostDistro(data, auth_id)
-    # elif 'killme' in host:
-    #     response, status_code = sendPostApp2(data, auth_id)
-    # elif 'p2psd' in host:
-    #     response, status_code = sendPostP2(data, auth_id)
+    elif 'killme' in host:
+        response, status_code = sendPostApp2(data, auth_id)
     elif 'bigger-yoshi' in host:
         print("sending to bigger yoshi")
         response, status_code = sendPostBiggerYoshi(data, auth_id)
