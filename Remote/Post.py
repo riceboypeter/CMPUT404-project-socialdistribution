@@ -160,23 +160,16 @@ def sendPostBiggerYoshi(data, auth_id):
 def sendPostYoshi(data, auth_id):
     url = 'https://yoshi-connect.herokuapp.com/authors/' + auth_id + '/inbox'
     if data["commentsSrc"] == []:
-        data["commentsSrc"] = [""]
+        data["commentsSrc"] = {"comments":[], "id": data["comments"], "post":data["id"], "type": "comments"}
     if data["description"] == '':
         data["description"] = data["title"]
     if not data["unlisted"]:
         data["unlisted"] = "false"
     if data["unlisted"]:
         data["unlisted"] = "true"
-    print(url)
-    print(type(data))
-    print(type(data["author"]))
-    print(data)
-    author = json.dumps(data)
-    author = json.loads(author)
+    
     data = json.dumps(data)
-    data = json.loads(data)
-    data['author'] =  author
-    # data['author'] = json.loads(data["author"])
+
     #update the data to be sent in proper format maybe
     response = requests.post(url=url, headers=yoshi_headers(), data=data)
     status_code = response.status_code
@@ -246,3 +239,26 @@ def clean_post(data):
 # visibility:"PUBLIC",
 # unlisted:"false" 
 # }
+
+
+def staticPost() :
+    url = 'https://yoshi-connect.herokuapp.com/authors/' + "4e6d2bd1c5fb4f40861cf75a927176cb" + '/inbox'
+    data = {'type': 'post', 'title': 'post to yoshi connect', 
+            'id': 'https://sociallydistributed.herokuapp.com/authors/f8708f98-d7c7-4827-829b-e02510a94610/posts/d7fe525a-3d07-4891-bb19-59ad5d90f1b8', 
+            'source': 'https://sociallydistributed.herokuapp.com/authors/f8708f98-d7c7-4827-829b-e02510a94610/posts/d7fe525a-3d07-4891-bb19-59ad5d90f1b8', 'origin': 'https://sociallydistributed.herokuapp.com/authors/f8708f98-d7c7-4827-829b-e02510a94610/posts/d7fe525a-3d07-4891-bb19-59ad5d90f1b8', 
+            'description': 'post to yoshi connect', 'contentType': 'text/plain', 'content': 'post to yoshi connect', 
+            'author': {'type': 'author', 'id': 'https://sociallydistributed.herokuapp.com/authors/f8708f98-d7c7-4827-829b-e02510a94610', 'url': 'https://sociallydistributed.herokuapp.com/authors/f8708f98-d7c7-4827-829b-e02510a94610', 
+                       'host': 'https://sociallydistributed.herokuapp.com/', 'displayName': 'videouser', 'github': None, 'profileImage': None}, 'categories': 'post to yoshi connect', 'count': 0, 
+                       'comments': 'https://sociallydistributed.herokuapp.com/authors/f8708f98-d7c7-4827-829b-e02510a94610/posts/d7fe525a-3d07-4891-bb19-59ad5d90f1b8/comments/', 
+                       'commentsSrc': {"id": "https://sociallydistributed.herokuapp.com/authors/f8708f98-d7c7-4827-829b-e02510a94610/posts/d7fe525a-3d07-4891-bb19-59ad5d90f1b8/comments/", 
+                                       "post": "https://sociallydistributed.herokuapp.com/authors/f8708f98-d7c7-4827-829b-e02510a94610/posts/d7fe525a-3d07-4891-bb19-59ad5d90f1b8", }, 
+                                       'published': '2023-04-06T18:53:11.930050-07:00', 'visibility': 'PRIVATE', 'unlisted': 'true'}
+    
+    print(json.dumps(data))
+    response = requests.post(url=url, headers=yoshi_headers(), data=json.dumps(data))
+    status_code = response.status_code
+    json_response = response.json()
+    print("YOSHI content", json_response)
+    return json_response, status_code
+
+staticPost()
