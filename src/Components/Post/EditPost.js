@@ -13,6 +13,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { getAuthorId } from "../utils/auth";
 import PROFILEIMAGE from "../Profile/ProfileImage";
 
+// This handles the editing of a post, this is displayed inside the editpostmodal
 function EDITPOST({ obj, handleClose }) {
 	const [post_status, set_post_status] = useState("Public");
 	const [post_type, set_post_type] = useState("text/plain");

@@ -6,6 +6,7 @@ import { getAuthorId, getCsrfToken } from "../utils/auth";
 import COMMENTLIKE from "./LikeComment";
 import axios from "axios";
 
+// This component handles posting and displaying comments on a post
 function COMMENTS({ postobj }) {
 	const [commentObj, setCommentObj] = useState([]);
 	const [postObj, setPostObj] = useState(postobj);

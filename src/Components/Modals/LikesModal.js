@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { getAuthorId } from "../utils/auth";
 import { createReqInstance } from "../utils/axios";
 
+// this component handles displaying all the authors who liked the post
 function LIKESMODAL({ postobj, open, handleClose }) {
 	const [likes, setLikes] = useState([]);
 	var navigate = useNavigate();

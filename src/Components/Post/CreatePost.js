@@ -16,6 +16,7 @@ import { getAuthorId } from "../utils/auth";
 import { useNavigate } from "react-router-dom";
 import PROFILEIMAGE from "../Profile/ProfileImage";
 
+// This component handles the creating a post
 function CREATEPOST({ refresh }) {
 	const [post_status, set_post_status] = useState("PUBLIC");
 	const [post_type, set_post_type] = useState("text/plain");
@@ -60,6 +61,7 @@ function CREATEPOST({ refresh }) {
 		}
 	}, []);
 
+	// this sets input area depending on the type of a post selected by the user
 	const input = () => {
 		if (post_type === "text/plain") {
 			return (
@@ -98,35 +100,6 @@ function CREATEPOST({ refresh }) {
 				</div>
 			);
 		}
-
-		// converts image to base64 then passes it into the backend
-		/* this is the code for what the uploader was:
-		<Uploader
-						action="post/authors/{AUTHOR_ID}/posts/"
-						accept=".png, .jpg, .jpeg"
-						autoUpload={false}
-						draggable
-						style={{
-							float: "left",
-							width: "100%",
-							margin: "auto",
-							paddingTop: "5px",
-						}}
-					>
-						<div
-							style={{
-								height: "100px",
-								display: "flex",
-								alignItems: "center",
-								justifyContent: "center",
-							}}
-						>
-							<span>
-								Click or Drag files to this area to upload
-							</span>
-						</div>
-					</Uploader>
-		*/
 		if (post_type === "image/png" || post_type === "image/jpeg") {
 			return (
 				<div>
@@ -150,6 +123,7 @@ function CREATEPOST({ refresh }) {
 		});
 	};
 
+	// convertes image into a base64 string
 	const toBase64 = (file) =>
 		new Promise((resolve, reject) => {
 			const reader = new FileReader();
@@ -158,6 +132,7 @@ function CREATEPOST({ refresh }) {
 			reader.onerror = (error) => reject(error);
 		});
 
+	// this fucntion handles the Posting of a function
 	async function handlePostClick() {
 		const author = JSON.parse(localStorage.getItem("user"));
 		const author_id = getAuthorId(null);

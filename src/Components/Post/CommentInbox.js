@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Avatar, Panel } from "rsuite";
 import PROFILEIMAGE from "../Profile/ProfileImage";
 // Component Imports
-
+// This is the inbox item for when someone makes a comment on your post
 function COMMENTINBOX({ obj }) {
 	const [comment, set_comment] = useState(obj);
 
