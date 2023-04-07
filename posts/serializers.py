@@ -9,7 +9,7 @@ from Remote.Post import clean_post
 class PostSerializer(WritableNestedModelSerializer):
     type = serializers.CharField(default="post",source="get_api_type",read_only=True)
     id = serializers.CharField(source="get_public_id", read_only=True)
-    count = serializers.IntegerField(read_only=True, default=0)
+    count = serializers.IntegerField(read_only=True, source="get_likes_count", default=0)
     comments = serializers.URLField(source="get_comments_source", read_only=True)
     commentsSrc = serializers.JSONField(read_only=True)
     author = AuthorSerializer(required=False)
@@ -76,7 +76,6 @@ class PostSerializer(WritableNestedModelSerializer):
             'id': id,
             'commentsSrc': commentsSrc,
             'categories': categories_list,
-            'count': len(commentsSrc)
         }
             
     class Meta:
@@ -162,7 +161,6 @@ class CommentSerializer(serializers.ModelSerializer):
             'comment',
             'contentType',
             'published',
-           
         ]
     
 class LikeSerializer(serializers.ModelSerializer):
@@ -215,7 +213,7 @@ class LikeSerializer(serializers.ModelSerializer):
 class ImageSerializer(serializers.ModelSerializer):
     type = serializers.CharField(default="post",source="get_api_type",read_only=True)
     id = serializers.CharField(source="get_public_id", read_only=True)
-    count = serializers.IntegerField(read_only=True, default=0)
+    count = serializers.IntegerField(read_only=True, source='get_likes_count', default=0)
     comments = serializers.URLField(source="get_comments_source", read_only=True)
     commentsSrc = serializers.JSONField(read_only=True)
     author = AuthorSerializer(required=False)
@@ -260,7 +258,6 @@ class ImageSerializer(serializers.ModelSerializer):
             'id': id,
             'commentsSrc': commentsSrc,
             'categories': categories_list,
-            'count': len(commentsSrc)
         }
 
     class Meta:
