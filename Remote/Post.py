@@ -123,6 +123,8 @@ def sendPost(host, data, auth_id):
     response = Response("r")
 
     if 'yoshi-connect' in host:
+        if "image/" in data['contentType']:
+            data['content'] = data['source']
         response, status_code = sendPostYoshi(data, auth_id)
     elif 'bigger-yoshi' in host:
         if "image/" in data['contentType']:
