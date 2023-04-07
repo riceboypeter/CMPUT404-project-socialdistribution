@@ -13,7 +13,7 @@ class AuthorSerializer(serializers.ModelSerializer):
     type = serializers.CharField(default="author",source="get_api_type",read_only=True)
     id = serializers.URLField(source="get_public_id",read_only=True)
     url = serializers.URLField(source="get_absolute_url",read_only=True)
-    displayName = serializers.CharField(default = '')
+    displayName = serializers.CharField(default = '')   
     
     # update author with provided instance
     def update(self, instance, validated_data):
@@ -25,7 +25,7 @@ class AuthorSerializer(serializers.ModelSerializer):
         instance.github = validated_data.get('github', instance.github)
         instance.profileImage = validated_data.get('profileImage', instance.profileImage)
         return instance
-
+    
     @staticmethod
     def _update(validated_data): 
         author = Author.objects.get(id=validated_data["id"])
@@ -89,9 +89,10 @@ class FollowRequestSerializer(serializers.ModelSerializer):
     #to_user = serializers.CharField(default = 'x')
     type = serializers.CharField(default="Follow",source="get_api_type",read_only=True)
     summary = serializers.CharField(source="get_summary", read_only=True)
-    actor = AuthorSerializer(required=False)
-    object = AuthorSerializer(required=False)
+    actor = AuthorSerializer(required=False)   # follower
+    object = AuthorSerializer(required=False)  # followee
     
+    # create a follow request if the object is not already a follower and a request doesn't already exist
     def create(self,validated_data):
         print("in follow req create")
         actor = validated_data["actor"]
@@ -108,6 +109,7 @@ class FollowRequestSerializer(serializers.ModelSerializer):
             return FollowRequest.objects.create(actor=actor,object=object)
     
     # https://www.django-rest-framework.org/api-guide/serializers/
+    # changes the data passed in to make it valid
     def to_internal_value(self, data):
         print("to_internal_value")
         actor = AuthorSerializer.extract_and_upcreate_author(self.context["actor_"])
