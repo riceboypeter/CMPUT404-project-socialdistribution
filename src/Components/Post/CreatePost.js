@@ -200,7 +200,8 @@ function CREATEPOST({ refresh }) {
 					setUnlisted(false);
 					setMarkdown("");
 					setAuthors([]);
-					// window.location.reload();
+					setDisabled(true);
+					window.location.reload();
 					notifySuccessPost();
 				} else {
 					notifyFailedPost(res.data);

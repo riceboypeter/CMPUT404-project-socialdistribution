@@ -115,32 +115,20 @@ def getAllPublicPosts():
 #                     posts.append(item)
 #     return posts
 
-
-
 def sendPost(host, data, auth_id):
     print(data)
     print(host)
     print(auth_id)
-    # encode image from data[image] as base64 string in data[content]
-    if "image/" in data['contentType']:
-        with open("./social"+data["image"],'rb') as file:
-            # encode image
-            encoded_image = base64.b64encode(file.read())
-            # properly pad the image + cast to string
-            data['content'] = str(encoded_image)[2:-1]
-            if data['content'][-1] != '=':
-                data['content'] += '='
-    print(data)
+    
+    response = Response("r")
 
     if 'yoshi-connect' in host:
         response, status_code = sendPostYoshi(data, auth_id)
-    # elif 'social-distro' in host:
-    #     response, status_code = sendPostDistro(data, auth_id)
-    # elif 'killme' in host:
-    #     response, status_code = sendPostApp2(data, auth_id)
-    # elif 'p2psd' in host:
-    #     response, status_code = sendPostP2(data, auth_id)
+    elif 'killme' in host:
+        response, status_code = sendPostApp2(data, auth_id)
     elif 'bigger-yoshi' in host:
+        if "image/" in data['contentType']:
+            data['content'] = data['source']
         print("sending to bigger yoshi")
         response, status_code = sendPostBiggerYoshi(data, auth_id)
     print("returning their response")

@@ -7,9 +7,7 @@ var username = localStorage.getItem("username");
 var password = localStorage.getItem("password");
 getCsrfToken();
 var token = localStorage.getItem("token");
-var busername = base64.encode(username);
-var bpassword = base64.encode(password);
-
+// default axios for our server with username andpassword setup
 export let reqInstance = axios.create({
 	baseURL: `${process.env.REACT_APP_HOST_NAME}/`,
 	auth: {
@@ -18,6 +16,7 @@ export let reqInstance = axios.create({
 	},
 });
 
+// axios without auth setup
 export let axiosInstance = axios.create({
 	headers: {
 		"X-CSRFToken": token,
@@ -28,6 +27,7 @@ export let axiosInstance = axios.create({
 	},
 });
 
+// axios for all the other servers
 export let createReqInstance = (baseUrl) => {
 	let username, password;
 	switch (baseUrl) {
@@ -44,35 +44,9 @@ export let createReqInstance = (baseUrl) => {
 					password: password,
 				},
 			});
-		case process.env.REACT_APP_HOST_NAME + "//":
-			username = localStorage.getItem("username");
-			password = localStorage.getItem("password");
-			return axios.create({
-				headers: {
-					"X-CSRFToken": token,
-				},
-				baseURL: baseUrl,
-				auth: {
-					username: username,
-					password: password,
-				},
-			});
 		case "https://yoshi-connect.herokuapp.com/":
 			username = "minion-yoshi";
 			password = "123";
-			return axios.create({
-				headers: {
-					"X-CSRFToken": token,
-				},
-				baseURL: baseUrl,
-				auth: {
-					username: username,
-					password: password,
-				},
-			});
-		case "https://social-distro.herokuapp.com/":
-			username = "team24";
-			password = "team24";
 			return axios.create({
 				headers: {
 					"X-CSRFToken": token,
@@ -116,18 +90,6 @@ export let createReqInstance = (baseUrl) => {
 				headers: {
 					"X-CSRFToken": token,
 					// Authorization: "Basic cDJwYWRtaW46cDJwYWRtaW4=",
-				},
-				baseURL: baseUrl,
-				auth: {
-					username: username,
-					password: password,
-				},
-			});
-		case "https://p2psd.herokuapp.com":
-			return axios.create({
-				headers: {
-					"X-CSRFToken": token,
-					Authorization: "Basic cDJwYWRtaW46cDJwYWRtaW4=",
 				},
 				baseURL: baseUrl,
 				auth: {
