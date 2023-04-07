@@ -168,6 +168,7 @@ def sendPostYoshi(data, auth_id):
     if data["unlisted"]:
         data["unlisted"] = "true"
     print(url)
+    print(type(data["author"]))
     print(data)
     #update the data to be sent in proper format maybe
     response = requests.post(url=url, headers=yoshi_headers(), data=data)
@@ -179,7 +180,7 @@ def sendPostYoshi(data, auth_id):
 def sendPostDistro(data, auth_id):
     url = 'https://social-distro.herokuapp.com/api/authors/' + auth_id + '/inbox'
     #setup data
-    response = requests.post(url=url, headers=distro_headers(), data=data)
+    response = requests.post(url=url, headers=distro_headers(), data=data, timeout=10)
     status_code = response.status_code
     json_response = response.json()
     return json_response, status_code
