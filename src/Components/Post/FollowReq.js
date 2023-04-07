@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { Button, Avatar, Panel, useToaster, Message } from "rsuite";
 import { reqInstance } from "../utils/axios";
 import { getAuthorId } from "../utils/auth";
-import PROFILEIMAGE from "../Profile/ProfileImage";
 
+// This is the inbox follow req object lets us accept friend requests
 function FOLLOWREQ({ obj }) {
 	const [follow, setFollow] = useState(obj);
 	const toaster = useToaster();
